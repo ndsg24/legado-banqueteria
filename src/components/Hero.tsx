@@ -42,9 +42,8 @@ export function Hero() {
       </div>
 
       <div className="hero__gold-orbit" aria-hidden="true">
-        <svg viewBox="0 0 800 440" preserveAspectRatio="none">
-          <path d="M-40 390C98 220 198 503 369 285 516 97 591 67 847 93" />
-          <circle cx="369" cy="285" r="5" />
+        <svg viewBox="0 0 800 200" preserveAspectRatio="none">
+          <path d="M-30 164C122 64 234 226 432 112C552 43 664 72 830 25" />
         </svg>
       </div>
     </main>

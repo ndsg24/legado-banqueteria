@@ -37,7 +37,10 @@
 html {
   scroll-behavior: smooth;
   scroll-snap-type: y proximity;
+  scrollbar-width: none;
 }
+html::-webkit-scrollbar,
+body::-webkit-scrollbar { display: none; }
 body {
   min-width: 320px;
   margin: 0;
