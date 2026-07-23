@@ -7,6 +7,126 @@
   .manifesto__copy { padding-left: 5vw; padding-right: 5vw; }
 }
 
+@media (max-width: 900px) {
+  #inicio, #historia, #servicios, #galeria, #manera, #contacto { scroll-margin-top: 68px; }
+  .site-shell { padding-top: 68px; }
+  .site-header {
+    width: 100%;
+    height: 68px;
+    inset: 0 0 auto;
+    margin: 0;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--canvas) 78%, transparent);
+  }
+  .site-header__inner { grid-template-columns: 1fr auto; }
+  .site-header.menu-open {
+    border-color: color-mix(in srgb, var(--gold) 38%, transparent);
+    background: color-mix(in srgb, var(--canvas) 88%, transparent);
+  }
+  .desktop-nav,
+  .site-header .theme-toggle { display: none; }
+  .brand small { display: none; }
+  .header-actions { gap: 0; }
+  .site-header .menu-toggle {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    position: relative;
+    z-index: 82;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+  }
+  .menu-toggle span {
+    width: 16px;
+    height: 1px;
+    position: absolute;
+    background: var(--ink);
+    transition: transform .3s cubic-bezier(.22, 1, .36, 1), top .3s ease;
+  }
+  .menu-toggle span:first-child { top: 17px; }
+  .menu-toggle span:last-child { top: 23px; }
+  .menu-open .menu-toggle span:first-child { top: 20px; transform: rotate(45deg); }
+  .menu-open .menu-toggle span:last-child { top: 20px; transform: rotate(-45deg); }
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    padding: 112px 20px 28px;
+    background: var(--canvas);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-18px);
+    transition: opacity .25s ease, transform .42s cubic-bezier(.22, 1, .36, 1), visibility .25s;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .mobile-menu::before {
+    content: 'LEGADO';
+    position: absolute;
+    top: 104px;
+    right: -1.5vw;
+    bottom: 24px;
+    display: flex;
+    align-items: center;
+    color: var(--canvas);
+    font: 700 min(22vw, 11.2dvh)/.78 var(--display);
+    letter-spacing: -.035em;
+    writing-mode: vertical-rl;
+    text-orientation: sideways;
+    text-shadow:
+      1px 0 0 color-mix(in srgb, var(--ink) 11%, transparent),
+      -1px 0 0 color-mix(in srgb, var(--ink) 11%, transparent),
+      0 1px 0 color-mix(in srgb, var(--ink) 11%, transparent),
+      0 -1px 0 color-mix(in srgb, var(--ink) 11%, transparent);
+    transform: rotate(180deg);
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .mobile-menu.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .mobile-menu > p { margin: 0 0 24px; color: var(--gold); font: italic 1rem var(--serif); }
+  .mobile-menu nav { display: grid; position: relative; z-index: 2; border-top: 1px solid var(--line); }
+  .mobile-menu nav a {
+    min-height: clamp(60px, 8.5vh, 78px);
+    display: grid;
+    grid-template-columns: 35px 1fr auto;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    transition: color .2s ease, padding .3s ease;
+  }
+  .mobile-menu nav a.active { color: var(--gold); padding-left: 10px; }
+  .mobile-menu nav small { color: var(--gold); font: italic .72rem var(--serif); }
+  .mobile-menu nav span { font: 600 clamp(1.9rem, 8.5vw, 3.2rem)/1 var(--display); letter-spacing: -.07em; }
+  .mobile-menu nav i { color: var(--gold); font: normal 1rem var(--serif); }
+  .mobile-menu__footer {
+    margin-top: auto;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    color: var(--muted);
+    font-size: .5rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .mobile-menu__footer .theme-toggle { display: flex; }
+}
+
 @media (max-width: 760px) {
   :root { --page: calc(100vw - 28px); }
   #inicio, #historia, #servicios, #galeria, #manera, #contacto { scroll-margin-top: 68px; }
@@ -113,16 +233,37 @@
   .section-rail a.active > i { width: 7px; height: 17px; }
   .hero { --hero-gutter: 14px; height: calc(100svh - 78px); min-height: 0; }
   .hero__meta p:nth-child(2) { display: none; }
-  .hero__word { top: 12%; flex-direction: column; align-items: flex-start; font-size: 30vw; line-height: .65; }
-  .hero__word span:nth-child(2) { margin-left: 22vw; }
-  .hero__word span:nth-child(3) { align-self: flex-end; margin-right: 18vw; font-size: .78em; }
+  .hero__word {
+    top: 15%;
+    flex-direction: row;
+    align-items: center;
+    gap: 2.2vw;
+    font-size: 16.2vw;
+    line-height: .76;
+    white-space: nowrap;
+  }
+  .hero__word span:nth-child(2) { margin-left: 0; }
+  .hero__word span:nth-child(3) {
+    align-self: auto;
+    margin-right: 0;
+    font-size: 1em;
+  }
   .hero__echoes { display: none; }
   .hero__memory--main { width: calc(100% - 28px); height: 195px; top: 63%; left: 50%; }
   .hero__memory figcaption { right: 12px; bottom: 16px; font-size: .82rem; }
   .hero__statement { bottom: 54px; }
   .hero__statement > p { width: 250px; font-size: 1.7rem; }
-  .hero__statement > a { width: 46px; height: 46px; padding: 0; display: grid; place-items: center; border: 1px solid var(--ink); border-radius: 50%; }
-  .hero__statement > a span { display: none; }
+  .hero__statement > a {
+    width: clamp(190px, 36vw, 250px);
+    padding: 13px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 0;
+    border-bottom: 1px solid var(--ink);
+    border-radius: 0;
+  }
+  .hero__statement > a span { display: inline; }
   .hero__scroll { display: none; }
   .hero__gold-orbit { width: 100%; height: 16%; left: 0; bottom: 17%; }
 
@@ -153,21 +294,41 @@
     width: 100%;
     height: auto;
     margin-top: 70px;
-    padding: 20px 9vw 48px;
+    padding: 20px 13vw 36px;
     display: flex;
     gap: 24px;
     overflow-x: auto;
     overflow-y: visible;
     scroll-snap-type: x mandatory;
+    scroll-padding-inline: 13vw;
     scrollbar-width: none;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    user-select: none;
   }
+  .gallery__stage.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+  }
+  .gallery__stage:focus-visible { outline: 1px solid var(--gold); outline-offset: -5px; }
   .gallery__stage::-webkit-scrollbar { display: none; }
   .gallery__ghost {
-    left: 13px;
-    top: 49%;
-    font-size: 28vw;
-    transform: translateY(-50%) rotate(-90deg);
-    transform-origin: left center;
+    width: 1em;
+    height: calc(100% - 84px);
+    left: 2.5vw;
+    top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(3.1rem, 12.5vw, 5.2rem);
+    line-height: .72;
+    letter-spacing: -.08em;
+    writing-mode: vertical-rl;
+    text-orientation: sideways;
+    transform: rotate(180deg);
+    transform-origin: center;
+    pointer-events: none;
   }
   .gallery-card,
   .gallery-card--1,
@@ -175,8 +336,8 @@
   .gallery-card--3,
   .gallery-card--4,
   .gallery-card--5 {
-    width: 74vw;
-    min-width: 74vw;
+    width: 72vw;
+    min-width: 72vw;
     height: 54vh;
     min-height: 430px;
     max-height: 570px;
@@ -188,7 +349,70 @@
   .gallery-card:nth-of-type(even) { margin-top: 48px; }
   .gallery-card:hover { transform: scale(1.015); }
   .gallery-card__image img { filter: saturate(.78) contrast(1.03); }
-  .gallery__note { padding: 0 14px; text-align: left; }
+  .gallery__mobile-nav {
+    margin: 2px 14px 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 13px 18px;
+  }
+  .gallery__mobile-nav > p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .52rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+  }
+  .gallery__mobile-nav > p em {
+    color: var(--gold);
+    font: italic .88rem var(--serif);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .gallery__progress {
+    height: 1px;
+    grid-column: 1;
+    position: relative;
+    align-self: center;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .gallery__progress > span {
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform-origin: left;
+    transition: transform .35s cubic-bezier(.22, 1, .36, 1);
+  }
+  .gallery__mobile-nav output {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: start;
+    color: var(--muted);
+    font: italic .76rem var(--serif);
+  }
+  .gallery__mobile-nav output strong { color: var(--gold); font-size: 1.35rem; font-weight: 400; }
+  .gallery__arrows {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 8px;
+  }
+  .gallery__arrows button {
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+  }
+  .gallery__arrows .editorial-arrow { width: 18px; height: 18px; }
+  .gallery__arrows button:disabled { opacity: .28; cursor: default; }
+  .gallery__arrows button:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
+  .gallery__note { margin-top: 34px; padding: 0 14px; text-align: left; }
 
   .manifesto { min-height: auto; padding: 175px 0 0; display: flex; flex-direction: column; }
   .manifesto__ticker { height: 72px; top: 55px; font-size: 2.2rem; }
@@ -206,6 +430,37 @@
   footer > p { display: none; }
   footer > div { flex-direction: column; align-items: flex-end; gap: 8px; }
 
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: calc(100svh - 68px);
+    min-height: 700px;
+  }
+  .hero__word {
+    top: 15%;
+    font-size: 16.2vw;
+  }
+  .hero__memory--main {
+    height: clamp(180px, 24svh, 205px);
+    top: 49%;
+  }
+  .hero__statement {
+    bottom: 30px;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .hero__statement > p {
+    width: min(300px, 82vw);
+    font-size: 1.55rem;
+    text-align: center;
+  }
+  .hero__statement > a {
+    width: min(238px, 70vw);
+    padding-block: 11px;
+    align-self: center;
+  }
 }
 
 @media (max-width: 760px) and (max-height: 650px) {

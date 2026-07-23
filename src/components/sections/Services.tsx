@@ -1,4 +1,5 @@
 import { services } from '../../config/content'
+import { EditorialArrow } from '../ui/EditorialArrow'
 
 export function Services() {
   return (
@@ -19,7 +20,7 @@ export function Services() {
               <h3>{service.title}</h3>
               <p>{service.copy}</p>
             </div>
-            <i aria-hidden="true">→</i>
+            <i aria-hidden="true"><EditorialArrow /></i>
           </article>
         ))}
       </div>

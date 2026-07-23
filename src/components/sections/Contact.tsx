@@ -1,4 +1,5 @@
 import { siteConfig } from '../../config/site'
+import { EditorialArrow } from '../ui/EditorialArrow'
 
 export function Contact() {
   return (
@@ -12,7 +13,7 @@ export function Contact() {
       <p>Fecha, número de invitados y una idea. Con eso basta para comenzar.</p>
       <div className="contact__actions">
         <a className="button button--gold" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
-          <span>Conversemos por WhatsApp</span><i>↗</i>
+          <span>Conversemos por WhatsApp</span><i><EditorialArrow direction="up-right" /></i>
         </a>
         <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
       </div>

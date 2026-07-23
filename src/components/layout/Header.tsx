@@ -4,6 +4,7 @@ import type { SectionId } from '../../types/navigation'
 import type { Theme } from '../../types/theme'
 import { Brand } from './Brand'
 import { ThemeToggle } from './ThemeToggle'
+import { EditorialArrow } from '../ui/EditorialArrow'
 
 type HeaderProps = {
   activeSection: SectionId
@@ -61,7 +62,7 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
             >
               <small>{String(index + 1).padStart(2, '0')}</small>
               <span>{item.label}</span>
-              <i>↗</i>
+              <i><EditorialArrow direction="up-right" /></i>
             </a>
           ))}
         </nav>

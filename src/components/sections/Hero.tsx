@@ -1,5 +1,6 @@
 import { m } from 'framer-motion'
 import { siteConfig } from '../../config/site'
+import { EditorialArrow } from '../ui/EditorialArrow'
 
 export function Hero() {
   return (
@@ -48,7 +49,7 @@ export function Hero() {
         </p>
         <a href="#contacto" aria-label="Cotizar una celebración">
           <span>Cotiza tu celebración</span>
-          <i>↗</i>
+          <i><EditorialArrow direction="up-right" /></i>
         </a>
       </div>
 

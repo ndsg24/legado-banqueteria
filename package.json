@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "typecheck": "tsc -b --pretty false",
     "build": "tsc -b && vite build",
     "check": "npm run typecheck && npm run lint && npm run build",
