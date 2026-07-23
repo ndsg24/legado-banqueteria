@@ -20,8 +20,11 @@ export function Gallery() {
               <img
                 src={`${import.meta.env.BASE_URL}images/gallery/${item.src}`}
                 alt={item.alt}
+                width={item.width}
+                height={item.height}
                 loading="lazy"
                 decoding="async"
+                sizes="(max-width: 760px) 86vw, 34vw"
               />
             </div>
             <figcaption>

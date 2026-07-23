@@ -29,15 +29,17 @@ export default function App() {
           onThemeToggle={toggleTheme}
         />
         <SectionRail activeSection={activeSection} />
-        <Hero />
-        <div className="content-canvas">
-          <BackgroundMotifs />
-          <Story />
-          <Services />
-          <Gallery />
-          <Manifesto />
-          <Contact />
-        </div>
+        <main>
+          <Hero />
+          <div className="content-canvas">
+            <BackgroundMotifs />
+            <Story />
+            <Services />
+            <Gallery />
+            <Manifesto />
+            <Contact />
+          </div>
+        </main>
         <Footer />
       </div>
     </AppMotionProvider>

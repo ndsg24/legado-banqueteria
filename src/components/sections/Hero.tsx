@@ -3,18 +3,18 @@ import { siteConfig } from '../../config/site'
 
 export function Hero() {
   return (
-    <main id="inicio" className="hero">
+    <section id="inicio" className="hero" aria-labelledby="hero-title">
       <div className="hero__meta">
         <p>Banquetería familiar</p>
         <p>{siteConfig.location}</p>
         <p>Desde nuestra casa</p>
       </div>
 
-      <div className="hero__word" aria-label="Legado">
+      <h1 className="hero__word" id="hero-title" aria-label="Legado">
         <span data-letter="LE">LE</span>
         <span data-letter="GA">GA</span>
         <span data-letter="DO">DO</span>
-      </div>
+      </h1>
 
       <div className="hero__echoes" aria-hidden="true">
         {[0, 1].map((echo) => (
@@ -30,6 +30,11 @@ export function Hero() {
         <m.img
           src={`${import.meta.env.BASE_URL}images/hero-table.jpg`}
           alt="Mesa familiar servida con platos caseros para compartir"
+          width={1800}
+          height={1200}
+          fetchPriority="high"
+          decoding="async"
+          sizes="(max-width: 760px) calc(100vw - 28px), min(920px, 62vw)"
           animate={{ scale: [1.02, 1.075, 1.02], x: [0, -8, 0] }}
           transition={{ duration: 15, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
         />
@@ -79,6 +84,6 @@ export function Hero() {
           <path className="hero__gold-orbit-shine" d="M-40 124C155 22 645 22 840 124" />
         </svg>
       </div>
-    </main>
+    </section>
   )
 }

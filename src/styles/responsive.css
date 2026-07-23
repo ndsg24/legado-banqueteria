@@ -195,7 +195,7 @@
   .manifesto__ticker span:last-of-type, .manifesto__ticker i { display: none; }
   .manifesto__image { width: calc(100% - 28px); height: 470px; margin: 0 14px; }
   .manifesto__copy { padding: 80px 28px 100px; }
-  .manifesto blockquote { margin-top: 40px; font-size: 14vw; }
+  .manifesto h2 { margin-top: 40px; font-size: 14vw; }
 
   .contact { min-height: auto; padding: 90px 0 110px; }
   .contact__pretitle { margin: 0 0 30px; }
