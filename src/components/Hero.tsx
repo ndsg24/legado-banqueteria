@@ -16,7 +16,7 @@ export function Hero() {
       </div>
 
       <div className="hero__echoes" aria-hidden="true">
-        {[0, 1, 2].map((echo) => (
+        {[0, 1].map((echo) => (
           <div className="hero__echo-row" key={echo}>
             <span>LE</span>
             <span>GA</span>

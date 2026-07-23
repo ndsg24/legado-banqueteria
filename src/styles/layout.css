@@ -178,10 +178,11 @@
 .hero__echoes {
   position: absolute;
   z-index: 1;
-  top: 38%;
+  top: 36%;
   right: var(--hero-gutter);
   left: var(--hero-gutter);
-  height: 48%;
+  display: grid;
+  gap: clamp(3.25rem, 5.4vw, 6.5rem);
   color: var(--canvas);
   font: 700 clamp(8rem, 16.6vw, 19rem)/.76 var(--display);
   letter-spacing: -.085em;
@@ -191,8 +192,6 @@
 }
 .hero__echo-row {
   width: 100%;
-  position: absolute;
-  inset: 0 0 auto;
   display: flex;
   justify-content: space-between;
   text-shadow:
@@ -202,9 +201,8 @@
     0 -1px 0 color-mix(in srgb, var(--gold) 28%, var(--ink));
 }
 .hero__echo-row span:nth-child(2) { letter-spacing: .005em; }
-.hero__echo-row:nth-child(1) { opacity: .17; transform: translateY(0); }
-.hero__echo-row:nth-child(2) { opacity: .09; transform: translateY(100px); }
-.hero__echo-row:nth-child(3) { opacity: .035; transform: translateY(200px); }
+.hero__echo-row:nth-child(1) { opacity: .16; }
+.hero__echo-row:nth-child(2) { opacity: .055; }
 .hero__memory {
   margin: 0;
   position: absolute;
