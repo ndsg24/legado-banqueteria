@@ -11,9 +11,9 @@ export function Header({ theme, onThemeToggle }: HeaderProps) {
     <header className="site-header">
       <Brand />
       <nav aria-label="Navegación principal">
-        <a href="#historia">Nuestra historia</a>
-        <a href="#servicios">Servicios</a>
-        <a href="#contacto">Contacto</a>
+        <a href="#historia">Origen</a>
+        <a href="#servicios">La mesa</a>
+        <a href="#contacto">Conversemos</a>
       </nav>
       <ThemeToggle theme={theme} onToggle={onThemeToggle} />
     </header>

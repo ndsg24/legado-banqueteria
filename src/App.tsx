@@ -21,11 +21,11 @@ export default function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('legado-theme', theme)
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#121310' : '#f5f1e8')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0a0a09' : '#f2f2ef')
   }, [theme])
 
   return (
-    <>
+    <div className="site-shell">
       <Header theme={theme} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} />
       <Hero />
       <Story />
@@ -33,6 +33,6 @@ export default function App() {
       <Manifesto />
       <Contact />
       <Footer />
-    </>
+    </div>
   )
 }

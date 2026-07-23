@@ -8,12 +8,8 @@ export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
 
   return (
     <button className="theme-toggle" type="button" onClick={onToggle} aria-label={`Cambiar a tema ${nextTheme}`}>
-      <span className="theme-toggle__track" aria-hidden="true">
-        <span className="theme-toggle__thumb">
-          {theme === 'light' ? '☼' : '☾'}
-        </span>
-      </span>
-      <span className="theme-toggle__label">{theme === 'light' ? 'Claro' : 'Oscuro'}</span>
+      <span aria-hidden="true">{theme === 'light' ? 'Luz' : 'Noche'}</span>
+      <i aria-hidden="true" />
     </button>
   )
 }

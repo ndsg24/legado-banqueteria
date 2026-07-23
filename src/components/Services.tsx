@@ -1,35 +1,41 @@
 const services = [
   {
     title: 'Matrimonios',
-    copy: 'Menús generosos y un servicio atento para celebrar sin preocuparse de nada.',
+    copy: 'Un menú que acompaña el día completo, sin quitarle protagonismo a lo importante.',
+    note: 'Celebrar',
   },
   {
     title: 'Encuentros familiares',
-    copy: 'Bautizos, aniversarios y cumpleaños con preparaciones que todos reconocen y disfrutan.',
+    copy: 'Bautizos, aniversarios y cumpleaños con esa comida que hace que todos se queden un rato más.',
+    note: 'Compartir',
   },
   {
     title: 'Eventos de empresa',
-    copy: 'Almuerzos, celebraciones y jornadas de equipo resueltas con calidez y puntualidad.',
+    copy: 'Almuerzos y jornadas resueltas con puntualidad, calidez y comida de verdad.',
+    note: 'Reunir',
   },
 ]
 
 export function Services() {
   return (
     <section className="services" id="servicios">
-      <div className="services__intro">
-        <p className="eyebrow">Para reunirnos</p>
-        <h2>Tu ocasión,<br /><em>nuestra mesa.</em></h2>
-        <p>Adaptamos cada propuesta al tipo de encuentro, sus tiempos y las personas que quieres recibir.</p>
+      <div className="services__header">
+        <div>
+          <span>La mesa</span>
+          <strong>02 — 03</strong>
+        </div>
+        <h2>No hacemos eventos.<br /><em>Vestimos recuerdos.</em></h2>
       </div>
       <div className="services__list">
         {services.map((service, index) => (
           <article className="service" key={service.title}>
-            <span>0{index + 1}</span>
-            <div>
+            <span className="service__number">{String(index + 1).padStart(2, '0')}</span>
+            <div className="service__content">
+              <span>{service.note}</span>
               <h3>{service.title}</h3>
               <p>{service.copy}</p>
             </div>
-            <i aria-hidden="true">↗</i>
+            <i aria-hidden="true">→</i>
           </article>
         ))}
       </div>

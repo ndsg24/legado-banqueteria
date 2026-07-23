@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer>
       <Brand />
-      <p>Banquetería familiar · Santiago, Chile</p>
+      <p>Comida hecha por personas,<br />para personas.</p>
       <div>
         <a href="#inicio">Volver arriba ↑</a>
         <span>© {new Date().getFullYear()} Legado</span>

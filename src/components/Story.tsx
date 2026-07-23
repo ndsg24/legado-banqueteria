@@ -1,22 +1,26 @@
 export function Story() {
   return (
     <section className="story" id="historia">
-      <div className="section-heading">
-        <p className="eyebrow">Nuestro origen</p>
-        <h2>Hay recetas que no se escriben.<br />Se <em>heredan.</em></h2>
+      <div className="story__index">
+        <span>El origen</span>
+        <strong>01 — 03</strong>
+      </div>
+      <div className="story__title">
+        <p>Esto no comenzó<br />como un negocio.</p>
+        <h2>Comenzó<br />con un “¿quién<br /><em>va a cocinar?”</em></h2>
       </div>
       <div className="story__body">
-        <p className="story__lead">
-          Legado nació alrededor de una mesa familiar: de cocinar para muchos, de servir abundante y de entender que una buena comida cambia el ánimo de una celebración.
+        <p>
+          Legado nació haciendo lo que nuestra familia siempre ha hecho: cocinar para muchos, servir sin medir el cariño y lograr que nadie quiera levantarse de la mesa.
         </p>
         <p>
-          No buscamos que la comida parezca distante. Buscamos ese sabor reconocible que invita a repetir, presentado con el cuidado y la calidad que exige un momento importante.
+          Con el tiempo entendimos que eso también era un oficio. Hoy llevamos ese sabor reconocible a matrimonios, encuentros y celebraciones, con la calidad que merece un día importante.
         </p>
       </div>
-      <div className="story__seal" aria-hidden="true">
-        <span>Cocina honesta</span>
-        <strong>L</strong>
-        <span>Hecha en familia</span>
+      <div className="story__stamp" aria-hidden="true">
+        <span>Receta familiar</span>
+        <strong>∞</strong>
+        <span>Porciones generosas</span>
       </div>
     </section>
   )

@@ -1,28 +1,45 @@
 export function Hero() {
   return (
     <main id="inicio" className="hero">
-      <div className="hero__copy">
-        <p className="eyebrow">Cocina que reúne · Santiago de Chile</p>
-        <h1>
-          El sabor de casa,
-          <em>a la altura de tu celebración.</em>
-        </h1>
-        <p className="hero__intro">
-          Recetas generosas, ingredientes escogidos y una atención cercana para esos días que merecen quedarse en la memoria.
-        </p>
-        <div className="hero__actions">
-          <a className="button button--primary" href="#contacto">Cuéntanos tu idea <span>↗</span></a>
-          <a className="text-link" href="#servicios">Conoce lo que hacemos <span>↓</span></a>
-        </div>
+      <div className="hero__meta">
+        <p>Banquetería familiar</p>
+        <p>Santiago de Chile</p>
+        <p>Desde nuestra casa</p>
       </div>
-      <figure className="hero__image">
+
+      <div className="hero__word" aria-label="Legado">
+        <span>LE</span>
+        <span>GA</span>
+        <span>DO</span>
+      </div>
+
+      <figure className="hero__memory hero__memory--main">
         <img src={`${import.meta.env.BASE_URL}images/hero-table.jpg`} alt="Mesa abundante con preparaciones caseras para compartir" />
-        <figcaption>
-          <span>01</span>
-          <p><strong>Preparado con tiempo.</strong> Servido con cariño.</p>
-        </figcaption>
+        <figcaption>Una mesa. Muchas historias.</figcaption>
       </figure>
-      <p className="hero__side-note" aria-hidden="true">Desde nuestra familia · Para la tuya</p>
+
+      <div className="hero__statement">
+        <p>
+          Cocina casera para días
+          <em> que no se repiten.</em>
+        </p>
+        <a href="#contacto" aria-label="Cotizar una celebración">
+          <span>Cotiza tu celebración</span>
+          <i>↗</i>
+        </a>
+      </div>
+
+      <div className="hero__scroll">
+        <span>Desliza para sentarte a la mesa</span>
+        <i />
+      </div>
+
+      <div className="hero__gold-orbit" aria-hidden="true">
+        <svg viewBox="0 0 800 440" preserveAspectRatio="none">
+          <path d="M-40 390C98 220 198 503 369 285 516 97 591 67 847 93" />
+          <circle cx="369" cy="285" r="5" />
+        </svg>
+      </div>
     </main>
   )
 }
