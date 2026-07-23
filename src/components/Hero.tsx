@@ -10,9 +10,9 @@ export function Hero() {
       </div>
 
       <div className="hero__word" aria-label="Legado">
-        <span>LE</span>
-        <span>GA</span>
-        <span>DO</span>
+        <span data-letter="LE">LE</span>
+        <span data-letter="GA">GA</span>
+        <span data-letter="DO">DO</span>
       </div>
 
       <figure className="hero__memory hero__memory--main">

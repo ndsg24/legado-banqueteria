@@ -71,7 +71,7 @@
   position: relative;
   isolation: isolate;
   background-color: var(--canvas);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='.16'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='.3'/%3E%3C/svg%3E");
   background-size: 210px 210px;
   background-blend-mode: soft-light;
   animation: hero-grain-shift 2.4s steps(2, end) infinite;
@@ -138,8 +138,31 @@
   letter-spacing: -.085em;
 }
 .hero__word span {
+  position: relative;
   opacity: 0;
   animation: hero-letter-in .9s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+.hero__word span::after {
+  content: attr(data-letter);
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  color: transparent;
+  background: linear-gradient(
+    108deg,
+    transparent 28%,
+    color-mix(in srgb, var(--gold-hot) 35%, transparent) 43%,
+    var(--gold-hot) 50%,
+    color-mix(in srgb, #fff 72%, var(--gold-hot)) 53%,
+    transparent 68%
+  );
+  background-size: 280% 100%;
+  background-position: 130% 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  opacity: 0;
+  pointer-events: none;
+  animation: legado-shimmer 8s 2.6s ease-in-out infinite;
 }
 .hero__word span:nth-child(2) {
   color: var(--canvas);
@@ -276,6 +299,12 @@
 @keyframes hero-dot-pulse {
   0%, 100% { transform: scale(.78); filter: drop-shadow(0 0 0 transparent); }
   50% { transform: scale(1.18); filter: drop-shadow(0 0 6px var(--gold-hot)); }
+}
+@keyframes legado-shimmer {
+  0%, 68%, 100% { opacity: 0; background-position: 130% 0; }
+  71% { opacity: .14; }
+  77% { opacity: .82; }
+  84% { opacity: 0; background-position: -35% 0; }
 }
 
 .story {
