@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Contact } from './components/Contact'
+import { BackgroundMotifs } from './components/BackgroundMotifs'
 import { Footer } from './components/Footer'
 import { Gallery } from './components/Gallery'
 import { Header } from './components/Header'
@@ -48,6 +49,7 @@ export default function App() {
       <SectionRail activeSection={activeSection} />
       <Hero />
       <div className="content-canvas">
+        <BackgroundMotifs />
         <Story />
         <Services />
         <Gallery />
