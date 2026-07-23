@@ -71,6 +71,17 @@
   position: relative;
   isolation: isolate;
 }
+.hero::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  opacity: .2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.34'/%3E%3C/svg%3E");
+  background-size: 190px 190px;
+  mix-blend-mode: soft-light;
+}
 
 .section-rail {
   position: fixed;
@@ -90,6 +101,8 @@
 .section-rail a:hover .section-rail__label, .section-rail a:focus-visible .section-rail__label, .section-rail a.active small { opacity: 1; transform: translateX(0); }
 
 .hero__meta {
+  position: relative;
+  z-index: 4;
   padding-top: 26px;
   display: flex;
   justify-content: space-between;
@@ -116,7 +129,24 @@
   opacity: 0;
   animation: hero-letter-in .9s cubic-bezier(.22, 1, .36, 1) forwards;
 }
+.hero__word span:nth-child(1),
+.hero__word span:nth-child(3) {
+  color: transparent;
+  background:
+    linear-gradient(color-mix(in srgb, var(--gold) 18%, transparent), color-mix(in srgb, #000 22%, transparent)),
+    var(--hero-photo);
+  background-size: 145% 145%;
+  background-position: 42% 48%;
+  background-blend-mode: soft-light, normal;
+  background-clip: text;
+  -webkit-background-clip: text;
+  filter: saturate(.78) contrast(1.14);
+  animation:
+    hero-letter-in .9s cubic-bezier(.22, 1, .36, 1) forwards,
+    hero-photo-breathe 13s 1.1s ease-in-out infinite alternate;
+}
 .hero__word span:nth-child(2) {
+  position: relative;
   color: var(--canvas);
   letter-spacing: .005em;
   text-shadow:
@@ -128,37 +158,19 @@
     -1px -1px 0 color-mix(in srgb, var(--ink) 58%, transparent);
   animation-delay: 90ms;
 }
-.hero__word span:nth-child(3) { animation-delay: 180ms; }
-.hero__memory {
-  margin: 0;
-  position: absolute;
-  z-index: 3;
-}
-.hero__memory--main {
-  width: min(760px, 52vw);
-  height: clamp(210px, 30vh, 300px);
-  left: 50%;
-  top: 54%;
-  transform: translate(-50%, -50%) rotate(-1deg);
-  clip-path: polygon(2% 3%, 100% 0, 97% 93%, 0 100%);
-  animation: hero-memory-in 1.15s .18s cubic-bezier(.22, 1, .36, 1) both;
-}
-.hero__memory--main::after {
-  content: '';
+.hero__word span:nth-child(2)::after {
+  content: attr(data-letter);
   position: absolute;
   inset: 0;
-  background: linear-gradient(145deg, transparent 56%, rgba(0, 0, 0, .56));
+  color: transparent;
+  text-shadow: 2px 0 0 var(--gold), -2px 0 0 color-mix(in srgb, var(--ink) 55%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  animation: heirloom-glitch 9s 2.5s steps(1, end) infinite;
 }
-.hero__memory img { height: 100%; object-fit: cover; object-position: center 48%; filter: saturate(.65) contrast(1.08); transition: transform 1.2s cubic-bezier(.22, 1, .36, 1), filter .6s ease; }
-.hero__memory:hover img { filter: saturate(.92) contrast(1.04); transform: scale(1.04); }
-.hero__memory figcaption {
-  position: absolute;
-  right: 18px;
-  bottom: 25px;
-  z-index: 2;
-  color: #fff;
-  font: italic 1.1rem var(--serif);
-  transform: rotate(-3deg);
+.hero__word span:nth-child(3) {
+  background-position: 72% 52%;
+  animation-delay: 180ms, 1.1s;
 }
 .hero__statement {
   width: 100%;
@@ -222,9 +234,15 @@
   from { opacity: 0; transform: translateY(.45em); }
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes hero-memory-in {
-  from { opacity: 0; transform: translate(-50%, -44%) rotate(4deg) scale(.88); }
-  to { opacity: 1; transform: translate(-50%, -50%) rotate(-1deg) scale(1); }
+@keyframes hero-photo-breathe {
+  from { background-size: 145% 145%; filter: saturate(.68) contrast(1.16); }
+  to { background-size: 162% 162%; filter: saturate(.92) contrast(1.06); }
+}
+@keyframes heirloom-glitch {
+  0%, 71%, 75%, 100% { opacity: 0; transform: translateX(0); clip-path: inset(0); }
+  72% { opacity: .42; transform: translateX(2px); clip-path: inset(12% 0 57%); }
+  73% { opacity: .28; transform: translateX(-1px); clip-path: inset(58% 0 16%); }
+  74% { opacity: .18; transform: translateX(1px); clip-path: inset(34% 0 43%); }
 }
 @keyframes hero-copy-in {
   from { opacity: 0; transform: translateY(24px); }
