@@ -3,7 +3,7 @@ export function Hero() {
     <main id="inicio" className="hero">
       <div className="hero__meta">
         <p>Banquetería familiar</p>
-        <p>Santiago de Chile</p>
+        <p>Concepción, Chile</p>
         <p>Desde nuestra casa</p>
       </div>
 

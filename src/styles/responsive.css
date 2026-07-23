@@ -56,15 +56,14 @@
     display: flex;
     flex-direction: column;
     padding: 112px 20px 28px;
-    background:
-      repeating-linear-gradient(92deg, transparent 0 4px, rgba(156, 128, 73, .035) 4px 5px, transparent 5px 11px),
-      var(--canvas);
+    background: var(--canvas);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     transform: translateY(-18px);
     transition: opacity .25s ease, transform .42s cubic-bezier(.22, 1, .36, 1), visibility .25s;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     overscroll-behavior: contain;
   }
   .mobile-menu::before {
@@ -113,7 +112,8 @@
   .hero__word { top: 12%; flex-direction: column; align-items: flex-start; font-size: 30vw; line-height: .65; }
   .hero__word span:nth-child(2) { margin-left: 22vw; }
   .hero__word span:nth-child(3) { align-self: flex-end; }
-  .hero__memory--main { width: 55vw; height: 340px; top: 45%; left: 50%; }
+  .hero__memory--main { width: calc(100% - 28px); height: 180px; top: 63%; left: 50%; }
+  .hero__memory figcaption { right: 12px; bottom: 16px; font-size: .82rem; }
   .hero__statement { bottom: 54px; }
   .hero__statement > p { width: 250px; font-size: 1.7rem; }
   .hero__statement > a { width: 46px; height: 46px; padding: 0; display: grid; place-items: center; border: 1px solid var(--ink); border-radius: 50%; }

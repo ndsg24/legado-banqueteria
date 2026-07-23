@@ -8,6 +8,19 @@ export function useActiveSection() {
   const [activeSection, setActiveSection] = useState<SectionId>('inicio')
 
   useEffect(() => {
+    const syncHash = () => {
+      const hash = window.location.hash.slice(1) as SectionId
+      if (sectionIds.includes(hash)) setActiveSection(hash)
+    }
+
+    const syncPageEnd = () => {
+      const reachedPageEnd =
+        window.scrollY + window.innerHeight >=
+        document.documentElement.scrollHeight - 24
+
+      if (reachedPageEnd) setActiveSection('contacto')
+    }
+
     const sections = sectionIds
       .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => section !== null)
@@ -28,7 +41,16 @@ export function useActiveSection() {
     )
 
     sections.forEach((section) => observer.observe(section))
-    return () => observer.disconnect()
+    window.addEventListener('hashchange', syncHash)
+    window.addEventListener('scroll', syncPageEnd, { passive: true })
+    syncHash()
+    syncPageEnd()
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('hashchange', syncHash)
+      window.removeEventListener('scroll', syncPageEnd)
+    }
   }, [])
 
   return activeSection
