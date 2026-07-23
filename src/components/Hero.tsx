@@ -1,12 +1,6 @@
-import type { CSSProperties } from 'react'
-
 export function Hero() {
-  const heroStyle = {
-    '--hero-photo': `url("${import.meta.env.BASE_URL}images/hero-family.jpg")`,
-  } as CSSProperties
-
   return (
-    <main id="inicio" className="hero" style={heroStyle}>
+    <main id="inicio" className="hero">
       <div className="hero__meta">
         <p>Banquetería familiar</p>
         <p>Concepción, Chile</p>
@@ -14,10 +8,15 @@ export function Hero() {
       </div>
 
       <div className="hero__word" aria-label="Legado">
-        <span data-letter="LE">LE</span>
-        <span data-letter="GA">GA</span>
-        <span data-letter="DO">DO</span>
+        <span>LE</span>
+        <span>GA</span>
+        <span>DO</span>
       </div>
+
+      <figure className="hero__memory hero__memory--main">
+        <img src={`${import.meta.env.BASE_URL}images/hero-family.jpg`} alt="Familia compartiendo una comida casera alrededor de la mesa" />
+        <figcaption>Siempre hay lugar para alguien más.</figcaption>
+      </figure>
 
       <div className="hero__statement">
         <p>

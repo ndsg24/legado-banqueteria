@@ -11,7 +11,6 @@ const revealSelector = [
   '.contact__pretitle',
   '.contact h2',
   '.contact__actions',
-  '.background-motif',
 ].join(',')
 
 export function useScrollReveal() {

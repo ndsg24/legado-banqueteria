@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { domAnimation, LazyMotion, MotionConfig } from 'framer-motion'
 import { Contact } from './components/Contact'
 import { BackgroundMotifs } from './components/BackgroundMotifs'
 import { Footer } from './components/Footer'
@@ -40,23 +41,27 @@ export default function App() {
   }, [])
 
   return (
-    <div className="site-shell">
-      <Header
-        activeSection={activeSection}
-        theme={theme}
-        onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')}
-      />
-      <SectionRail activeSection={activeSection} />
-      <Hero />
-      <div className="content-canvas">
-        <BackgroundMotifs />
-        <Story />
-        <Services />
-        <Gallery />
-        <Manifesto />
-        <Contact />
-      </div>
-      <Footer />
-    </div>
+    <LazyMotion features={domAnimation} strict>
+      <MotionConfig reducedMotion="user">
+        <div className="site-shell">
+          <Header
+            activeSection={activeSection}
+            theme={theme}
+            onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')}
+          />
+          <SectionRail activeSection={activeSection} />
+          <Hero />
+          <div className="content-canvas">
+            <BackgroundMotifs />
+            <Story />
+            <Services />
+            <Gallery />
+            <Manifesto />
+            <Contact />
+          </div>
+          <Footer />
+        </div>
+      </MotionConfig>
+    </LazyMotion>
   )
 }
