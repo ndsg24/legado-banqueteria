@@ -46,28 +46,30 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
   return (
     <>
       <header className={`site-header${menuOpen ? ' menu-open' : ''}`}>
-        <Brand />
-        <nav className="desktop-nav" aria-label="Navegación principal">
-          {navigation.map((item) => (
-            <a className={activeSection === item.id ? 'active' : undefined} href={item.href} key={item.id}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
-        <div className="header-actions">
-          <ThemeToggle theme={theme} onToggle={onThemeToggle} />
-          <button
-            className="menu-toggle"
-            type="button"
-            aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            onClick={() => setMenuOpen((current) => !current)}
-            ref={triggerRef}
-          >
-            <span />
-            <span />
-          </button>
+        <div className="site-header__inner">
+          <Brand />
+          <nav className="desktop-nav" aria-label="Navegación principal">
+            {navigation.map((item) => (
+              <a className={activeSection === item.id ? 'active' : undefined} href={item.href} key={item.id}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <div className="header-actions">
+            <ThemeToggle theme={theme} onToggle={onThemeToggle} />
+            <button
+              className="menu-toggle"
+              type="button"
+              aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              onClick={() => setMenuOpen((current) => !current)}
+              ref={triggerRef}
+            >
+              <span />
+              <span />
+            </button>
+          </div>
         </div>
       </header>
       <div
