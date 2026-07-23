@@ -112,7 +112,8 @@
   .hero__word { top: 12%; flex-direction: column; align-items: flex-start; font-size: 30vw; line-height: .65; }
   .hero__word span:nth-child(2) { margin-left: 22vw; }
   .hero__word span:nth-child(3) { align-self: flex-end; margin-right: 18vw; font-size: .78em; }
-  .hero__memory--main { width: calc(100% - 28px); height: 180px; top: 63%; left: 50%; }
+  .hero__echoes { display: none; }
+  .hero__memory--main { width: calc(100% - 28px); height: 195px; top: 63%; left: 50%; }
   .hero__memory figcaption { right: 12px; bottom: 16px; font-size: .82rem; }
   .hero__statement { bottom: 54px; }
   .hero__statement > p { width: 250px; font-size: 1.7rem; }
