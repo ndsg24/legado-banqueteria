@@ -78,6 +78,7 @@
     writing-mode: vertical-rl;
     text-orientation: sideways;
     -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 9%, transparent);
+    transform: rotate(180deg);
     pointer-events: none;
     overflow: hidden;
   }
