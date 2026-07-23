@@ -13,7 +13,7 @@ type HeaderProps = {
 }
 
 export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
-  const { closeMenu, isOpen, menuRef, toggleMenu, triggerRef } = useMobileMenu()
+  const { isOpen, menuRef, navigateToSection, toggleMenu, triggerRef } = useMobileMenu()
 
   return (
     <>
@@ -58,7 +58,10 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
               className={activeSection === item.id ? 'active' : undefined}
               href={item.href}
               key={item.id}
-              onClick={closeMenu}
+              onClick={(event) => {
+                event.preventDefault()
+                navigateToSection(item.href)
+              }}
             >
               <small>{String(index + 1).padStart(2, '0')}</small>
               <span>{item.label}</span>
