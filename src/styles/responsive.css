@@ -1,0 +1,45 @@
+@media (max-width: 1050px) {
+  :root { --page: calc(100vw - 48px); }
+  .site-header { grid-template-columns: 1fr auto; }
+  .site-header nav { display: none; }
+  .hero { grid-template-columns: 1fr .75fr; gap: 45px; }
+  .hero h1 { font-size: clamp(3.5rem, 7vw, 5.5rem); }
+  .hero__side-note { display: none; }
+  .story { padding-left: 3vw; padding-right: 3vw; }
+  .manifesto__copy { padding: 70px; }
+}
+
+@media (max-width: 760px) {
+  :root { --page: calc(100vw - 32px); }
+  .site-header { height: 84px; }
+  .theme-toggle__label { display: none; }
+  .brand small { display: none; }
+  .hero { min-height: auto; padding: 66px 0 90px; display: flex; flex-direction: column; align-items: stretch; gap: 64px; }
+  .hero h1 { font-size: clamp(3.25rem, 15vw, 5.1rem); }
+  .hero__intro { font-size: .9rem; }
+  .hero__actions { align-items: flex-start; flex-direction: column; gap: 22px; }
+  .hero__image { width: calc(100% - 12px); margin-left: 12px; }
+  .hero__image img { aspect-ratio: 4 / 5; }
+  .story { padding: 110px 0; display: block; }
+  .section-heading h2, .services h2 { font-size: 3.5rem; }
+  .story__body { padding-top: 48px; }
+  .story__seal { width: 94px; height: 94px; bottom: -47px; }
+  .services { padding: 130px 0 100px; display: block; }
+  .services__list { margin-top: 70px; }
+  .service { min-height: 165px; grid-template-columns: 30px 1fr auto; gap: 12px; }
+  .service h3 { font-size: 1.65rem; }
+  .manifesto { min-height: auto; display: flex; flex-direction: column; }
+  .manifesto__image { height: 480px; }
+  .manifesto__copy { padding: 76px 24px 90px; }
+  .manifesto blockquote { font-size: 2.7rem; }
+  .contact { padding: 110px 0; }
+  .contact h2 { font-size: 3.4rem; }
+  .contact__actions { flex-direction: column; gap: 25px; }
+  footer { padding: 38px 0; grid-template-columns: 1fr auto; gap: 30px; }
+  footer > p { display: none; }
+  footer > div { flex-direction: column; gap: 8px; text-align: right; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
