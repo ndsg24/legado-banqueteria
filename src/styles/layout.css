@@ -187,8 +187,6 @@
   font: 700 clamp(8rem, 16.6vw, 19rem)/.76 var(--display);
   letter-spacing: -.085em;
   pointer-events: none;
-  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .76) 42%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .76) 42%, transparent 100%);
 }
 .hero__echo-row {
   width: 100%;
@@ -288,8 +286,8 @@
     90deg,
     transparent,
     color-mix(in srgb, var(--gold-hot) 40%, transparent) 24%,
-    var(--gold-hot) 55%,
-    color-mix(in srgb, #fff 68%, var(--gold-hot)) 64%,
+    var(--gold-hot) 52%,
+    var(--gold-hot) 64%,
     transparent
   );
   box-shadow: 0 0 7px color-mix(in srgb, var(--gold-hot) 42%, transparent);
@@ -341,13 +339,13 @@
   opacity: .72;
 }
 .hero__gold-orbit-shine {
-  stroke: color-mix(in srgb, #fff 62%, var(--gold-hot));
+  stroke: var(--gold-hot);
   stroke-width: 2;
   stroke-linecap: round;
-  stroke-dasharray: 58 942;
+  stroke-dasharray: 64 1064;
   opacity: 0;
   filter: drop-shadow(0 0 4px color-mix(in srgb, var(--gold-hot) 72%, transparent));
-  animation: orbit-shine 7.5s ease-in-out infinite;
+  animation: orbit-shine 7.5s cubic-bezier(.45, 0, .2, 1) infinite;
 }
 
 @keyframes hero-letter-in {
@@ -382,11 +380,11 @@
   100% { right: -34%; opacity: 0; }
 }
 @keyframes orbit-shine {
-  0%, 28% { stroke-dashoffset: 90; opacity: 0; }
+  0%, 28% { stroke-dashoffset: 64; opacity: 0; }
   34% { opacity: .22; }
   43% { opacity: .9; }
-  58% { stroke-dashoffset: -1010; opacity: 0; }
-  100% { stroke-dashoffset: -1010; opacity: 0; }
+  60% { stroke-dashoffset: -1000; opacity: 0; }
+  100% { stroke-dashoffset: -1000; opacity: 0; }
 }
 
 .story {
