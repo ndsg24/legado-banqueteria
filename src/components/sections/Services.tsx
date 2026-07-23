@@ -8,7 +8,7 @@ export function Services() {
           <span>La mesa</span>
           <strong>02 — 04</strong>
         </div>
-        <h2>No hacemos eventos.<br /><em>Vestimos recuerdos.</em></h2>
+        <h2>Hay días que piden<br /><em>una mesa distinta.</em></h2>
       </div>
       <div className="services__list">
         {services.map((service, index) => (

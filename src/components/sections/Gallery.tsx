@@ -5,11 +5,11 @@ export function Gallery() {
     <section className="gallery" id="galeria">
       <header className="gallery__header">
         <div>
-          <span>Momentos reales</span>
+          <span>Días para recordar</span>
           <strong>03 — 04</strong>
         </div>
         <h2>Lo que queda<br /><em>después de la mesa.</em></h2>
-        <p>Montajes, encuentros y pequeños gestos que hacen que una celebración se vuelva recuerdo.</p>
+        <p>Montajes, encuentros y pequeños gestos que convierten una celebración en recuerdo.</p>
       </header>
 
       <div className="gallery__stage">

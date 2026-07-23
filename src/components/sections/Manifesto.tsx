@@ -7,7 +7,7 @@ export function Manifesto() {
         <span>Casero significa nuestro</span>
       </div>
       <div className="manifesto__image">
-        <img src={`${import.meta.env.BASE_URL}images/table-detail.jpg`} alt="Fuente casera servida en una mesa elegante" loading="lazy" />
+        <img src={`${import.meta.env.BASE_URL}images/table-detail.jpg`} alt="Fuente de comida casera servida al centro de una mesa" loading="lazy" />
         <span>Fuente al centro / como debe ser</span>
       </div>
       <div className="manifesto__copy">
