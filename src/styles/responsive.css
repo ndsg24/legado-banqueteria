@@ -107,11 +107,11 @@
   .section-rail a small, .section-rail__label { display: none; }
   .section-rail a > i { width: 5px; height: 5px; }
   .section-rail a.active > i { width: 7px; height: 17px; }
-  .hero { height: calc(100svh - 78px); min-height: 0; }
+  .hero { --hero-gutter: 14px; height: calc(100svh - 78px); min-height: 0; }
   .hero__meta p:nth-child(2) { display: none; }
   .hero__word { top: 12%; flex-direction: column; align-items: flex-start; font-size: 30vw; line-height: .65; }
   .hero__word span:nth-child(2) { margin-left: 22vw; }
-  .hero__word span:nth-child(3) { align-self: flex-end; }
+  .hero__word span:nth-child(3) { align-self: flex-end; font-size: .78em; }
   .hero__memory--main { width: calc(100% - 28px); height: 180px; top: 63%; left: 50%; }
   .hero__memory figcaption { right: 12px; bottom: 16px; font-size: .82rem; }
   .hero__statement { bottom: 54px; }
