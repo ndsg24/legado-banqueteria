@@ -1,3 +1,5 @@
+import { m } from 'framer-motion'
+
 export function Hero() {
   return (
     <main id="inicio" className="hero">
@@ -14,8 +16,13 @@ export function Hero() {
       </div>
 
       <figure className="hero__memory hero__memory--main">
-        <img src={`${import.meta.env.BASE_URL}images/hero-family.jpg`} alt="Familia compartiendo una comida casera alrededor de la mesa" />
-        <figcaption>Siempre hay lugar para alguien más.</figcaption>
+        <m.img
+          src={`${import.meta.env.BASE_URL}images/hero-table.jpg`}
+          alt="Mesa familiar servida con platos caseros para compartir"
+          animate={{ scale: [1.02, 1.075, 1.02], x: [0, -8, 0] }}
+          transition={{ duration: 15, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
+        />
+        <figcaption>La mesa está servida.</figcaption>
       </figure>
 
       <div className="hero__statement">
