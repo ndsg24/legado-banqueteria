@@ -244,60 +244,39 @@
   border-top: 1px solid var(--line);
 }
 
-.story,
-.services,
-.gallery,
-.manifesto,
-.contact {
+.content-canvas {
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  background: var(--canvas);
 }
 
-.story::before,
-.services::before,
-.gallery::before,
-.manifesto::before,
-.contact::before {
-  content: '';
-  position: absolute;
-  z-index: 0;
-  width: min(72vw, 1080px);
-  aspect-ratio: 1.5;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse,
-    color-mix(in srgb, var(--gold-hot) 26%, transparent) 0,
-    color-mix(in srgb, var(--gold) 11%, transparent) 38%,
-    transparent 72%
-  );
-  filter: blur(28px);
-  pointer-events: none;
-  animation: table-light 18s ease-in-out infinite alternate;
-}
-
-.story::before { top: 8%; right: -18%; }
-.services::before { left: 26%; bottom: -24%; animation-delay: -10s; }
-.gallery::before { top: 22%; left: -20%; animation-delay: -7s; }
-.manifesto::before { right: -22%; bottom: -8%; animation-delay: -12s; }
-.contact::before { top: 4%; left: 18%; animation-delay: -4s; }
-
-.story::after,
-.services::after,
-.gallery::after,
-.manifesto::after,
-.contact::after {
+.content-canvas::before {
   content: '';
   position: absolute;
   z-index: 0;
   inset: 0;
   pointer-events: none;
-  opacity: .58;
   background-image:
+    radial-gradient(
+      ellipse 42vw 34rem at 82% 8%,
+      color-mix(in srgb, var(--gold-hot) 25%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 46vw 42rem at 14% 54%,
+      color-mix(in srgb, var(--gold) 16%, transparent),
+      transparent 74%
+    ),
+    radial-gradient(
+      ellipse 38vw 30rem at 78% 88%,
+      color-mix(in srgb, var(--gold-hot) 14%, transparent),
+      transparent 72%
+    ),
     repeating-linear-gradient(
       103deg,
       transparent 0 12px,
-      color-mix(in srgb, var(--gold) 10%, transparent) 12px 13px,
+      color-mix(in srgb, var(--gold) 8%, transparent) 12px 13px,
       transparent 13px 31px
     ),
     repeating-linear-gradient(
@@ -306,18 +285,24 @@
       color-mix(in srgb, var(--ink) 4%, transparent) 39px 40px,
       transparent 40px 67px
     );
-  background-size: 128px 96px, 173px 139px;
-  animation: woven-drift 24s linear infinite;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 128px 96px, 173px 139px;
+  animation: page-atmosphere 28s ease-in-out infinite alternate;
 }
 
-@keyframes table-light {
-  0% { opacity: .58; transform: translate3d(-4%, -3%, 0) scale(.9); }
-  55% { opacity: .96; }
-  100% { opacity: .66; transform: translate3d(13%, 10%, 0) scale(1.16); }
+.content-canvas > section {
+  position: relative;
+  z-index: 1;
 }
 
-@keyframes woven-drift {
-  to { background-position: 128px 48px, -173px 70px; }
+@keyframes page-atmosphere {
+  0% {
+    opacity: .72;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+  }
+  100% {
+    opacity: 1;
+    background-position: 5vw 5rem, -6vw 9rem, 4vw -7rem, 128px 48px, -173px 70px;
+  }
 }
 .story__index, .services__header > div, .contact__index {
   display: flex;
@@ -366,7 +351,7 @@
 
 .services {
   padding: 110px max(32px, calc((100vw - min(1600px, calc(100vw - 64px))) / 2)) 140px;
-  background: var(--inverse);
+  background: color-mix(in srgb, var(--inverse) 94%, transparent);
   color: var(--inverse-ink);
 }
 .services__header { display: grid; grid-template-columns: 15% 1fr; margin-bottom: 110px; }
@@ -400,7 +385,7 @@
   min-height: 1280px;
   padding: 130px max(32px, calc((100vw - min(1600px, calc(100vw - 64px))) / 2)) 100px;
   position: relative;
-  background: var(--canvas);
+  background: transparent;
   overflow: hidden;
 }
 .gallery__header {
@@ -497,7 +482,7 @@
   position: relative;
   display: grid;
   grid-template-columns: 54% 46%;
-  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
   overflow: hidden;
 }
 .manifesto__ticker {

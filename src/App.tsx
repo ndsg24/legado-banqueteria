@@ -47,11 +47,13 @@ export default function App() {
       />
       <SectionRail activeSection={activeSection} />
       <Hero />
-      <Story />
-      <Services />
-      <Gallery />
-      <Manifesto />
-      <Contact />
+      <div className="content-canvas">
+        <Story />
+        <Services />
+        <Gallery />
+        <Manifesto />
+        <Contact />
+      </div>
       <Footer />
     </div>
   )
