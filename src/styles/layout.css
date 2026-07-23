@@ -117,9 +117,15 @@
   animation: hero-letter-in .9s cubic-bezier(.22, 1, .36, 1) forwards;
 }
 .hero__word span:nth-child(2) {
-  color: transparent;
-  letter-spacing: -.035em;
-  -webkit-text-stroke: 1px var(--ink);
+  color: var(--canvas);
+  letter-spacing: .005em;
+  text-shadow:
+    1px 0 0 var(--ink),
+    -1px 0 0 var(--ink),
+    0 1px 0 var(--ink),
+    0 -1px 0 var(--ink),
+    1px 1px 0 color-mix(in srgb, var(--ink) 58%, transparent),
+    -1px -1px 0 color-mix(in srgb, var(--ink) 58%, transparent);
   animation-delay: 90ms;
 }
 .hero__word span:nth-child(3) { animation-delay: 180ms; }
@@ -236,6 +242,45 @@
   grid-template-columns: 15% 51% 34%;
   position: relative;
   border-top: 1px solid var(--line);
+}
+
+.story,
+.gallery,
+.manifesto,
+.contact {
+  isolation: isolate;
+}
+
+.story::before,
+.gallery::before,
+.manifesto::before,
+.contact::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  width: min(62vw, 920px);
+  aspect-ratio: 1.5;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--gold-hot) 15%, transparent) 0,
+    color-mix(in srgb, var(--gold) 6%, transparent) 38%,
+    transparent 72%
+  );
+  filter: blur(20px);
+  pointer-events: none;
+  animation: table-light 18s ease-in-out infinite alternate;
+}
+
+.story::before { top: 8%; right: -18%; }
+.gallery::before { top: 22%; left: -20%; animation-delay: -7s; }
+.manifesto::before { right: -22%; bottom: -8%; animation-delay: -12s; }
+.contact::before { top: 4%; left: 18%; animation-delay: -4s; }
+
+@keyframes table-light {
+  0% { opacity: .45; transform: translate3d(-3%, -2%, 0) scale(.92); }
+  55% { opacity: .82; }
+  100% { opacity: .5; transform: translate3d(11%, 8%, 0) scale(1.12); }
 }
 .story__index, .services__header > div, .contact__index {
   display: flex;

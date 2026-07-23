@@ -8,48 +8,48 @@ export function useActiveSection() {
   const [activeSection, setActiveSection] = useState<SectionId>('inicio')
 
   useEffect(() => {
+    let frame = 0
+
     const syncHash = () => {
       const hash = window.location.hash.slice(1) as SectionId
       if (sectionIds.includes(hash)) setActiveSection(hash)
     }
 
-    const syncPageEnd = () => {
-      const reachedPageEnd =
-        window.scrollY + window.innerHeight >=
-        document.documentElement.scrollHeight - 24
+    const syncScrollPosition = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        const reachedPageEnd =
+          window.scrollY + window.innerHeight >=
+          document.documentElement.scrollHeight - 24
 
-      if (reachedPageEnd) setActiveSection('contacto')
+        if (reachedPageEnd) {
+          setActiveSection('contacto')
+          return
+        }
+
+        const readingLine = window.innerHeight * 0.42
+        const currentSection = [...sectionIds]
+          .reverse()
+          .find((id) => {
+            const section = document.getElementById(id)
+            return section ? section.getBoundingClientRect().top <= readingLine : false
+          })
+
+        if (currentSection) setActiveSection(currentSection)
+      })
     }
 
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((section): section is HTMLElement => section !== null)
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-
-        const nextSection = visible[0]?.target.id as SectionId | undefined
-        if (nextSection) setActiveSection(nextSection)
-      },
-      {
-        rootMargin: '-22% 0px -54% 0px',
-        threshold: [0, 0.1, 0.35, 0.65],
-      },
-    )
-
-    sections.forEach((section) => observer.observe(section))
     window.addEventListener('hashchange', syncHash)
-    window.addEventListener('scroll', syncPageEnd, { passive: true })
+    window.addEventListener('scroll', syncScrollPosition, { passive: true })
+    window.addEventListener('resize', syncScrollPosition)
     syncHash()
-    syncPageEnd()
+    syncScrollPosition()
 
     return () => {
-      observer.disconnect()
+      cancelAnimationFrame(frame)
       window.removeEventListener('hashchange', syncHash)
-      window.removeEventListener('scroll', syncPageEnd)
+      window.removeEventListener('scroll', syncScrollPosition)
+      window.removeEventListener('resize', syncScrollPosition)
     }
   }, [])
 
