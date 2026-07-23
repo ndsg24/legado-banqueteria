@@ -119,7 +119,7 @@
   .hero__statement > a { width: 46px; height: 46px; padding: 0; display: grid; place-items: center; border: 1px solid var(--ink); border-radius: 50%; }
   .hero__statement > a span { display: none; }
   .hero__scroll { display: none; }
-  .hero__gold-orbit { width: 92%; height: 22%; left: -24%; bottom: 17%; }
+  .hero__gold-orbit { width: 100%; height: 16%; left: 0; bottom: 17%; }
 
   .story { min-height: auto; padding: 90px 0 110px; display: block; }
   .story__index, .contact__index { margin-bottom: 62px; position: static; }
