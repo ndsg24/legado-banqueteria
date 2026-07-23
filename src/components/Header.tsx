@@ -10,8 +10,10 @@ type HeaderProps = {
 }
 
 const navigation = [
+  { href: '#inicio', id: 'inicio', label: 'Inicio' },
   { href: '#historia', id: 'historia', label: 'Origen' },
   { href: '#servicios', id: 'servicios', label: 'La mesa' },
+  { href: '#galeria', id: 'galeria', label: 'Galería' },
   { href: '#manera', id: 'manera', label: 'Nuestra manera' },
   { href: '#contacto', id: 'contacto', label: 'Conversemos' },
 ] as const

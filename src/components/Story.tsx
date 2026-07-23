@@ -3,7 +3,7 @@ export function Story() {
     <section className="story" id="historia">
       <div className="story__index">
         <span>El origen</span>
-        <strong>01 — 03</strong>
+        <strong>01 — 04</strong>
       </div>
       <div className="story__title">
         <p>Esto no comenzó<br />como un negocio.</p>

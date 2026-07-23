@@ -3,7 +3,7 @@ export function Contact() {
     <section className="contact" id="contacto">
       <div className="contact__index">
         <span>Tu celebración</span>
-        <strong>03 — 03</strong>
+        <strong>04 — 04</strong>
       </div>
       <p className="contact__pretitle">Si ya sabes a quién quieres invitar,</p>
       <h2>nosotros sabemos<br /><em>cómo reunirlos.</em></h2>

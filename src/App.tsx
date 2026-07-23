@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
+import { Gallery } from './components/Gallery'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { Manifesto } from './components/Manifesto'
-import { ParallaxDivider } from './components/ParallaxDivider'
 import { SectionRail } from './components/SectionRail'
 import { Services } from './components/Services'
 import { Story } from './components/Story'
@@ -28,6 +28,14 @@ export default function App() {
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0a0a09' : '#f2f2ef')
   }, [theme])
 
+  useEffect(() => {
+    const initialHash = window.location.hash
+    if (!initialHash) return
+
+    const initialTarget = document.querySelector<HTMLElement>(initialHash)
+    initialTarget?.scrollIntoView()
+  }, [])
+
   return (
     <div className="site-shell">
       <Header
@@ -38,9 +46,8 @@ export default function App() {
       <SectionRail activeSection={activeSection} />
       <Hero />
       <Story />
-      <ParallaxDivider phrase="La sobremesa también es parte del menú." detail="Tiempo para compartir / sin apuro" />
       <Services />
-      <ParallaxDivider phrase="Preparar. Servir. Volver a llenar." detail="El gesto que se hereda" variant="dish" />
+      <Gallery />
       <Manifesto />
       <Contact />
       <Footer />

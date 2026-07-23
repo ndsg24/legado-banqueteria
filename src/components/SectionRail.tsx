@@ -4,6 +4,7 @@ const sections: Array<{ id: SectionId; label: string }> = [
   { id: 'inicio', label: 'Portada' },
   { id: 'historia', label: 'Origen' },
   { id: 'servicios', label: 'La mesa' },
+  { id: 'galeria', label: 'Galería' },
   { id: 'manera', label: 'Nuestra manera' },
   { id: 'contacto', label: 'Conversemos' },
 ]

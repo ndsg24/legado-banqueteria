@@ -22,5 +22,6 @@ Antes de publicar como sitio definitivo, reemplazar:
 
 - Hero: [Unsplash / Stefan Vladimirov](https://unsplash.com/photos/people-eating-on-the-table-lot-74d2a71d0826)
 - Detalle: [Unsplash](https://unsplash.com/photos/1617295097082-96897a3d23ad)
+- Galería: fotografías provisionales de [Unsplash](https://unsplash.com/), incluyendo trabajos de Fotógrafo Samuel Cruz, Mady Events, Vidit Goswami y Jennifer Kalenberg.
 
 Se usan como material inicial y pueden reemplazarse desde `public/images`.

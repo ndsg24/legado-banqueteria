@@ -22,7 +22,7 @@ export function Services() {
       <div className="services__header">
         <div>
           <span>La mesa</span>
-          <strong>02 — 03</strong>
+          <strong>02 — 04</strong>
         </div>
         <h2>No hacemos eventos.<br /><em>Vestimos recuerdos.</em></h2>
       </div>
