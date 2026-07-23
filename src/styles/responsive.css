@@ -74,12 +74,16 @@
     bottom: 24px;
     display: flex;
     align-items: center;
-    color: transparent;
-    font: 700 min(22vw, 11.2dvh)/.72 var(--display);
-    letter-spacing: -.1em;
+    color: var(--canvas);
+    font: 700 min(22vw, 11.2dvh)/.78 var(--display);
+    letter-spacing: -.035em;
     writing-mode: vertical-rl;
     text-orientation: sideways;
-    -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 9%, transparent);
+    text-shadow:
+      1px 0 0 color-mix(in srgb, var(--ink) 11%, transparent),
+      -1px 0 0 color-mix(in srgb, var(--ink) 11%, transparent),
+      0 1px 0 color-mix(in srgb, var(--ink) 11%, transparent),
+      0 -1px 0 color-mix(in srgb, var(--ink) 11%, transparent);
     transform: rotate(180deg);
     pointer-events: none;
     overflow: hidden;
