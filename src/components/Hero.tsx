@@ -15,17 +15,15 @@ export function Hero() {
         <span data-letter="DO">DO</span>
       </div>
 
-      <m.div
-        className="hero__echoes"
-        aria-hidden="true"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 12, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
-      >
-        <span>LEGADO</span>
-        <span>LEGADO</span>
-        <span>LEGADO</span>
-        <span>LEGADO</span>
-      </m.div>
+      <div className="hero__echoes" aria-hidden="true">
+        {[0, 1, 2].map((echo) => (
+          <div className="hero__echo-row" key={echo}>
+            <span>LE</span>
+            <span>GA</span>
+            <span>DO</span>
+          </div>
+        ))}
+      </div>
 
       <figure className="hero__memory hero__memory--main">
         <m.img
