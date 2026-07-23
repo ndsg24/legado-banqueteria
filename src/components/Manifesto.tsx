@@ -1,6 +1,6 @@
 export function Manifesto() {
   return (
-    <section className="manifesto">
+    <section className="manifesto" id="manera">
       <div className="manifesto__ticker" aria-hidden="true">
         <span>Casero no significa simple</span>
         <i>✦</i>

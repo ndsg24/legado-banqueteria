@@ -4,8 +4,11 @@ import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { Manifesto } from './components/Manifesto'
+import { ParallaxDivider } from './components/ParallaxDivider'
+import { SectionRail } from './components/SectionRail'
 import { Services } from './components/Services'
 import { Story } from './components/Story'
+import { useActiveSection } from './hooks/useActiveSection'
 
 type Theme = 'light' | 'dark'
 
@@ -17,6 +20,7 @@ const getInitialTheme = (): Theme => {
 
 export default function App() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
+  const activeSection = useActiveSection()
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -26,10 +30,17 @@ export default function App() {
 
   return (
     <div className="site-shell">
-      <Header theme={theme} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} />
+      <Header
+        activeSection={activeSection}
+        theme={theme}
+        onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')}
+      />
+      <SectionRail activeSection={activeSection} />
       <Hero />
       <Story />
+      <ParallaxDivider phrase="La sobremesa también es parte del menú." detail="Tiempo para compartir / sin apuro" />
       <Services />
+      <ParallaxDivider phrase="Preparar. Servir. Volver a llenar." detail="El gesto que se hereda" variant="dish" />
       <Manifesto />
       <Contact />
       <Footer />

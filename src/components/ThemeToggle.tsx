@@ -8,8 +8,12 @@ export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
 
   return (
     <button className="theme-toggle" type="button" onClick={onToggle} aria-label={`Cambiar a tema ${nextTheme}`}>
-      <span aria-hidden="true">{theme === 'light' ? 'Luz' : 'Noche'}</span>
-      <i aria-hidden="true" />
+      <span className="theme-toggle__label" aria-hidden="true">{theme === 'light' ? 'Día' : 'Noche'}</span>
+      <span className="theme-toggle__orbit" aria-hidden="true">
+        <i className="theme-toggle__sun">✦</i>
+        <i className="theme-toggle__moon">◐</i>
+        <i className="theme-toggle__bead" />
+      </span>
     </button>
   )
 }

@@ -34,7 +34,10 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
 body {
   min-width: 320px;
   margin: 0;
@@ -49,8 +52,11 @@ body::before {
   inset: 0;
   z-index: 30;
   pointer-events: none;
-  opacity: .035;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: .12;
+  background:
+    repeating-linear-gradient(92deg, transparent 0 3px, rgba(88, 79, 58, .12) 3px 4px, transparent 4px 9px),
+    repeating-linear-gradient(0deg, transparent 0 17px, rgba(255, 255, 255, .04) 17px 18px);
+  mix-blend-mode: soft-light;
 }
 a { color: inherit; text-decoration: none; }
 button { color: inherit; font: inherit; }
@@ -59,3 +65,12 @@ img { display: block; width: 100%; }
 :focus-visible { outline: 2px solid var(--gold-hot); outline-offset: 5px; }
 h1, h2, h3, p, blockquote, figure { margin-top: 0; }
 em { color: var(--gold); font-family: var(--serif); font-weight: 400; }
+
+#inicio,
+#historia,
+#servicios,
+#manera,
+#contacto {
+  scroll-margin-top: 104px;
+  scroll-snap-align: start;
+}
