@@ -222,4 +222,5 @@
     animation-duration: .01ms !important;
   }
   html { scroll-snap-type: none; }
+  .reveal-item { opacity: 1; transform: none; }
 }

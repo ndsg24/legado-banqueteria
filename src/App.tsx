@@ -9,6 +9,7 @@ import { SectionRail } from './components/SectionRail'
 import { Services } from './components/Services'
 import { Story } from './components/Story'
 import { useActiveSection } from './hooks/useActiveSection'
+import { useScrollReveal } from './hooks/useScrollReveal'
 
 type Theme = 'light' | 'dark'
 
@@ -21,6 +22,7 @@ const getInitialTheme = (): Theme => {
 export default function App() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
   const activeSection = useActiveSection()
+  useScrollReveal()
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme

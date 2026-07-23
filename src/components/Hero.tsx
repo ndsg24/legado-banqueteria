@@ -14,8 +14,8 @@ export function Hero() {
       </div>
 
       <figure className="hero__memory hero__memory--main">
-        <img src={`${import.meta.env.BASE_URL}images/hero-table.jpg`} alt="Mesa abundante con preparaciones caseras para compartir" />
-        <figcaption>Una mesa. Muchas historias.</figcaption>
+        <img src={`${import.meta.env.BASE_URL}images/hero-family.jpg`} alt="Familia compartiendo una comida casera alrededor de la mesa" />
+        <figcaption>Siempre hay lugar para alguien más.</figcaption>
       </figure>
 
       <div className="hero__statement">

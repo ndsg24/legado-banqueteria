@@ -20,7 +20,7 @@ Antes de publicar como sitio definitivo, reemplazar:
 
 ## Fotografías de muestra
 
-- Hero: [Unsplash / Stefan Vladimirov](https://unsplash.com/photos/people-eating-on-the-table-lot-74d2a71d0826)
+- Hero: [Pexels / August de Richelieu](https://www.pexels.com/photo/family-having-dinner-together-4262175/)
 - Detalle: [Unsplash](https://unsplash.com/photos/1617295097082-96897a3d23ad)
 - Galería: fotografías provisionales de [Unsplash](https://unsplash.com/), incluyendo trabajos de Fotógrafo Samuel Cruz, Mady Events, Vidit Goswami y Jennifer Kalenberg.
 
