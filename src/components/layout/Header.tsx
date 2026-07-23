@@ -1,55 +1,26 @@
-import { useEffect, useRef, useState } from 'react'
-import type { SectionId } from '../hooks/useActiveSection'
+import { navigationItems } from '../../config/navigation'
+import { useMobileMenu } from '../../hooks/useMobileMenu'
+import type { SectionId } from '../../types/navigation'
+import type { Theme } from '../../types/theme'
 import { Brand } from './Brand'
 import { ThemeToggle } from './ThemeToggle'
 
 type HeaderProps = {
   activeSection: SectionId
-  theme: 'light' | 'dark'
+  theme: Theme
   onThemeToggle: () => void
 }
 
-const navigation = [
-  { href: '#inicio', id: 'inicio', label: 'Inicio' },
-  { href: '#historia', id: 'historia', label: 'Origen' },
-  { href: '#servicios', id: 'servicios', label: 'La mesa' },
-  { href: '#galeria', id: 'galeria', label: 'Galería' },
-  { href: '#manera', id: 'manera', label: 'Nuestra manera' },
-  { href: '#contacto', id: 'contacto', label: 'Conversemos' },
-] as const
-
 export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-  const triggerRef = useRef<HTMLButtonElement>(null)
-
-  useEffect(() => {
-    if (!menuOpen) return
-
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    menuRef.current?.focus()
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      setMenuOpen(false)
-      triggerRef.current?.focus()
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [menuOpen])
+  const { closeMenu, isOpen, menuRef, toggleMenu, triggerRef } = useMobileMenu()
 
   return (
     <>
-      <header className={`site-header${menuOpen ? ' menu-open' : ''}`}>
+      <header className={`site-header${isOpen ? ' menu-open' : ''}`}>
         <div className="site-header__inner">
           <Brand />
           <nav className="desktop-nav" aria-label="Navegación principal">
-            {navigation.map((item) => (
+            {navigationItems.map((item) => (
               <a className={activeSection === item.id ? 'active' : undefined} href={item.href} key={item.id}>
                 {item.label}
               </a>
@@ -60,10 +31,10 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
             <button
               className="menu-toggle"
               type="button"
-              aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-              aria-expanded={menuOpen}
+              aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={isOpen}
               aria-controls="mobile-menu"
-              onClick={() => setMenuOpen((current) => !current)}
+              onClick={toggleMenu}
               ref={triggerRef}
             >
               <span />
@@ -73,20 +44,20 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
         </div>
       </header>
       <div
-        className={`mobile-menu${menuOpen ? ' open' : ''}`}
+        className={`mobile-menu${isOpen ? ' open' : ''}`}
         id="mobile-menu"
-        aria-hidden={!menuOpen}
+        aria-hidden={!isOpen}
         ref={menuRef}
         tabIndex={-1}
       >
         <p>Elige un capítulo</p>
         <nav aria-label="Navegación móvil">
-          {navigation.map((item, index) => (
+          {navigationItems.map((item, index) => (
             <a
               className={activeSection === item.id ? 'active' : undefined}
               href={item.href}
               key={item.id}
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
             >
               <small>{String(index + 1).padStart(2, '0')}</small>
               <span>{item.label}</span>

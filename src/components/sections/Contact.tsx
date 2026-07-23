@@ -1,3 +1,5 @@
+import { siteConfig } from '../../config/site'
+
 export function Contact() {
   return (
     <section className="contact" id="contacto">
@@ -9,10 +11,10 @@ export function Contact() {
       <h2>nosotros sabemos<br /><em>cómo reunirlos.</em></h2>
       <p>Fecha, número de invitados y una idea. Con eso basta para comenzar.</p>
       <div className="contact__actions">
-        <a className="button button--gold" href="https://wa.me/56900000000?text=Hola%20Legado,%20quiero%20cotizar%20una%20celebración" target="_blank" rel="noreferrer">
+        <a className="button button--gold" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
           <span>Conversemos por WhatsApp</span><i>↗</i>
         </a>
-        <a href="mailto:hola@legadobanqueteria.cl">hola@legadobanqueteria.cl</a>
+        <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
       </div>
     </section>
   )

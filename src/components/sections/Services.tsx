@@ -1,20 +1,4 @@
-const services = [
-  {
-    title: 'Matrimonios',
-    copy: 'Un menú que acompaña el día completo, sin quitarle protagonismo a lo importante.',
-    note: 'Celebrar',
-  },
-  {
-    title: 'Encuentros familiares',
-    copy: 'Bautizos, aniversarios y cumpleaños con esa comida que hace que todos se queden un rato más.',
-    note: 'Compartir',
-  },
-  {
-    title: 'Eventos de empresa',
-    copy: 'Almuerzos y jornadas resueltas con puntualidad, calidez y comida de verdad.',
-    note: 'Reunir',
-  },
-]
+import { services } from '../../config/content'
 
 export function Services() {
   return (

@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react'
+import { sectionIds, type SectionId } from '../types/navigation'
 
-const sectionIds = ['inicio', 'historia', 'servicios', 'galeria', 'manera', 'contacto'] as const
+const reversedSectionIds = [...sectionIds].reverse()
+const sectionIdSet = new Set<string>(sectionIds)
 
-export type SectionId = (typeof sectionIds)[number]
+function isSectionId(value: string): value is SectionId {
+  return sectionIdSet.has(value)
+}
 
 export function useActiveSection() {
   const [activeSection, setActiveSection] = useState<SectionId>('inicio')
@@ -11,8 +15,8 @@ export function useActiveSection() {
     let frame = 0
 
     const syncHash = () => {
-      const hash = window.location.hash.slice(1) as SectionId
-      if (sectionIds.includes(hash)) setActiveSection(hash)
+      const hash = window.location.hash.slice(1)
+      if (isSectionId(hash)) setActiveSection(hash)
     }
 
     const syncScrollPosition = () => {
@@ -28,9 +32,7 @@ export function useActiveSection() {
         }
 
         const readingLine = window.innerHeight * 0.42
-        const currentSection = [...sectionIds]
-          .reverse()
-          .find((id) => {
+        const currentSection = reversedSectionIds.find((id) => {
             const section = document.getElementById(id)
             return section ? section.getBoundingClientRect().top <= readingLine : false
           })

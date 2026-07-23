@@ -1,11 +1,12 @@
 import { m } from 'framer-motion'
+import { siteConfig } from '../../config/site'
 
 export function Hero() {
   return (
     <main id="inicio" className="hero">
       <div className="hero__meta">
         <p>Banquetería familiar</p>
-        <p>Concepción, Chile</p>
+        <p>{siteConfig.location}</p>
         <p>Desde nuestra casa</p>
       </div>
 

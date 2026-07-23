@@ -1,27 +1,55 @@
 # Legado Banquetería
 
-Landing page para una banquetería familiar enfocada en cocina casera de alta calidad.
+Landing editorial para una banquetería familiar de Concepción, construida con React, TypeScript, Vite y Framer Motion.
 
-## Desarrollo
+## Comandos
 
 ```bash
 npm install
 npm run dev
+npm run check
+npm run build
 ```
+
+`npm run check` ejecuta typecheck, lint y build. Es el control requerido antes de publicar.
+
+## Arquitectura
+
+```text
+src/
+├── app/                    # Composición raíz y proveedores globales
+├── components/
+│   ├── decorative/        # Elementos visuales sin contenido
+│   ├── layout/            # Header, footer y navegación transversal
+│   └── sections/          # Secciones editoriales de la landing
+├── config/                 # Navegación, contenido y datos del sitio
+├── hooks/                  # Comportamiento reutilizable del navegador
+├── styles/                 # Tokens, layout y reglas responsive
+└── types/                  # Contratos compartidos
+```
+
+### Criterios
+
+- `app/` compone; no contiene detalles de interacción.
+- Las secciones no conocen el estado global.
+- La navegación se define una sola vez en `config/navigation.ts`.
+- Los datos reemplazables viven en `config/`, no dentro del JSX.
+- Los hooks encapsulan efectos del navegador y limpian sus listeners.
+- Se usan imports directos para conservar un bundle analizable.
 
 ## Contenido pendiente
 
-Antes de publicar como sitio definitivo, reemplazar:
+Antes de la publicación definitiva:
 
-- Número de WhatsApp en `src/components/Contact.tsx`.
-- Correo de contacto.
-- Fotografías de muestra por fotografías propias.
-- Textos específicos de servicios, ubicación y trayectoria.
+- Reemplazar el número de WhatsApp en `src/config/site.ts`.
+- Confirmar el correo de contacto.
+- Sustituir las fotografías referenciales por material propio.
+- Revisar textos finales de servicios, ubicación y trayectoria.
 
 ## Fotografías de muestra
 
 - Hero: [Pexels / August de Richelieu](https://www.pexels.com/photo/family-having-dinner-together-4262175/)
 - Detalle: [Unsplash](https://unsplash.com/photos/1617295097082-96897a3d23ad)
-- Galería: fotografías provisionales de [Unsplash](https://unsplash.com/), incluyendo trabajos de Fotógrafo Samuel Cruz, Mady Events, Vidit Goswami y Jennifer Kalenberg.
+- Galería: material provisional de Unsplash.
 
-Se usan como material inicial y pueden reemplazarse desde `public/images`.
+Los archivos públicos se reemplazan desde `public/images` sin modificar los componentes.

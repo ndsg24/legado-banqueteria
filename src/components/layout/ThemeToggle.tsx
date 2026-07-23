@@ -1,5 +1,7 @@
+import type { Theme } from '../../types/theme'
+
 type ThemeToggleProps = {
-  theme: 'light' | 'dark'
+  theme: Theme
   onToggle: () => void
 }
 
