@@ -224,4 +224,5 @@
   }
   html { scroll-snap-type: none; }
   .reveal-item { opacity: 1; transform: none; }
+  .hero__gold-orbit-shine { display: none; }
 }

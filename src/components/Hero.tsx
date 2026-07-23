@@ -53,12 +53,29 @@ export function Hero() {
 
       <div className="hero__gold-orbit" aria-hidden="true">
         <svg viewBox="0 0 800 160" preserveAspectRatio="none">
+          <defs>
+            <linearGradient
+              id="orbit-shimmer"
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              y1="0"
+              x2="180"
+              y2="0"
+            >
+              <stop offset="0" stopColor="var(--gold-hot)" stopOpacity="0" />
+              <stop offset=".42" stopColor="var(--gold-hot)" stopOpacity=".18" />
+              <stop offset=".58" stopColor="var(--gold-hot)" stopOpacity="1" />
+              <stop offset="1" stopColor="var(--gold-hot)" stopOpacity="0" />
+              <animate
+                attributeName="gradientTransform"
+                values="translate(-220 0); translate(1020 0)"
+                dur="7.5s"
+                repeatCount="indefinite"
+              />
+            </linearGradient>
+          </defs>
           <path className="hero__gold-orbit-base" d="M-40 124C155 22 645 22 840 124" />
-          <path
-            className="hero__gold-orbit-shine"
-            pathLength="1000"
-            d="M-40 124C155 22 645 22 840 124"
-          />
+          <path className="hero__gold-orbit-shine" d="M-40 124C155 22 645 22 840 124" />
         </svg>
       </div>
     </main>

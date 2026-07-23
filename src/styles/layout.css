@@ -64,7 +64,7 @@
 .menu-toggle, .mobile-menu { display: none; }
 
 .hero {
-  --hero-gutter: max(32px, calc((100vw - 1600px) / 2));
+  --hero-gutter: clamp(32px, 3.125vw, 80px);
   width: 100%;
   height: calc(100svh - 78px);
   min-height: 0;
@@ -339,13 +339,11 @@
   opacity: .72;
 }
 .hero__gold-orbit-shine {
-  stroke: var(--gold-hot);
+  stroke: url('#orbit-shimmer');
   stroke-width: 2;
   stroke-linecap: round;
-  stroke-dasharray: 64 1064;
-  opacity: 0;
+  opacity: .9;
   filter: drop-shadow(0 0 4px color-mix(in srgb, var(--gold-hot) 72%, transparent));
-  animation: orbit-shine 7.5s cubic-bezier(.45, 0, .2, 1) infinite;
 }
 
 @keyframes hero-letter-in {
@@ -379,14 +377,6 @@
   68% { right: -34%; opacity: 0; }
   100% { right: -34%; opacity: 0; }
 }
-@keyframes orbit-shine {
-  0%, 28% { stroke-dashoffset: 64; opacity: 0; }
-  34% { opacity: .22; }
-  43% { opacity: .9; }
-  60% { stroke-dashoffset: -1000; opacity: 0; }
-  100% { stroke-dashoffset: -1000; opacity: 0; }
-}
-
 .story {
   width: var(--page);
   min-height: 880px;
