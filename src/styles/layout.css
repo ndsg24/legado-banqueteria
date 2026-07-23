@@ -279,13 +279,21 @@
 }
 .hero__statement > a::after {
   content: '';
-  width: 42%;
-  height: 1px;
+  width: 34%;
+  height: 2px;
   position: absolute;
   right: 100%;
   bottom: -1px;
-  background: linear-gradient(90deg, transparent, var(--gold-hot), transparent);
-  animation: cta-trace 3.6s ease-in-out infinite;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--gold-hot) 40%, transparent) 24%,
+    var(--gold-hot) 55%,
+    color-mix(in srgb, #fff 68%, var(--gold-hot)) 64%,
+    transparent
+  );
+  box-shadow: 0 0 7px color-mix(in srgb, var(--gold-hot) 42%, transparent);
+  animation: cta-trace 4.8s cubic-bezier(.45, 0, .2, 1) infinite;
 }
 .hero__statement > a span,
 .hero__statement > a i { position: relative; z-index: 1; }
@@ -325,10 +333,21 @@
 .hero__gold-orbit svg { width: 100%; height: 100%; overflow: visible; }
 .hero__gold-orbit path {
   fill: none;
+  vector-effect: non-scaling-stroke;
+}
+.hero__gold-orbit-base {
   stroke: var(--gold);
   stroke-width: 1.1;
   opacity: .72;
-  vector-effect: non-scaling-stroke;
+}
+.hero__gold-orbit-shine {
+  stroke: color-mix(in srgb, #fff 62%, var(--gold-hot));
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 58 942;
+  opacity: 0;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--gold-hot) 72%, transparent));
+  animation: orbit-shine 7.5s ease-in-out infinite;
 }
 
 @keyframes hero-letter-in {
@@ -356,10 +375,18 @@
   84% { opacity: 0; }
 }
 @keyframes cta-trace {
-  0%, 18% { right: 100%; opacity: 0; }
-  30% { opacity: 1; }
-  72% { opacity: 1; }
-  84%, 100% { right: -42%; opacity: 0; }
+  0%, 38% { right: 100%; opacity: 0; }
+  44% { opacity: .25; }
+  55% { opacity: 1; }
+  68% { right: -34%; opacity: 0; }
+  100% { right: -34%; opacity: 0; }
+}
+@keyframes orbit-shine {
+  0%, 28% { stroke-dashoffset: 90; opacity: 0; }
+  34% { opacity: .22; }
+  43% { opacity: .9; }
+  58% { stroke-dashoffset: -1010; opacity: 0; }
+  100% { stroke-dashoffset: -1010; opacity: 0; }
 }
 
 .story {

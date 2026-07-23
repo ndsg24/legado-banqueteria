@@ -53,7 +53,12 @@ export function Hero() {
 
       <div className="hero__gold-orbit" aria-hidden="true">
         <svg viewBox="0 0 800 160" preserveAspectRatio="none">
-          <path d="M-40 124C155 22 645 22 840 124" />
+          <path className="hero__gold-orbit-base" d="M-40 124C155 22 645 22 840 124" />
+          <path
+            className="hero__gold-orbit-shine"
+            pathLength="1000"
+            d="M-40 124C155 22 645 22 840 124"
+          />
         </svg>
       </div>
     </main>
