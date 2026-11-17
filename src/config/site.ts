@@ -1,6 +1,6 @@
 export const siteConfig = {
   brandName: 'Legado',
-  email: 'hola@legadobanqueteria.cl',
+  email: 'legadobanqueteria@gmail.com',
   location: 'Concepción, Chile',
   themeStorageKey: 'legado-theme',
   whatsappUrl:

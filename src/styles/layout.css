@@ -80,10 +80,7 @@
   padding-inline: var(--hero-gutter);
   position: relative;
   isolation: isolate;
-  background:
-    radial-gradient(circle, color-mix(in srgb, var(--ink) 8%, transparent) 0 .7px, transparent .9px),
-    var(--canvas);
-  background-size: 9px 9px, auto;
+
 }
 
 .section-rail {
@@ -733,3 +730,11 @@ footer {
 }
 footer > p { margin: 0; color: var(--muted); font: italic .85rem/1.3 var(--serif); }
 footer > div { justify-self: end; display: flex; gap: 27px; color: var(--muted); font-size: .57rem; letter-spacing: .06em; text-transform: uppercase; }
+
+/* Shared dotted canvas used by the home hero and the independent menu. */
+.site-texture {
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--ink) 8%, transparent) 0 .7px, transparent .9px),
+    var(--canvas);
+  background-size: 9px 9px, auto;
+}

@@ -4,7 +4,7 @@ import { EditorialArrow } from '../ui/EditorialArrow'
 
 export function Hero() {
   return (
-    <section id="inicio" className="hero" aria-labelledby="hero-title">
+    <section id="inicio" className="hero site-texture" aria-labelledby="hero-title">
       <div className="hero__meta">
         <p>Banquetería familiar</p>
         <p>{siteConfig.location}</p>

@@ -32,7 +32,7 @@ Cocina casera para matrimonios, encuentros y celebraciones.
 |---|---|
 | UI | React, TypeScript |
 | Estilos | CSS con design tokens (`tokens.css`), layout y reglas responsive separadas |
-| Animación | Framer Motion |
+| Animación | Framer Motion en la landing; GSAP y Three.js en la carta |
 | Build | Vite |
 | Calidad | ESLint, typescript-eslint, `tsc` |
 | CI/CD | GitHub Actions → GitHub Pages |
@@ -63,6 +63,9 @@ src/
 - Se usan imports directos para conservar un bundle analizable.
 
 ## 🚀 Desarrollo local
+
+Usa Node.js 22, la misma versión principal que utiliza GitHub Actions. Si tienes
+`nvm`, ejecuta `nvm install` y `nvm use` desde la raíz del proyecto.
 
 ```bash
 npm install
@@ -97,3 +100,53 @@ Las imágenes se reemplazan desde `public/images` sin modificar los componentes.
 Hecho por **[Nelson Daniel Silva Gutiérrez](https://github.com/ndsg24)** · [LinkedIn](https://www.linkedin.com/in/nelson-daniel-dev/) · [Portafolio](https://ndsg24.github.io/portfolio/)
 
 </div>
+
+## Carta interactiva
+
+La página independiente `carta.html` reúne tres cartas: Cóctel & bocados (12 productos), Menú & celebración (49)
+y Bebestibles & bar (24). Aperitivos, Bajativos y Bar pertenecen a Bebestibles. Los contratos están
+ en `src/types/catalog.ts`, los productos y precios en `src/config/catalog.ts`,
+ el estado de exploración y favoritos en `src/hooks/useCatalog.ts` y las piezas
+ visuales en `src/components/catalog/`. Las fotografías de la carta
+ están optimizadas en `public/images/catalog/`; sus rutas respetan la base de GitHub Pages.
+
+Los favoritos se conservan durante la visita al cambiar de categoría. La consulta
+ abre el cliente de correo con la selección; no envía mensajes automáticamente.
+ Los precios del cóctel son por unidad en CLP. Banquetería requiere cotización.
+ La página de promociones del catálogo repite los dulces sin condiciones distintas,
+ por lo que no se presenta como una oferta adicional.
+
+El selector de categorías se presenta como un recorrido horizontal ilustrado,
+encapsulado en `CatalogCategoryPicker` y `CategoryMotif`. Sus botones funcionan
+con teclado y declaran su estado mediante `aria-pressed`.
+
+Once imágenes de cóctel conservan la transparencia nativa y se exportan a WebP
+sin pérdida, sin añadir fondos ni ampliar los originales. Las 73 imágenes de
+banquetería son recreaciones referenciales generadas con ImageGen, con fondo
+transparente y versiones WebP de 600 y hasta 1200 píxeles. `CatalogCard` utiliza
+`srcSet`, `sizes` y carga diferida para servir una imagen acorde a cada pantalla.
+Los prompts están en `docs/catalog-image-prompts.json`; el inventario, las dimensiones
+y las huellas SHA-256 de los archivos están en `docs/catalog-generated-assets.json`.
+
+La escala óptica se normaliza con `imageBounds`, conservando las proporciones de
+cada producto. `CatalogProductGrid` mantiene un único lienzo WebGL compartido:
+`CatalogScene` renderiza cada fotografía con scissor, materiales GLSL y texturas
+sRGB. GSAP coordina el revelado con máscara, el enfoque, el barrido de luz y la
+entrada de los textos. Al explorar un producto, el resto se suaviza temporalmente.
+`catalogAtmosphere` añade vapor a platos calientes, partículas a preparaciones
+frescas y burbujas con reflejos de hielo facetado a bebidas, con shaders
+procedurales y un cursor propio. El vapor y las burbujas tienen mayor presencia
+visual sin ocultar la fotografía.
+La atmósfera solo se anima mientras el producto explorado está visible; se apaga
+al salir y respeta el movimiento reducido.
+No hay balanceo continuo ni duplicación de fotografías para simular volumen.
+
+Three.js se carga de forma diferida, fuera del bundle de la landing. El renderizado
+se solicita solo al cargar, redimensionar, entrar en pantalla o animar. Se liberan
+texturas, materiales, observadores y timelines al cambiar de categoría o desmontar.
+La preferencia de movimiento reducido muestra los productos sin revelado; si WebGL
+no está disponible, se conservan las imágenes HTML accesibles. El fondo usa
+la misma textura punteada de la portada mediante la clase compartida `site-texture`, en ambos temas.
+
+El canapé se restauró con ImageGen para completar el borde del plato; su original
+se conserva como referencia. La versión activa usa archivos con sufijo `v2`.

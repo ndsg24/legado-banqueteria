@@ -1,12 +1,14 @@
 import { Brand } from './Brand'
 
-export function Footer() {
+type FooterProps = { homeHref?: string; topHref?: string }
+
+export function Footer({ homeHref = '#inicio', topHref = '#inicio' }: FooterProps) {
   return (
     <footer>
-      <Brand />
+      <Brand href={homeHref} />
       <p>Comida hecha por personas,<br />para personas.</p>
       <div>
-        <a href="#inicio">Volver arriba ↑</a>
+        <a href={topHref}>Volver arriba ↑</a>
         <span>© {new Date().getFullYear()} Legado</span>
       </div>
     </footer>

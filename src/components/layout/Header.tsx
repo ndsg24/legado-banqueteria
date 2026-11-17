@@ -7,22 +7,35 @@ import { ThemeToggle } from './ThemeToggle'
 import { EditorialArrow } from '../ui/EditorialArrow'
 
 type HeaderProps = {
-  activeSection: SectionId
+  activeSection: SectionId | 'carta'
   theme: Theme
   onThemeToggle: () => void
 }
 
 export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
-  const { isOpen, menuRef, navigateToSection, toggleMenu, triggerRef } = useMobileMenu()
+  const { closeMenu, isOpen, menuRef, navigateToSection, toggleMenu, triggerRef } = useMobileMenu()
+
+  const isCatalogPage = activeSection === 'carta'
+  const items = navigationItems.map((item) => ({
+    ...item,
+    href: isCatalogPage && item.href.startsWith('#')
+      ? `${import.meta.env.BASE_URL}${item.href}`
+      : item.href,
+  }))
 
   return (
     <>
       <header className={`site-header${isOpen ? ' menu-open' : ''}`}>
         <div className="site-header__inner">
-          <Brand />
+          <Brand href={isCatalogPage ? `${import.meta.env.BASE_URL}#inicio` : '#inicio'} />
           <nav className="desktop-nav" aria-label="Navegación principal">
-            {navigationItems.map((item) => (
-              <a className={activeSection === item.id ? 'active' : undefined} href={item.href} key={item.id}>
+            {items.map((item) => (
+              <a
+                className={activeSection === item.id ? 'active' : undefined}
+                href={item.href}
+                aria-current={activeSection === item.id ? (isCatalogPage ? 'page' : 'location') : undefined}
+                key={item.id}
+              >
                 {item.label}
               </a>
             ))}
@@ -53,14 +66,18 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
       >
         <p>Elige un capítulo</p>
         <nav aria-label="Navegación móvil">
-          {navigationItems.map((item, index) => (
+          {items.map((item, index) => (
             <a
               className={activeSection === item.id ? 'active' : undefined}
               href={item.href}
               key={item.id}
               onClick={(event) => {
-                event.preventDefault()
-                navigateToSection(item.href)
+                if (item.href.startsWith('#')) {
+                  event.preventDefault()
+                  navigateToSection(item.href)
+                } else {
+                  closeMenu()
+                }
               }}
             >
               <small>{String(index + 1).padStart(2, '0')}</small>

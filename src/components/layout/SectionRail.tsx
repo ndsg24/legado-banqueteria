@@ -1,4 +1,4 @@
-import { navigationItems } from '../../config/navigation'
+import { sectionNavigationItems } from '../../config/navigation'
 import type { SectionId } from '../../types/navigation'
 
 type SectionRailProps = {
@@ -9,7 +9,7 @@ export function SectionRail({ activeSection }: SectionRailProps) {
   return (
     <nav className="section-rail" aria-label="Navegación por capítulos">
       <span className="section-rail__line" aria-hidden="true" />
-      {navigationItems.map((section, index) => {
+      {sectionNavigationItems.map((section, index) => {
         const isActive = activeSection === section.id
 
         return (
