@@ -64,6 +64,13 @@ src/
 
 ## 🚀 Desarrollo local
 
+La navegación entre Inicio, La carta y Tu mesa usa `PageTransition`, con una
+campana SVG animada mediante GSAP y colores del tema seleccionado. El arranque
+en `public/page-transition.js` conserva el tema antes del primer pintado y una
+marca de sesión conecta ambos documentos. Los enlaces internos a secciones,
+descargas y enlaces externos conservan su comportamiento nativo. La transición
+respeta movimiento reducido y se libera al volver con el historial del navegador.
+
 Usa Node.js 22, la misma versión principal que utiliza GitHub Actions. Si tienes
 `nvm`, ejecuta `nvm install` y `nvm use` desde la raíz del proyecto.
 
