@@ -1,3 +1,4 @@
+import { EditorialArrow } from '../ui/EditorialArrow'
 import { useRef } from 'react'
 import { useEditorialMotion } from '../../hooks/useEditorialMotion'
 
@@ -33,7 +34,7 @@ export function Story() {
         <p>
           Con el tiempo entendimos que eso también era un oficio. Hoy llevamos ese sabor reconocible a matrimonios, encuentros y celebraciones, con la calidad que merece un día importante.
         </p>
-        <div className="story__ritual" aria-label="Nuestra receta"><span>01 <b>Cocinar</b></span><i>↗</i><span>02 <b>Compartir</b></span><i>↗</i><span>03 <b>Celebrar</b></span></div>
+        <div className="story__ritual" aria-label="Nuestra receta"><span>01 <b>Cocinar</b></span><i><EditorialArrow direction="up-right" /></i><span>02 <b>Compartir</b></span><i><EditorialArrow direction="up-right" /></i><span>03 <b>Celebrar</b></span></div>
       </div>
     </section>
   )

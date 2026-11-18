@@ -1,3 +1,4 @@
+import { EditorialArrow } from '../ui/EditorialArrow'
 import { useRef } from 'react'
 import { useCatalogIntro } from '../../hooks/useCatalogIntro'
 import { useCatalog } from '../../hooks/useCatalog'
@@ -27,11 +28,11 @@ export function CatalogExperience() {
           Explora nuestra cocina y empieza a imaginar tu celebración.
         </p>
         </div><a className="catalog__studio-invite" href={`${import.meta.env.BASE_URL}ambientacion.html`}>
-          <span>Del sabor a la atmósfera <i aria-hidden="true">↗</i></span>
+          <span>Del sabor a la atmósfera <i aria-hidden="true"><EditorialArrow direction="up-right" /></i></span>
           <strong>La mesa también<br /><em>se diseña.</em></strong>
           <small>Explora colores, telas y flores para tu celebración.</small>
           <span className="catalog__studio-swatches" aria-hidden="true"><i /><i /><i /><i /></span>
-          <b>Diseña tu mesa ↗</b>
+          <b>Diseña tu mesa <EditorialArrow direction="up-right" /></b>
         </a></div>
       </header>
 
@@ -43,7 +44,7 @@ export function CatalogExperience() {
         >
           <small>01 / Para compartir</small>
           <span>Cóctel <em>& bocados</em></span>
-          <i aria-hidden="true">↗</i>
+          <i aria-hidden="true"><EditorialArrow direction="up-right" /></i>
         </button>
         <button
           type="button"
@@ -52,7 +53,7 @@ export function CatalogExperience() {
         >
           <small>02 / Para sentarse a la mesa</small>
           <span>Menú <em>& celebración</em></span>
-          <i aria-hidden="true">↗</i>
+          <i aria-hidden="true"><EditorialArrow direction="up-right" /></i>
         </button>
         <button
           type="button"
@@ -61,7 +62,7 @@ export function CatalogExperience() {
         >
           <small>03 / Para brindar</small>
           <span>Bebestibles <em>& bar</em></span>
-          <i aria-hidden="true">↗</i>
+          <i aria-hidden="true"><EditorialArrow direction="up-right" /></i>
         </button>
       </div>
 

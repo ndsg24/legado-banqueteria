@@ -199,8 +199,8 @@ La secuencia cambia cada siete segundos, permite elegir y pausar, y se detiene
 fuera de pantalla, al ocultar la pestaña o con movimiento reducido.
 La grilla adapta la composición de dos columnas a una en móvil.
 
-El video del hero generado con Runway se conserva como material descartado en
-`public/videos/` y su documentación en `docs/video/`; el hero no lo carga.
+Los videos descartados del hero se retiraron de `public/videos/`. Su documentación
+se conserva en `docs/video/`; solo se despliega el video activo de «Nuestra manera».
 La firma SVG pinta el contorno bajo el relleno para evitar las intersecciones
 internas de la tipografía. No se carga una foto de fondo.
 

@@ -20,7 +20,7 @@ export function Hero() {
       </div>
       <HeroFoodShowcase />
       </div>
-      <a className="hero__scroll" href="#historia" aria-label="Desliza para sentarte a la mesa. Conoce nuestra historia"><span>Desliza para sentarte a la mesa</span><i aria-hidden="true"><b /></i><span className="hero__scroll-cue" aria-hidden="true">↓</span></a>
+      <a className="hero__scroll" href="#historia" aria-label="Desliza para sentarte a la mesa. Conoce nuestra historia"><span>Desliza para sentarte a la mesa</span><i aria-hidden="true"><b /></i><span className="hero__scroll-cue" aria-hidden="true"><EditorialArrow direction="down" /></span></a>
     </section>
   )
 }

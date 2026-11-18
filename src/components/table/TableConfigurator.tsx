@@ -1,3 +1,4 @@
+import { EditorialArrow } from '../ui/EditorialArrow'
 import { useCallback, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { fabricColor, fabricColors, tablePartLabels, tablePresets, fabricTextures, floralStyles } from '../../config/table'
@@ -44,7 +45,7 @@ export function TableConfigurator() {
             <div className="table-studio__scene-label"><span>Mesa redonda · {design.chairs} puestos</span><span>{preset?.label ?? 'Tu combinación'}</span></div>
             <canvas ref={canvasRef} aria-label="Vista tridimensional de tu mesa. Arrastra para girar y usa la rueda o dos dedos para acercarte. Los controles de colores están a continuación." />
             {status !== 'ready' && <p className="table-studio__loading" role="status">{status === 'loading' ? 'Preparando tu mesa…' : 'La vista 3D no está disponible en este dispositivo. Puedes seguir combinando colores y compartir tu diseño.'}</p>}
-            <p className="table-studio__gesture">↔ Arrastra para girar <span>·</span> Toca una tela para editarla</p>
+            <p className="table-studio__gesture"><EditorialArrow direction="both" /> Arrastra para girar <span>·</span> Toca una tela para editarla</p>
             <div className="table-studio__views" role="group" aria-label="Punto de vista">
               {views.map((item) => <button key={item.id} type="button" disabled={status !== 'ready'} aria-pressed={view === item.id} onClick={() => { setActiveView(item.id); setView(item.id) }}>{item.label}</button>)}
             </div>
@@ -63,7 +64,7 @@ export function TableConfigurator() {
           <fieldset className="table-studio__colors"><legend>{tablePartLabels[activePart]} <span>{current.label}</span></legend><div>{fabricColors.map((color) => <button key={color.id} type="button" aria-label={color.label} aria-pressed={design[activePart] === color.id} style={{ '--swatch': color.hex } as CSSProperties} onClick={() => setColor(color.id)}><span aria-hidden="true" /> <small>{color.label}</small></button>)}</div></fieldset>
           <fieldset className="table-studio__textures"><legend>Textura de {tablePartLabels[activePart].toLowerCase()}</legend><div>{fabricTextures.map((texture) => <button key={texture.id} type="button" aria-pressed={design.textures[activePart] === texture.id} onClick={() => setTexture(texture.id)}><i className={`fabric-sample fabric-sample--${texture.id}`} style={{ '--swatch': current.hex } as CSSProperties} aria-hidden="true" /><span>{texture.label}<small>{texture.caption}</small></span></button>)}</div></fieldset>
           </>}
-          <div className="table-studio__actions"><a className="button--gold" href={`mailto:${siteConfig.email}?subject=${encodeURIComponent('Mi mesa · Legado')}&body=${encodeURIComponent(email)}`}>Consultar esta ambientación <span aria-hidden="true">↗</span></a><div><button type="button" onClick={share}>Copiar diseño ↗</button><button type="button" disabled={status !== 'ready' || saving} onClick={download}>{saving ? 'Preparando imagen…' : 'Guardar en 4K ↓'}</button></div></div>
+          <div className="table-studio__actions"><a className="button--gold" href={`mailto:${siteConfig.email}?subject=${encodeURIComponent('Mi mesa · Legado')}&body=${encodeURIComponent(email)}`}>Consultar esta ambientación <span aria-hidden="true"><EditorialArrow direction="up-right" /></span></a><div><button type="button" onClick={share}>Copiar diseño <EditorialArrow direction="up-right" /></button><button type="button" disabled={status !== 'ready' || saving} onClick={download}>{saving ? 'Preparando imagen…' : <>Guardar en 4K <EditorialArrow direction="down" /></>}</button></div></div>
           <p className="table-studio__feedback" role="status" aria-live="polite">{message}</p>
           <p className="table-studio__note">Esta es una visualización de referencia. Telas, tonos y elementos se confirman con nuestro equipo según disponibilidad. Los colores pueden variar en pantalla.</p>
         </aside>

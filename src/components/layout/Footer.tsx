@@ -1,3 +1,4 @@
+import { EditorialArrow } from '../ui/EditorialArrow'
 import { Brand } from './Brand'
 
 type FooterProps = { homeHref?: string; topHref?: string }
@@ -8,7 +9,7 @@ export function Footer({ homeHref = '#inicio', topHref = '#inicio' }: FooterProp
       <Brand href={homeHref} />
       <p>Comida hecha por personas,<br />para personas.</p>
       <div>
-        <a href={topHref}>Volver arriba ↑</a>
+        <a href={topHref}>Volver arriba <EditorialArrow direction="up" /></a>
         <span>© {new Date().getFullYear()} Legado</span>
       </div>
     </footer>

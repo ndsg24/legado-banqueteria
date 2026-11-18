@@ -48,7 +48,7 @@ export function Gallery() {
     <header className="gallery__header">
       <div><span>Días para recordar</span><strong>03 — 04</strong></div>
       <h2 id="gallery-title">Lo que queda<br /><em>después de la mesa.</em></h2>
-      <p><span>Una mesa se prepara. Un recuerdo se queda.</span><small>Acércate a los detalles ↗</small></p>
+      <p><span>Una mesa se prepara. Un recuerdo se queda.</span><small>Acércate a los detalles <EditorialArrow direction="up-right" /></small></p>
     </header>
     <div className="memories" ref={stage} onScroll={track} aria-label="Galería de celebraciones" tabIndex={0}>
       {galleryItems.map((photo, index) => <figure className={`memory memory--${index + 1}`} data-memory={index} key={photo.src}>
@@ -56,16 +56,16 @@ export function Gallery() {
           <img src={`${import.meta.env.BASE_URL}images/gallery/${photo.src}`} srcSet={'srcSet' in photo ? photo.srcSet.split(', ').map(source => `${import.meta.env.BASE_URL}images/gallery/${source}`).join(', ') : undefined} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" sizes={index === 0 ? "(max-width: 760px) 82vw, (min-width: 1980px) 1250px, 65vw" : "(max-width: 760px) 82vw, (min-width: 1980px) 1130px, 60vw"} />
           <span className="memory__discover" aria-hidden="true">Mirar de cerca <EditorialArrow direction="up-right" /></span>
         </button>
-        <figcaption><span>0{index + 1}</span><div><small>{photo.detail}</small><h3>{photo.title}.</h3></div><span aria-hidden="true">↗</span></figcaption>
+        <figcaption><span>0{index + 1}</span><div><small>{photo.detail}</small><h3>{photo.title}.</h3></div><span aria-hidden="true"><EditorialArrow direction="up-right" /></span></figcaption>
       </figure>)}
       <aside className="memories__aside"><span aria-hidden="true">✦</span><p>Los mejores momentos<br /><em>no tienen prisa.</em></p><small>Sentarse. Compartir. Quedarse.</small></aside>
     </div>
-    <div className="memories__nav"><span><em>Desliza</em> y quédate un rato.</span><output aria-live="polite">0{active + 1} / 05</output><button type="button" aria-label="Ver recuerdo anterior" disabled={active === 0} onClick={() => scrollTo(active - 1)}>←</button><button type="button" aria-label="Ver siguiente recuerdo" disabled={active === 4} onClick={() => scrollTo(active + 1)}>→</button></div>
+    <div className="memories__nav"><span><em>Desliza</em> y quédate un rato.</span><output aria-live="polite">0{active + 1} / 05</output><button type="button" aria-label="Ver recuerdo anterior" disabled={active === 0} onClick={() => scrollTo(active - 1)}><EditorialArrow direction="left" /></button><button type="button" aria-label="Ver siguiente recuerdo" disabled={active === 4} onClick={() => scrollTo(active + 1)}><EditorialArrow direction="right" /></button></div>
     <p className="gallery__note">Fotografías referenciales · Próximamente, historias de Legado</p>
     <dialog className="memory-viewer" ref={dialog} aria-label="Recuerdos de una celebración" onClose={() => opener.current?.focus({ preventScroll: true })} onClick={event => { if (event.target === event.currentTarget) dialog.current?.close() }} onKeyDown={event => { if (event.key === 'ArrowRight') setOpened(index => (index + 1) % galleryItems.length); if (event.key === 'ArrowLeft') setOpened(index => (index + galleryItems.length - 1) % galleryItems.length) }}>
       <button className="memory-viewer__close" type="button" aria-label="Cerrar imagen" onClick={() => dialog.current?.close()}>Cerrar ×</button>
       <img key={item.src} src={`${import.meta.env.BASE_URL}images/gallery/${'fullSrc' in item ? item.fullSrc : item.src}`} alt={item.alt} width={item.width} height={item.height} />
-      <div className="memory-viewer__footer"><button type="button" aria-label="Imagen anterior" onClick={() => setOpened(index => (index + 4) % 5)}>←</button><div aria-live="polite"><small>0{opened + 1} / 05 · {item.detail}</small><h3>{item.title}.</h3></div><button type="button" aria-label="Imagen siguiente" onClick={() => setOpened(index => (index + 1) % 5)}>→</button></div>
+      <div className="memory-viewer__footer"><button type="button" aria-label="Imagen anterior" onClick={() => setOpened(index => (index + 4) % 5)}><EditorialArrow direction="left" /></button><div aria-live="polite"><small>0{opened + 1} / 05 · {item.detail}</small><h3>{item.title}.</h3></div><button type="button" aria-label="Imagen siguiente" onClick={() => setOpened(index => (index + 1) % 5)}><EditorialArrow direction="right" /></button></div>
     </dialog>
   </section>
 }

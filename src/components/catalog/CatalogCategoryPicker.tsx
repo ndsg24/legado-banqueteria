@@ -1,3 +1,4 @@
+import { EditorialArrow } from '../ui/EditorialArrow'
 import type { CatalogCategory } from '../../types/catalog'
 import { useCategoryNavigation } from '../../hooks/useCategoryNavigation'
 import { useCategoryMotion } from '../../hooks/useCategoryMotion'
@@ -18,7 +19,7 @@ export function CatalogCategoryPicker({ categories, activeId, onSelect }: Catalo
     <nav className="tasting-menu" aria-label="Categorías de la carta">
       <div className="tasting-menu__caption">
         <span>Elige el próximo sabor</span>
-        <span aria-hidden="true">Un recorrido por nuestra cocina ↔</span>
+        <span aria-hidden="true">Un recorrido por nuestra cocina <EditorialArrow direction="both" /></span>
       </div>
       <div ref={listRef} className={`tasting-menu__course-list${categories.length > 5 ? ' tasting-menu__course-list--full' : ''}`}>
         {categories.map((category, index) => (
@@ -39,11 +40,11 @@ export function CatalogCategoryPicker({ categories, activeId, onSelect }: Catalo
         ))}
       </div>
       <div className="tasting-menu__navigation">
-        <p>Desliza para explorar <span aria-hidden="true">↔</span></p>
+        <p>Desliza para explorar <span aria-hidden="true"><EditorialArrow direction="both" /></span></p>
         <div>
-          <button type="button" aria-label="Categoría anterior" disabled={activeIndex <= 0} onClick={() => selectAdjacent(-1)}>←</button>
+          <button type="button" aria-label="Categoría anterior" disabled={activeIndex <= 0} onClick={() => selectAdjacent(-1)}><EditorialArrow direction="left" /></button>
           <output aria-live="polite" aria-label="Categoría actual">{String(activeIndex + 1).padStart(2, '0')}<span> / {String(categories.length).padStart(2, '0')}</span></output>
-          <button type="button" aria-label="Categoría siguiente" disabled={activeIndex >= categories.length - 1} onClick={() => selectAdjacent(1)}>→</button>
+          <button type="button" aria-label="Categoría siguiente" disabled={activeIndex >= categories.length - 1} onClick={() => selectAdjacent(1)}><EditorialArrow direction="right" /></button>
         </div>
       </div>
     </nav>
