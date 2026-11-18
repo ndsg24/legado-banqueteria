@@ -1,7 +1,7 @@
-import { catalogCategories } from '../config/catalog'
+import { quoteCategories } from '../config/catalog'
 
-export const menuItems = new Map(catalogCategories.flatMap(category => category.items.map(item => [item.id, item.name] as const)))
-const singleChoices = new Set(catalogCategories
+export const menuItems = new Map(quoteCategories.flatMap(category => category.items.map(item => [item.id, item.name] as const)))
+const singleChoices = new Set(quoteCategories
   .filter(category => category.collection !== 'cocktail')
   .flatMap(category => category.items.map(item => item.id)))
 

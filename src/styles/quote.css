@@ -306,8 +306,9 @@
 @media (prefers-reduced-motion: no-preference) {
   :is(.quote-dish__photo, .sauce-option__photo) { transition: transform .28s ease-out, opacity .25s, filter .25s; }
 }
-.quote-mount__scene { width: 100%; height: clamp(230px, 24vw, 340px); position: relative; background: radial-gradient(ellipse at center, #eee9de, #d9d1c3); overflow: hidden; }
+.quote-mount__scene { width: 100%; height: clamp(230px, 24vw, 340px); position: relative; background: var(--table-stage-backdrop); overflow: hidden; }
 .quote-mount__scene canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+:root[data-theme='dark'] .quote-mount__scene [role=status] { color: var(--ink); }
 .quote-mount__scene canvas:active { cursor: grabbing; }
 .quote-mount__scene [role=status] { position: absolute; inset: 0; display: grid; place-content: center; padding: 1rem; color: #433d32; text-align: center; }
 .quote-mount__caption { min-height: 44px; font-size: .84rem; }
@@ -441,3 +442,5 @@
 @media (max-width: 380px) {
   .quote-menu__grid { gap: 1.25rem .75rem; }
 }
+
+.quote-mount > .seating-plan, .quote-review .seating-plan { display: block; width: 100%; height: clamp(200px, 28vw, 350px); background: var(--table-stage-backdrop); }

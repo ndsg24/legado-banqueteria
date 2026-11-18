@@ -1,3 +1,4 @@
+import { migrateBottleOutfit, floralDefaults, defaultLayout } from '../src/config/table'
 import { z } from 'zod'
 import { quoteMessage, quoteSchema } from '../src/quote/request'
 
@@ -9,12 +10,18 @@ interface Environment {
   QUOTE_LIMIT: { limit(input: { key: string }): Promise<{ success: boolean }> }
 }
 
-// Earlier clients sent one product ID per selection.
+// Normalize payloads from clients predating quantities or the seating plan.
 const incomingQuote = z.preprocess(quote => {
   if (!quote || typeof quote !== 'object' || !('items' in quote)) return quote
   const { items } = quote
-  if (!Array.isArray(items) || !items.every(id => typeof id === 'string')) return quote
-  return { ...quote, items: Object.fromEntries(items.map(id => [id, 1])) }
+  const table = 'table' in quote ? quote.table : undefined
+  return {
+    ...quote,
+    items: Array.isArray(items) && items.every(id => typeof id === 'string')
+      ? Object.fromEntries(items.map(id => [id, 1])) : items,
+    table: table && typeof table === 'object' ? { ...defaultLayout, ...floralDefaults, napkinFold: 'flat', overlayStyle: 'traditional', ...table,
+      bottleOutfit: migrateBottleOutfit('bottleOutfit' in table ? table.bottleOutfit : undefined, 'floral' in table ? table.floral : undefined) } : table,
+  }
 }, quoteSchema)
 const envelope = z.strictObject({ id: z.uuid(), quote: incomingQuote })
 const maxBytes = 16_384

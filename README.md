@@ -124,18 +124,10 @@ Hecho por **[Nelson Daniel Silva Gutiérrez](https://github.com/ndsg24)** · [Li
 
 ## Carta interactiva
 
-La página independiente `carta.html` reúne tres cartas: Cóctel & bocados (12 productos), Menú & celebración (49)
-y Bebestibles & bar (24). Aperitivos, Bajativos y Bar pertenecen a Bebestibles. Los contratos están
- en `src/types/catalog.ts`, los productos y precios en `src/config/catalog.ts`,
- el estado de exploración y favoritos en `src/hooks/useCatalog.ts` y las piezas
- visuales en `src/components/catalog/`. Las fotografías de la carta
- están optimizadas en `public/images/catalog/`; sus rutas respetan la base de GitHub Pages.
-
-Los favoritos se conservan durante la visita al cambiar de categoría. La consulta
- abre el cliente de correo con la selección; no envía mensajes automáticamente.
- Los precios del cóctel son por unidad en CLP. Banquetería requiere cotización.
- La página de promociones del catálogo repite los dulces sin condiciones distintas,
- por lo que no se presenta como una oferta adicional.
+La página `carta.html` presenta fotos, nombres y descripciones en tres colecciones:
+Cóctel & bocados, Menú & celebración y Bebestibles & bar. Las categorías e imágenes
+provienen de `src/config/catalog.ts`. La selección de platos para un evento se hace
+en el cotizador (`cotizar.html`).
 
 El selector de categorías se presenta como un recorrido horizontal ilustrado,
 encapsulado en `CatalogCategoryPicker` y `CategoryMotif`. Sus botones funcionan

@@ -3,7 +3,6 @@ import { useRef } from 'react'
 import { useCatalogIntro } from '../../hooks/useCatalogIntro'
 import { useCatalog } from '../../hooks/useCatalog'
 import { CatalogProductGrid } from './CatalogProductGrid'
-import { CatalogSelection } from './CatalogSelection'
 import { CatalogCategoryPicker } from './CatalogCategoryPicker'
 
 export function CatalogExperience() {
@@ -75,17 +74,8 @@ export function CatalogExperience() {
         <div id="catalog-dishes" className="catalog__dishes" aria-labelledby="catalog-category-title">
           <div className="catalog__category-heading">
             <h2 id="catalog-category-title">{catalog.activeCategory.label}<em>.</em></h2>
-            <span>
-              {catalog.collection === 'cocktail'
-                ? 'Precio por unidad · CLP'
-                : 'Una propuesta a tu medida · Consultar valores'}
-            </span>
           </div>
-          <CatalogProductGrid
-            items={catalog.activeCategory.items}
-            selectedIds={catalog.selectedIds}
-            onToggle={catalog.toggleItem}
-          />
+          <CatalogProductGrid items={catalog.activeCategory.items} />
         </div>
       </div>
 
@@ -94,12 +84,6 @@ export function CatalogExperience() {
         Frutas sujetas a temporada. Consulta por alternativas vegetarianas, veganas, sin gluten
         y requerimientos alimentarios especiales.
       </p>
-      <CatalogSelection
-        items={catalog.selectedItems}
-        quantities={catalog.quantities}
-        onQuantityChange={catalog.setQuantity}
-        onClear={catalog.clearSelection}
-      />
     </section>
   )
 }

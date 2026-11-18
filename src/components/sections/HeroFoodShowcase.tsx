@@ -35,18 +35,11 @@ export function HeroFoodShowcase() {
 
   useLayoutEffect(() => {
     if (!root.current) return
-    const photos = root.current.querySelectorAll<HTMLElement>('.hero-table__look')
     const before = previous.current
     previous.current = active
+    if (reduced || before === null || before === active) return
     const context = gsap.context(() => {
-      gsap.set(photos, { autoAlpha: 0, zIndex: 0 })
-      if (before !== null && before !== active && !reduced) {
-        gsap.fromTo(photos[before], { autoAlpha: 1, scale: 1, zIndex: 1 }, { autoAlpha: 0, scale: 0.985, duration: 1.65, ease: 'sine.inOut' })
-      }
-      gsap.fromTo(photos[active], { autoAlpha: before === null || reduced ? 1 : 0, scale: reduced ? 1 : 0.985, zIndex: 2 }, { autoAlpha: 1, scale: 1, duration: reduced ? 0 : 1.85, ease: 'sine.inOut' })
-      if (!reduced && before !== null && before !== active) {
-        gsap.fromTo('.hero-food__caption', { opacity: 0, y: 5 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: 'power2.out' })
-      }
+      gsap.fromTo('.hero-food__caption', { opacity: 0, y: 5 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.35, ease: 'power2.out' })
     }, root.current)
     return () => context.revert()
   }, [active, reduced])
@@ -62,9 +55,11 @@ export function HeroFoodShowcase() {
   return (
     <div className="hero-food hero-food--table" ref={root} aria-label="Una mesa realista, tres formas de celebrar">
       <div className="hero-table__scene">
-        {moments.map((moment, index) => <div key={moment.id} className="hero-table__look" data-active={active === index} aria-hidden={active !== index}>
+        <div className="hero-table__photos">
+          {moments.map((moment, index) => <div key={moment.id} className="hero-table__look" data-active={active === index} aria-hidden={active !== index}>
           <img src={`${import.meta.env.BASE_URL}images/${moment.image}.webp`} srcSet={`${import.meta.env.BASE_URL}images/${moment.image}-720.webp 720w, ${import.meta.env.BASE_URL}images/${moment.image}.webp 1254w`} sizes="(max-width: 760px) calc(100vw - 32px), (min-width: 2200px) 940px, 46vw" width="1254" height="1254" alt={moment.alt} decoding="async" fetchPriority={index === 0 ? 'high' : 'auto'} />
-        </div>)}
+          </div>)}
+        </div>
         <HeroReactions kind={active} enabled={playing} />
       </div>
       <div className="hero-food__caption"><span>{moments[active].course}</span><strong>{moments[active].title}</strong><small>{moments[active].detail}</small></div>

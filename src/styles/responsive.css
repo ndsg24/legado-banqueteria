@@ -426,9 +426,10 @@
   .contact h2 { font-size: 15vw; }
   .contact__actions { flex-direction: column; gap: 26px; }
 
-  footer { min-height: 150px; grid-template-columns: 1fr auto; }
+  footer { min-height: 150px; grid-template-columns: 1fr auto; gap: 1.25rem .75rem; padding-block: 1.5rem; }
   footer > p { display: none; }
-  footer > div { flex-direction: column; align-items: flex-end; gap: 8px; }
+  .footer-meta { grid-column: 2; grid-row: 1; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .footer-socials { grid-column: 1 / -1; }
 
 }
 

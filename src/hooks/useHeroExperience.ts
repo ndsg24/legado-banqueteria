@@ -20,6 +20,13 @@ export function useHeroExperience(root: RefObject<HTMLElement | null>) {
       gsap.timeline({ scrollTrigger: { trigger: element, start: 'top top', end: 'bottom top', scrub: 0.9 } })
         .to('.living-hero__content', { y: -60, opacity: 0.25, ease: 'none' }, 0)
         .to('.hero__signature', { y: -90, ease: 'none' }, 0)
+      const glint = gsap.timeline({ delay: 2.6, repeat: -1, repeatDelay: 6 })
+      element.querySelectorAll('.hero__signature-trace').forEach((letter, index) => {
+        const start = index * 2.4
+        glint.fromTo(letter, { strokeDashoffset: 8 }, { strokeDashoffset: -100, duration: 3, ease: 'none' }, start)
+          .fromTo(letter, { opacity: 0 }, { opacity: .26, duration: .9, ease: 'sine.inOut' }, start)
+          .to(letter, { opacity: 0, duration: 1, ease: 'sine.inOut' }, start + 2)
+      })
       const cue = gsap.timeline({ repeat: -1, repeatDelay: 0.6 })
         .fromTo('.hero__scroll i b', { x: 0, opacity: 0 }, { x: 30, opacity: 1, duration: 1.1, ease: 'power2.inOut' })
         .to('.hero__scroll i b', { opacity: 0, duration: 0.3 })
@@ -27,6 +34,7 @@ export function useHeroExperience(root: RefObject<HTMLElement | null>) {
       const update = () => {
         const rect = element.getBoundingClientRect()
         const playing = !document.hidden && rect.bottom > 0 && rect.top < innerHeight
+        glint.paused(!playing)
         cue.paused(!playing)
         arrow.paused(!playing)
       }

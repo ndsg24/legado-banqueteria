@@ -1,3 +1,4 @@
+import { HeroSignature } from './HeroSignature'
 import { HeroFoodShowcase } from './HeroFoodShowcase'
 import { useRef } from 'react'
 import { useHeroExperience } from '../../hooks/useHeroExperience'
@@ -9,7 +10,7 @@ export function Hero() {
   useHeroExperience(root)
   return (
     <section id="inicio" className="hero hero--living site-texture" ref={root} aria-labelledby="hero-title">
-      <svg className="hero__signature" viewBox="0 0 1600 300" aria-hidden="true"><text x="800" y="258" textAnchor="middle" textLength="1540" lengthAdjust="spacingAndGlyphs" fill="#080808" stroke="#f6edc9" strokeWidth="1" strokeLinejoin="round" paintOrder="stroke fill">LEGADO</text></svg>
+      <HeroSignature />
       <div className="hero__meta"><p>Banquetería familiar</p><p>{siteConfig.location}</p><p>Comida hecha para reunir</p></div>
       <div className="living-hero__layout">
       <div className="living-hero__content">

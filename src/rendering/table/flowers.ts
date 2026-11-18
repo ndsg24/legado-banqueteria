@@ -1,7 +1,37 @@
 import { CylinderGeometry, Group, Mesh, MeshStandardMaterial, SphereGeometry } from 'three'
-import type { FloralStyle } from '../../types/table'
+import { floralDefaults } from '../../config/table'
+import type { FloralOptions, FloralStyle } from '../../types/table'
 
-export function createFlowers(style: FloralStyle) {
+import { createPhotoCenterpiece } from './photoCenterpieces'
+
+import { createWineBottle } from './wineBottle'
+
+export function createFlowers(style: FloralStyle, options: FloralOptions = floralDefaults) {
+  const arrangement = createArrangement(style === 'ribbonBottle' ? 'burgundy' : style, options)
+  if (options.bottleOutfit === 'none') return arrangement
+  const group = new Group()
+  group.position.y = 1.06
+  const huaso = createWineBottle('manta')
+  const huasa = createWineBottle('huasa')
+  const spacing = style === 'none' ? .16 : .28
+  huaso.position.set(-spacing, 0, .07)
+  huasa.position.set(spacing, 0, -.07)
+  if (style !== 'none') {
+    const offset = new Group()
+    offset.add(arrangement)
+    offset.scale.setScalar(.82)
+    offset.position.set(0, -1.06*.82, -.16)
+    group.add(offset)
+  }
+  group.add(huaso, huasa)
+  return group
+}
+
+function createArrangement(style: Exclude<FloralStyle,'ribbonBottle'>, options: FloralOptions) {
+  if (style !== 'none' && style !== 'botanical') {
+    const classic = style === 'white' || style === 'rose'
+    if (!classic || options.flowerKind !== 'original' || options.flowerColor !== 'original') return createPhotoCenterpiece(style, options)
+  }
   const group = new Group()
   if (style === 'none') return group
   const gold = new MeshStandardMaterial({ color: '#a58b59', metalness: 0.65, roughness: 0.35 })

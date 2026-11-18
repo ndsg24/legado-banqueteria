@@ -1,6 +1,6 @@
 import type { CatalogCategory } from '../types/catalog'
 
-const categories: readonly CatalogCategory[] = [
+export const catalogCategories: readonly CatalogCategory[] = [
   {
     "id": "salados",
     "label": "Salados",
@@ -1437,5 +1437,5 @@ const categories: readonly CatalogCategory[] = [
   }
 ]
 
-export const catalogCategories = categories.filter(category => category.id !== 'salsas')
-export const menuSauces = categories.find(category => category.id === 'salsas')!.items
+export const quoteCategories = catalogCategories.filter(category => category.id !== 'salsas')
+export const menuSauces = catalogCategories.find(category => category.id === 'salsas')!.items

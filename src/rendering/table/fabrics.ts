@@ -27,12 +27,13 @@ export function tableclothGeometry() {
   return geometry
 }
 
-export function overlayGeometry() {
+export function overlayGeometry(width = 1.85, length = 1.85) {
   const vertices: number[] = [], indices: number[] = [], segments = 40
   for (let j = 0; j <= segments; j++) for (let i = 0; i <= segments; i++) {
-    const x = (i / segments - 0.5) * 1.85, z = (j / segments - 0.5) * 1.85
-    const radius = Math.hypot(x, z), fall = Math.max(0, radius - 1.17)
-    const scale = radius > 1.17 ? (1.17 + fall * 0.2) / radius : 1
+    const x = (i / segments - 0.5) * width, z = (j / segments - 0.5) * length
+    const radius = Math.hypot(x, z), fall = Math.max(0, radius - 1.19)
+    const fold = Math.sin(Math.atan2(z, x) * 22 + Math.sin(Math.atan2(z, x) * 5) * .7)
+    const scale = fall > 0 ? (1.19 + fall * (.16 + .1 * fold)) / radius : 1
     vertices.push(x * scale, 1.058 - fall * 0.9 + Math.sin(x * 30 + z * 8) * fall * 0.055, z * scale)
     if (j < segments && i < segments) {
       const a = j * (segments + 1) + i, b = a + segments + 1

@@ -1,6 +1,6 @@
 import { useRef, useState, type ReactNode } from 'react'
 import { Button, Dialog, DialogTrigger, Heading, Modal, ModalOverlay } from 'react-aria-components'
-import { catalogCategories } from '../../config/catalog'
+import { quoteCategories } from '../../config/catalog'
 import { isSingleChoice, type Quantities } from '../../quote/quantities'
 import { CatalogItemPhoto } from '../catalog/CatalogItemPhoto'
 import { QuantityControl } from '../ui/QuantityControl'
@@ -41,7 +41,7 @@ export function QuoteSelection({ selected, onQuantityChange, ...saucePicker }: P
             if (touchedRow.current !== row) touchedRow.current?.scrollTo({ left: 0 })
             touchedRow.current = row
           }}>
-            {catalogCategories.map(category => {
+            {quoteCategories.map(category => {
               const chosen = category.items.filter(item => selected[item.id])
               if (!chosen.length) return null
               return <section key={category.id} className="quote-summary__group">

@@ -5,11 +5,9 @@ import { CatalogCard } from './CatalogCard'
 
 type CatalogProductGridProps = {
   items: readonly CatalogItem[]
-  selectedIds: readonly string[]
-  onToggle: (id: string) => void
 }
 
-export function CatalogProductGrid({ items, selectedIds, onToggle }: CatalogProductGridProps) {
+export function CatalogProductGrid({ items }: CatalogProductGridProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useCatalogScene(containerRef, canvasRef, items)
@@ -18,13 +16,7 @@ export function CatalogProductGrid({ items, selectedIds, onToggle }: CatalogProd
     <div ref={containerRef} className="catalog__grid" data-visuals="loading">
       <canvas ref={canvasRef} className="catalog__visual-layer" aria-hidden="true" />
       {items.map((item, index) => (
-        <CatalogCard
-          key={item.id}
-          item={item}
-          index={index}
-          selected={selectedIds.includes(item.id)}
-          onToggle={onToggle}
-        />
+        <CatalogCard key={item.id} item={item} index={index} />
       ))}
     </div>
   )

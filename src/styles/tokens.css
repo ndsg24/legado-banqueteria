@@ -1,5 +1,8 @@
 :root {
   color-scheme: light;
+  --table-stage-backdrop: radial-gradient(ellipse at 50% 42%, #ece7dd, #d9d2c4 75%);
+  --table-stage-floor: #bcb5a6;
+  --table-stage-export: #e5dfd2;
   --canvas: #f2f2ef;
   --surface: #e8e8e3;
   --ink: #10110f;
@@ -22,6 +25,9 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
+  --table-stage-floor: #282b2d;
+  --table-stage-export: #242627;
+  --table-stage-backdrop: radial-gradient(ellipse at 50% 40%, #36383a 0%, #242627 48%, #171819 100%);
   --canvas: #0a0a09;
   --surface: #171815;
   --ink: #f3f3ee;

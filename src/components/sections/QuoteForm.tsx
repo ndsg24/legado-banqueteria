@@ -167,7 +167,7 @@ export default function QuoteForm() {
     setNotice('')
     try {
       const { downloadQuotePdf } = await import('../../quote/pdf')
-      await downloadQuotePdf(review, picture.current?.capture())
+      await downloadQuotePdf(review, await picture.current?.capture())
     } catch {
       setNotice('No pudimos preparar el PDF. Puedes reintentar la descarga.')
     } finally { setDownloading(false) }
