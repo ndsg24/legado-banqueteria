@@ -405,7 +405,6 @@
   display: grid;
   grid-template-columns: 15% 51% 34%;
   position: relative;
-  border-top: 1px solid var(--line);
 }
 
 .content-canvas {
@@ -702,8 +701,8 @@
 .contact__actions { margin-top: 45px; display: flex; justify-content: center; align-items: center; gap: 35px; }
 .button--gold {
   min-width: 270px;
-  min-height: 65px;
-  padding: 0 24px;
+  min-height: 48px;
+  padding: 15px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -713,9 +712,12 @@
   font-weight: 600;
   letter-spacing: .09em;
   text-transform: uppercase;
-  transition: transform .25s ease, background .25s ease;
+  gap: 24px;
+  border: 1px solid var(--gold);
+  transition: background .25s ease;
 }
-.button--gold:hover { transform: rotate(-1deg) scale(1.02); background: var(--gold-hot); }
+.button--gold:hover { background: var(--gold-hot); }
+.button--gold:focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; }
 .button--gold i { font-style: normal; font-size: 1rem; }
 .contact__actions > a:last-child { color: var(--muted); font-size: .66rem; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
 
@@ -738,3 +740,44 @@ footer > div { justify-self: end; display: flex; gap: 27px; color: var(--muted);
     var(--canvas);
   background-size: 9px 9px, auto;
 }
+
+/* Navigation separates exploration, the two tools, and the contact action. */
+.desktop-nav { align-items: center; gap: 28px; }
+.desktop-nav__primary { display: flex; align-items: center; gap: 26px; }
+.desktop-nav__primary a:not(:first-child) { padding: 10px 0; }
+.desktop-nav__primary a.active { color: var(--gold); }
+.desktop-nav__explore { font-weight: 500; }
+.desktop-nav__explore summary { list-style: none; cursor: pointer; padding: 12px 0; }
+.desktop-nav__explore summary::-webkit-details-marker { display: none; }
+.desktop-nav__explore summary > span { display: inline-block; margin-left: 8px; color: var(--gold); }
+.desktop-nav__explore[open] summary > span { transform: rotate(45deg); }
+.desktop-nav__dropdown { position: absolute; top: 77px; left: 0; width: 100%; padding: 38px 32px 42px; background: var(--canvas); border-bottom: 1px solid var(--line); box-shadow: 0 24px 50px #0002; text-transform: none; letter-spacing: 0; }
+.desktop-nav__story-panel { max-width: 1200px; margin: auto; display: grid; grid-template-columns: .8fr 1.6fr; gap: 70px; }
+.desktop-nav__story-intro { border-right: 1px solid var(--line); padding-right: 35px; }
+.desktop-nav__story-intro > small { color: var(--gold); font-size: .54rem; text-transform: uppercase; letter-spacing: .12em; }
+.desktop-nav__story-intro > strong { display: block; margin: 22px 0 15px; font: 500 2.5rem/.95 var(--display); letter-spacing: -.055em; color: var(--ink); }
+.desktop-nav__story-intro p { max-width: 240px; margin: 0; font-size: .65rem; line-height: 1.8; color: var(--muted); }
+.desktop-nav__chapters { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 35px; }
+.desktop-nav__chapters a { display: flex; align-items: baseline; gap: 14px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.desktop-nav__chapters a::after { display: none; }
+.desktop-nav__chapters a > small { font: italic .8rem var(--serif); color: var(--gold); }
+.desktop-nav__chapters a > span { flex: 1; }
+.desktop-nav__chapters strong { display: block; font: 500 1.25rem var(--display); letter-spacing: -.04em; color: var(--ink); }
+.desktop-nav__chapters span > small { display: block; margin-top: 9px; font-size: .59rem; line-height: 1.65; color: var(--muted); }
+.desktop-nav__chapters i { font-style: normal; font-size: 1rem; color: var(--gold); }
+.desktop-nav__chapters a:hover strong, .desktop-nav__chapters a[aria-current] strong { color: var(--gold); }
+.desktop-nav__explore summary:focus-visible { outline: 1px solid var(--gold); outline-offset: 6px; }
+.desktop-nav__contact { border: 1px solid var(--line); padding: 11px 15px; color: var(--ink); }
+.desktop-nav__contact > span { margin-left: 12px; color: var(--gold); }
+.desktop-nav__contact:hover { border-color: var(--gold); }
+.page-path { max-width: 1664px; padding: 30px 32px 0; margin: auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: .62rem; }
+.page-path > a { display: inline-flex; align-items: center; gap: 12px; min-height: 36px; color: var(--ink); }
+.page-path > a > span { color: var(--gold); font-size: 1rem; }
+.page-path > p { margin: 0; color: var(--muted); }
+.page-path > p > span { color: var(--gold); margin-inline: 10px; }
+@media (max-width: 760px) {
+  .page-path { padding: 20px 18px 0; font-size: .58rem; }
+  .page-path > p { font-size: .52rem; }
+}
+/* Section snapping belongs to the landing; it must not hide a subpage breadcrumb. */
+html:has(.catalog-page), html:has(.table-page) { scroll-snap-type: none; }

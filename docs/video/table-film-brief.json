@@ -1,0 +1,47 @@
+{
+  "provider": "Runway (connection required)",
+  "status": "Prepared; no video generated or credits spent",
+  "assets": [
+    "public/images/table-encuentro-v1.webp",
+    "public/images/table-celebracion-v1.webp",
+    "public/images/table-sobremesa-v1.webp"
+  ],
+  "delivery": {
+    "duration_seconds": 15,
+    "resolution": "1920x1080",
+    "fps": 30,
+    "background": "solid #080808",
+    "audio": false,
+    "loop": true
+  },
+  "direction": "Premium catering campaign, photographic realism, stable table silhouette and matching camera. Slow cinematic arc around table; physically coherent tableware, glass and fabric. Transform ivory ceviche/white wine into navy beef/red wine, then dusty rose tiramisu/espresso/champagne. Flowing fabric ribbon passes across table to motivate changes, restrained directional motion blur, no particle cone, no slideshow/crossfade, no text, no logos, no cropped table, no hands or people, no duplicated/melting objects. Return to original ivory setting for a seamless loop. Keep generous safe margin around table for responsive contain framing.",
+  "shots": [
+    {
+      "seconds": [
+        0,
+        5
+      ],
+      "from": "table-encuentro-v1",
+      "to": "table-celebracion-v1",
+      "action": "Slow camera arc 8 degrees clockwise. Ivory linen lifts gently into an elegant fabric sweep that reveals navy satin, gold cutlery, beef platter and red wine. Maintain realistic contact and weight."
+    },
+    {
+      "seconds": [
+        5,
+        10
+      ],
+      "from": "table-celebracion-v1",
+      "to": "table-sobremesa-v1",
+      "action": "Continue same camera and light. Navy fabric sweeps into dusty rose linen as dessert porcelain, copper cutlery, tiramisu, espresso and champagne settle naturally."
+    },
+    {
+      "seconds": [
+        10,
+        15
+      ],
+      "from": "table-sobremesa-v1",
+      "to": "table-encuentro-v1",
+      "action": "A final flowing cloth pass returns to ivory, ceviche, silver cutlery and white wine. End with exactly the original camera and table configuration for seamless loop."
+    }
+  ]
+}

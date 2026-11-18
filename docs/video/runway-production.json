@@ -1,0 +1,67 @@
+{
+  "provider": "Runway",
+  "status": "complete",
+  "model": "gen-4.5",
+  "budget": {
+    "initial": 625,
+    "totalSpent": 180,
+    "expectedRemaining": 445,
+    "remainingVerified": 445
+  },
+  "shots": [
+    {
+      "id": "encuentro",
+      "taskId": "a2b76539-52a3-440c-a238-ecb9454ee7f6",
+      "prompt": "Premium photorealistic catering commercial. Animate the exact fully laid dining table in the reference as a real filmed object in a seamless solid near-black studio (#080808). One continuous elegant camera arc clockwise, approximately 10 degrees, with a subtle slow push-in. Real linen has gentle flowing folds along the hanging edge, the leaves move slightly, delicate realistic reflections travel across the wine glasses and silver cutlery, water and wine remain physically stable. Keep the entire table, carafe, flowers, every plate and both glasses visible with generous black safety margin. Preserve the ceviche, original ivory and sage styling, correct anatomy and placement of every object. In the last second, let the hanging linen lift gently and curl in a single controlled flowing fabric ribbon around the table edge, as a high-end practical commercial transition, while the camera eases to a stop. Smooth intentional motion, dimensional photographic lighting, natural material detail and sophisticated editorial color grading. No slideshow, no crossfade, no floating tableware, no changing food, no added objects, no people, no hands, no text, no logos, no particle tornado, no melting geometry. Silent.",
+      "sourceDuration": 5.041667
+    },
+    {
+      "id": "celebracion",
+      "taskId": "355e1ef7-195d-47e8-9863-78f7795ee159",
+      "prompt": "Premium photorealistic catering commercial. Animate the exact navy blue fully laid dining table in the reference as a real filmed object in a seamless solid near-black studio (#080808). One continuous elegant camera arc clockwise, approximately 10 degrees, with a subtle slow push-in. Real satin has gentle flowing folds along the hanging edge, the leaves move slightly, delicate realistic reflections travel across the wine glasses and gold cutlery, water and wine remain physically stable. Keep the entire table, carafe, flowers, every plate and both glasses visible with generous black safety margin. Preserve the grilled beef medallions and potatoes, original navy satin and champagne styling, correct anatomy and placement of every object. In the last second, let the hanging navy satin lift gently and curl in a single controlled flowing fabric ribbon around the table edge, as a high-end practical commercial transition, while the camera eases to a stop. Smooth intentional motion, dimensional photographic lighting, natural material detail and sophisticated editorial color grading. No slideshow, no crossfade, no floating tableware, no changing food, no added objects, no people, no hands, no text, no logos, no particle tornado, no melting geometry. Silent.",
+      "sourceDuration": 5.041667
+    },
+    {
+      "id": "sobremesa",
+      "taskId": "57c9c52c-6fc5-4cf5-a1ab-3196e3b2d86a",
+      "prompt": "Premium photorealistic catering commercial. Animate the exact dusty rose fully laid dining table in the reference as a real filmed object in a seamless solid near-black studio (#080808). One continuous elegant camera arc clockwise, approximately 10 degrees, with a subtle slow push-in. Real linen has gentle flowing folds along the hanging edge, the leaves move slightly, delicate realistic reflections travel across the wine glasses and copper dessert cutlery, water and wine remain physically stable. Keep the entire table, carafe, flowers, every plate and both glasses visible with generous black safety margin. Preserve the tiramisu, espresso cups and champagne, original dusty rose and ivory styling, correct anatomy and placement of every object. In the last second, let the hanging rose linen lift gently and curl in a single controlled flowing fabric ribbon around the table edge, as a high-end practical commercial transition, while the camera eases to a stop. Smooth intentional motion, dimensional photographic lighting, natural material detail and sophisticated editorial color grading. No slideshow, no crossfade, no floating tableware, no changing food, no added objects, no people, no hands, no text, no logos, no particle tornado, no melting geometry. Silent.",
+      "sourceDuration": 5.041667
+    }
+  ],
+  "edit": {
+    "sourceResolution": [
+      960,
+      960
+    ],
+    "fps": 30,
+    "silent": true,
+    "webEncoding": "H.264 yuv420p faststart",
+    "mobileResolution": [
+      640,
+      640
+    ],
+    "dessert": "Only first 1.9 seconds retained; optically interpolated to 5 seconds to avoid the source's cropped late camera move."
+  },
+  "outputs": {
+    "durationSeconds": 13.8,
+    "fps": 30,
+    "desktop": {
+      "mp4": "public/videos/table-film-v1.mp4",
+      "webm": "public/videos/table-film-v1.webm",
+      "width": 960,
+      "height": 960
+    },
+    "mobile": {
+      "mp4": "public/videos/table-film-v1-mobile.mp4",
+      "webm": "public/videos/table-film-v1-mobile.webm",
+      "width": 640,
+      "height": 640
+    },
+    "poster": "public/videos/table-film-v1-poster.webp",
+    "chapters": [
+      0,
+      4.7,
+      9.3
+    ]
+  }
+}

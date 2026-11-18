@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { navigationItems } from '../../config/navigation'
 import { useMobileMenu } from '../../hooks/useMobileMenu'
 import type { SectionId } from '../../types/navigation'
@@ -7,7 +8,7 @@ import { ThemeToggle } from './ThemeToggle'
 import { EditorialArrow } from '../ui/EditorialArrow'
 
 type HeaderProps = {
-  activeSection: SectionId | 'carta'
+  activeSection: SectionId | 'carta' | 'ambientacion'
   theme: Theme
   onThemeToggle: () => void
 }
@@ -15,7 +16,16 @@ type HeaderProps = {
 export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
   const { closeMenu, isOpen, menuRef, navigateToSection, toggleMenu, triggerRef } = useMobileMenu()
 
-  const isCatalogPage = activeSection === 'carta'
+  const exploreRef = useRef<HTMLDetailsElement>(null)
+  useEffect(() => {
+    const dismiss = (event: PointerEvent) => {
+      if (event.target instanceof Node && !exploreRef.current?.contains(event.target) && exploreRef.current) exploreRef.current.open = false
+    }
+    document.addEventListener('pointerdown', dismiss)
+    return () => document.removeEventListener('pointerdown', dismiss)
+  }, [])
+
+  const isCatalogPage = activeSection === 'carta' || activeSection === 'ambientacion'
   const items = navigationItems.map((item) => ({
     ...item,
     href: isCatalogPage && item.href.startsWith('#')
@@ -29,16 +39,23 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
         <div className="site-header__inner">
           <Brand href={isCatalogPage ? `${import.meta.env.BASE_URL}#inicio` : '#inicio'} />
           <nav className="desktop-nav" aria-label="Navegación principal">
-            {items.map((item) => (
-              <a
-                className={activeSection === item.id ? 'active' : undefined}
-                href={item.href}
-                aria-current={activeSection === item.id ? (isCatalogPage ? 'page' : 'location') : undefined}
-                key={item.id}
-              >
-                {item.label}
-              </a>
-            ))}
+            <div className="desktop-nav__primary">
+              {items.filter((item) => ['inicio', 'carta', 'ambientacion'].includes(item.id)).map((item) => (
+                <a className={activeSection === item.id ? 'active' : undefined} href={item.href} aria-current={activeSection === item.id ? (isCatalogPage ? 'page' : 'location') : undefined} key={item.id}>{item.id === 'ambientacion' ? 'Diseña tu mesa' : item.label}</a>
+              ))}
+            </div>
+            <details ref={exploreRef} className="desktop-nav__explore" onKeyDown={(event) => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus() } }}>
+              <summary>Conoce Legado <span aria-hidden="true">+</span></summary>
+              <div className="desktop-nav__dropdown">
+                <div className="desktop-nav__story-panel">
+                  <div className="desktop-nav__story-intro"><small>Somos Legado</small><strong>Detrás de<br /><em>cada encuentro.</em></strong><p>Una cocina familiar y una manera propia de celebrar.</p></div>
+                  <div className="desktop-nav__chapters">
+                    {items.filter((item) => ['historia', 'servicios', 'galeria', 'manera'].includes(item.id)).map((item, index) => <a href={item.href} key={item.id} aria-current={activeSection === item.id ? 'location' : undefined} onClick={(event) => event.currentTarget.closest('details')?.removeAttribute('open')}><small>{String(index + 1).padStart(2, '0')}</small><span><strong>{item.id === 'servicios' ? 'Lo que hacemos' : item.label}</strong><small>{({ historia: 'Nuestra historia, desde casa.', servicios: 'Celebraciones hechas a tu medida.', galeria: 'Momentos que ya compartimos.', manera: 'El cuidado detrás de cada detalle.' } as Record<string, string>)[item.id]}</small></span><i aria-hidden="true">↗</i></a>)}
+                  </div>
+                </div>
+              </div>
+            </details>
+            <a className="desktop-nav__contact" href={items.find((item) => item.id === 'contacto')?.href}>Conversemos <span aria-hidden="true">↗</span></a>
           </nav>
           <div className="header-actions">
             <ThemeToggle theme={theme} onToggle={onThemeToggle} />

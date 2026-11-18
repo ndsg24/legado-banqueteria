@@ -1,0 +1,22 @@
+{
+  "provider": "Runway",
+  "model": "gen-4.5",
+  "taskId": "ec9f4b43-9a2b-4e24-9266-16801f6649c7",
+  "prompt": "Photorealistic premium family catering film, based closely on this real photograph. A warm dining table with a large rectangular stainless-steel baked food serving tray, real glassware and candles. Begin with a carefully composed slightly wider view of this same setting: show BOTH tray handles and the entire rim of the serving tray with comfortable space around it, the candle to the left, and glassware in the foreground. The food remains appetizing, golden brown, exactly the same dish. Camera is almost locked: only a very slow gentle pullback of a few centimeters, no rotation, no tilt, no abrupt movement, no zoom-in. The candle flame flickers naturally, tiny warm reflections shift in the crystal and metal, faint natural steam rises delicately from the hot food. Preserve photographic texture, coherent light, correct object shape and positions. Quiet high-end restaurant editorial footage, shallow depth of field with the food in focus. Whole serving dish stays visible throughout; steady framing and constant exposure. No people, no hands, no text, no logos, no added plates, no flying ingredients, no transitions, no changing food, no exaggerated steam, no warping or melting, no dramatic camera moves. Silent, suitable as a restrained looping website film.",
+  "input": "public/images/table-detail.jpg",
+  "creditsSpent": 60,
+  "expectedCreditsRemaining": 385,
+  "source": {
+    "width": 1104,
+    "height": 832,
+    "duration": 5.041667
+  },
+  "edit": "Trim first 0.5s, dissolve the end into the first 0.5s and trim the same opening; 4s seamless web loop.",
+  "outputs": [
+    "manifesto-table-v1.mp4",
+    "manifesto-table-v1.webm",
+    "manifesto-table-v1-mobile.mp4",
+    "manifesto-table-v1-mobile.webm",
+    "manifesto-table-v1-poster.webp"
+  ]
+}

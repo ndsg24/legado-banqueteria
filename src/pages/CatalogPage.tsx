@@ -1,6 +1,7 @@
 import { AppMotionProvider } from '../app/AppMotionProvider'
 import { CatalogExperience } from '../components/catalog/CatalogExperience'
 import { Footer } from '../components/layout/Footer'
+import { PagePath } from '../components/layout/PagePath'
 import { Header } from '../components/layout/Header'
 import { useTheme } from '../hooks/useTheme'
 import '../styles/catalog.css'
@@ -14,7 +15,7 @@ export function CatalogPage() {
       <div className="site-shell catalog-page site-texture">
         <Header activeSection="carta" theme={theme} onThemeToggle={toggleTheme} />
         <main>
-          <a className="catalog-page__back" href={homeHref}>← Volver a Legado</a>
+          <PagePath href={homeHref} backLabel="Volver al inicio" current="La carta" />
           <CatalogExperience />
         </main>
         <Footer homeHref={homeHref} topHref="#carta" />

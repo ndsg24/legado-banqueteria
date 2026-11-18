@@ -17,6 +17,7 @@ export function CatalogExperience() {
           <span>La carta de Legado</span>
           <span>De la bienvenida al último brindis</span>
         </div>
+        <div className="catalog__introduction"><div>
         <h1 id="catalog-title">
           <span className="catalog__title-line"><span data-title-line>El sabor de</span></span>
           <span className="catalog__title-line"><span data-title-line><em>cada momento.</em></span></span>
@@ -25,7 +26,13 @@ export function CatalogExperience() {
           Pequeños bocados, una gran mesa y todo lo que sucede entre ambos.
           Explora nuestra cocina y empieza a imaginar tu celebración.
         </p>
-
+        </div><a className="catalog__studio-invite" href={`${import.meta.env.BASE_URL}ambientacion.html`}>
+          <span>Del sabor a la atmósfera <i aria-hidden="true">↗</i></span>
+          <strong>La mesa también<br /><em>se diseña.</em></strong>
+          <small>Explora colores, telas y flores para tu celebración.</small>
+          <span className="catalog__studio-swatches" aria-hidden="true"><i /><i /><i /><i /></span>
+          <b>Diseña tu mesa ↗</b>
+        </a></div>
       </header>
 
       <div className="catalog__collections" role="group" aria-label="Elige una carta">

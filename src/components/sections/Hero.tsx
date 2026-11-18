@@ -1,90 +1,26 @@
-import { m } from 'framer-motion'
+import { HeroFoodShowcase } from './HeroFoodShowcase'
+import { useRef } from 'react'
+import { useHeroExperience } from '../../hooks/useHeroExperience'
 import { siteConfig } from '../../config/site'
 import { EditorialArrow } from '../ui/EditorialArrow'
 
 export function Hero() {
+  const root = useRef<HTMLElement>(null)
+  useHeroExperience(root)
   return (
-    <section id="inicio" className="hero site-texture" aria-labelledby="hero-title">
-      <div className="hero__meta">
-        <p>Banquetería familiar</p>
-        <p>{siteConfig.location}</p>
-        <p>Desde nuestra casa</p>
+    <section id="inicio" className="hero hero--living site-texture" ref={root} aria-labelledby="hero-title">
+      <svg className="hero__signature" viewBox="0 0 1600 300" aria-hidden="true"><text x="800" y="258" textAnchor="middle" textLength="1540" lengthAdjust="spacingAndGlyphs" fill="#080808" stroke="#f6edc9" strokeWidth="1" strokeLinejoin="round" paintOrder="stroke fill">LEGADO</text></svg>
+      <div className="hero__meta"><p>Banquetería familiar</p><p>{siteConfig.location}</p><p>Comida hecha para reunir</p></div>
+      <div className="living-hero__layout">
+      <div className="living-hero__content">
+        <p className="living-hero__eyebrow"><span aria-hidden="true" />De nuestra casa a tu celebración</p>
+        <h1 id="hero-title"><span className="living-hero__line"><span>Hay mesas</span></span><span className="living-hero__line"><span>que se quedan</span></span><span className="living-hero__line living-hero__line--serif"><span><em>contigo.</em></span></span></h1>
+        <p className="living-hero__description">La comida se comparte.<br />Lo que vivimos alrededor, se queda.</p>
+        <div className="living-hero__actions"><a href="#contacto">Imaginemos tu celebración <EditorialArrow direction="up-right" /></a><a href={`${import.meta.env.BASE_URL}carta.html`}>Descubre la carta <EditorialArrow direction="up-right" /></a></div>
       </div>
-
-      <h1 className="hero__word" id="hero-title" aria-label="Legado">
-        <span data-letter="LE">LE</span>
-        <span data-letter="GA">GA</span>
-        <span data-letter="DO">DO</span>
-      </h1>
-
-      <div className="hero__echoes" aria-hidden="true">
-        {[0, 1].map((echo) => (
-          <div className="hero__echo-row" key={echo}>
-            <span>LE</span>
-            <span>GA</span>
-            <span>DO</span>
-          </div>
-        ))}
+      <HeroFoodShowcase />
       </div>
-
-      <figure className="hero__memory hero__memory--main">
-        <m.img
-          src={`${import.meta.env.BASE_URL}images/hero-table.jpg`}
-          alt="Mesa familiar servida con platos caseros para compartir"
-          width={1800}
-          height={1200}
-          fetchPriority="high"
-          decoding="async"
-          sizes="(max-width: 760px) calc(100vw - 28px), min(920px, 62vw)"
-          animate={{ scale: [1.02, 1.075, 1.02], x: [0, -8, 0] }}
-          transition={{ duration: 15, ease: 'easeInOut', repeat: Number.POSITIVE_INFINITY }}
-        />
-        <figcaption>La mesa está servida.</figcaption>
-      </figure>
-
-      <div className="hero__statement">
-        <p>
-          Cocina casera para días
-          <em> que no se repiten.</em>
-        </p>
-        <a href="#contacto" aria-label="Cotizar una celebración">
-          <span>Cotiza tu celebración</span>
-          <i><EditorialArrow direction="up-right" /></i>
-        </a>
-      </div>
-
-      <div className="hero__scroll">
-        <span>Desliza para sentarte a la mesa</span>
-        <i />
-      </div>
-
-      <div className="hero__gold-orbit" aria-hidden="true">
-        <svg viewBox="0 0 800 160" preserveAspectRatio="none">
-          <defs>
-            <linearGradient
-              id="orbit-shimmer"
-              gradientUnits="userSpaceOnUse"
-              x1="0"
-              y1="0"
-              x2="180"
-              y2="0"
-            >
-              <stop offset="0" stopColor="var(--gold-hot)" stopOpacity="0" />
-              <stop offset=".42" stopColor="var(--gold-hot)" stopOpacity=".18" />
-              <stop offset=".58" stopColor="var(--gold-hot)" stopOpacity="1" />
-              <stop offset="1" stopColor="var(--gold-hot)" stopOpacity="0" />
-              <animate
-                attributeName="gradientTransform"
-                values="translate(-220 0); translate(1020 0)"
-                dur="7.5s"
-                repeatCount="indefinite"
-              />
-            </linearGradient>
-          </defs>
-          <path className="hero__gold-orbit-base" d="M-40 124C155 22 645 22 840 124" />
-          <path className="hero__gold-orbit-shine" d="M-40 124C155 22 645 22 840 124" />
-        </svg>
-      </div>
+      <a className="hero__scroll" href="#historia" aria-label="Desliza para sentarte a la mesa. Conoce nuestra historia"><span>Desliza para sentarte a la mesa</span><i aria-hidden="true"><b /></i><span className="hero__scroll-cue" aria-hidden="true">↓</span></a>
     </section>
   )
 }

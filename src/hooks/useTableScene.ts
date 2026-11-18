@@ -1,0 +1,23 @@
+import { useEffect, useRef, useState } from 'react'
+import type { TableDesign, TablePart } from '../types/table'
+import type { TableScene, TableView } from '../rendering/table/TableScene'
+
+export function useTableScene(design: TableDesign, onSelect: (part: TablePart) => void) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const sceneRef = useRef<TableScene | null>(null)
+  const latest = useRef({ design, onSelect })
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+  useEffect(() => { latest.current = { design, onSelect }; sceneRef.current?.setDesign(design) }, [design, onSelect])
+  useEffect(() => {
+    let cancelled = false
+    import('../rendering/table/TableScene').then(({ TableScene }) => {
+      if (cancelled || !canvasRef.current) return
+      try {
+        const scene = new TableScene(canvasRef.current, (part) => latest.current.onSelect(part), () => setStatus('error'))
+        sceneRef.current = scene; scene.setDesign(latest.current.design); setStatus('ready')
+      } catch { setStatus('error') }
+    }).catch(() => { if (!cancelled) setStatus('error') })
+    return () => { cancelled = true; sceneRef.current?.dispose(); sceneRef.current = null }
+  }, [])
+  return { canvasRef, status, setView: (view: TableView) => sceneRef.current?.setView(view), saveImage: () => sceneRef.current?.saveImage() }
+}

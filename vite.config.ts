@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         home: 'index.html',
         catalog: 'carta.html',
+        table: 'ambientacion.html',
       },
     },
   },

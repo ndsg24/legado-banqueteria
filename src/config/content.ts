@@ -18,12 +18,14 @@ export const services = [
 
 export const galleryItems = [
   {
-    src: 'event-05.jpg',
-    alt: 'Celebración nocturna con una larga mesa preparada entre palmeras',
+    src: 'event-night-1600.webp',
+    srcSet: 'event-night-800.webp 800w, event-night-1600.webp 1600w, event-night-3200.webp 3200w',
+    fullSrc: 'event-night-3200.webp',
+    alt: 'Celebración nocturna en un jardín con mesas, invitados y palmeras iluminadas',
     title: 'Cuando cae la noche',
     detail: 'Montaje exterior',
-    width: 811,
-    height: 1100,
+    width: 3200,
+    height: 2136,
   },
   {
     src: 'event-04.jpg',

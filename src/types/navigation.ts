@@ -10,7 +10,7 @@ export const sectionIds = [
 export type SectionId = (typeof sectionIds)[number]
 
 export type NavigationItem = {
-  id: SectionId | 'carta'
+  id: SectionId | 'carta' | 'ambientacion'
   href: string
   label: string
   railLabel: string

@@ -32,7 +32,7 @@ Cocina casera para matrimonios, encuentros y celebraciones.
 |---|---|
 | UI | React, TypeScript |
 | Estilos | CSS con design tokens (`tokens.css`), layout y reglas responsive separadas |
-| Animación | Framer Motion en la landing; GSAP y Three.js en la carta |
+| Animación | Framer Motion en secciones; GSAP y Three.js en hero, carta y estudio |
 | Build | Vite |
 | Calidad | ESLint, typescript-eslint, `tsc` |
 | CI/CD | GitHub Actions → GitHub Pages |
@@ -87,9 +87,10 @@ npm run preview # previsualizar el build
 
 ## 📸 Créditos fotográficos
 
-- Hero: [Pexels / August de Richelieu](https://www.pexels.com/photo/family-having-dinner-together-4262175/)
+- Fotografía original del hero (referencia conservada): [Pexels / August de Richelieu](https://www.pexels.com/photo/family-having-dinner-together-4262175/)
 - Detalle: [Unsplash](https://unsplash.com/photos/1617295097082-96897a3d23ad)
 - Galería: material provisional de Unsplash.
+- Galería 01: [Fotógrafo Samuel Cruz / celebración nocturna](https://unsplash.com/photos/outdoor-event-with-illuminated-tables-and-guests-at-night-D-qRkpXR-KE), servida en WebP de 800, 1600 y 3200 px; el visor abre la versión de 3200 px.
 
 Las imágenes se reemplazan desde `public/images` sin modificar los componentes.
 
@@ -150,3 +151,76 @@ la misma textura punteada de la portada mediante la clase compartida `site-textu
 
 El canapé se restauró con ImageGen para completar el borde del plato; su original
 se conserva como referencia. La versión activa usa archivos con sufijo `v2`.
+
+## Estudio de ambientación (prototipo)
+
+`ambientacion.html` permite combinar mantel, carpeta, fundas, rosones y servilletas
+sobre una mesa 3D de seis a diez puestos. Las paletas y combinaciones de referencia se
+definen en `src/config/table.ts`; no representan un inventario confirmado.
+`useTableDesign` valida los colores, conserva el diseño localmente y lo incluye
+en la URL para compartirlo. La consulta por correo contiene la combinación actual.
+
+`TableScene` se importa de forma diferida y construye los muebles, telas con
+pliegues, lazos y servicio de mesa mediante geometría procedural. OrbitControls
+permite girar y acercarse; las vistas predefinidas también funcionan con teclado.
+GSAP interpola colores y cámara respetando movimiento reducido. La escena se
+renderiza al interactuar, no en un bucle permanente. Se puede guardar una imagen
+PNG; la selección de colores sigue disponible si el dispositivo no admite WebGL.
+
+El montaje adapta el diámetro de la mesa, sillas y servicio a entre 6 y 10
+puestos. Cada tela puede usar lino, satén o damasco; el centro se elige entre
+blanco clásico, rosa suave, botánico o sin arreglo. Los enlaces antiguos conservan
+sus colores y reciben valores por defecto para las opciones nuevas. La descarga
+se renderiza aparte a 3840 × 2400 px (o al límite disponible de la GPU), con fondo
+opaco, y restaura el tamaño y la cámara del visor incluso si la captura falla.
+
+La navegación principal distingue las herramientas (carta y estudio), el menú
+editorial «Conoce Legado» y el contacto. `PagePath` comparte los enlaces de regreso
+y su alineación con el contenido. El scroll por secciones queda limitado a la
+landing para que no oculte las rutas de navegación de las páginas independientes.
+
+## Hero editorial
+
+El hero conserva el mensaje «Hay mesas que se quedan contigo», las llamadas a la
+acción y la firma Legado, sobre fondo negro con la textura de puntos compartida
+por las páginas del sitio.
+GSAP coordina la entrada tipográfica y ScrollTrigger separa las capas al desplazarse.
+La invitación a deslizar incorpora una flecha y un punto de luz animados y enlaza
+con la historia. El movimiento ambiental se pausa fuera de pantalla y al ocultar
+la pestaña, y se respeta movimiento reducido. La mitad derecha presenta tres montajes fotorrealistas generados con ImageGen:
+lino marfil con ceviche y vino blanco; satén azul con medallones y vino tinto;
+lino rosa con tiramisú, café y espumante. Cada montaje cambia textiles, vajilla,
+cubiertos, flores y bebestibles manteniendo el encuadre. Las imágenes WebP con
+alfa se sirven en dos resoluciones (720 y 1254 px). No representan eventos reales.
+El hero vuelve a las tres imágenes originales con transparencia. GSAP coordina un
+fundido de 1,85 segundos y un acercamiento del 1,5% sin superar el tamaño natural
+del encuadre. Las mesas permanecen completas, sin deformaciones ni desenfoque.
+La secuencia cambia cada siete segundos, permite elegir y pausar, y se detiene
+fuera de pantalla, al ocultar la pestaña o con movimiento reducido.
+La grilla adapta la composición de dos columnas a una en móvil.
+
+El video del hero generado con Runway se conserva como material descartado en
+`public/videos/` y su documentación en `docs/video/`; el hero no lo carga.
+La firma SVG pinta el contorno bajo el relleno para evitar las intersecciones
+internas de la tipografía. No se carga una foto de fondo.
+
+La cinta de «Nuestra manera» usa dos grupos idénticos para un desplazamiento
+continuo con GSAP, con altura y margen para no recortar las letras al inclinarse.
+Se pausa al pasar el puntero. «El origen» ordena título y relato en dos columnas
+(una en móvil), con una fuente dibujada y vapor sutil. `useEditorialMotion`
+coordina ambos efectos y los detiene fuera de pantalla, con la pestaña oculta
+o cuando se solicita movimiento reducido.
+
+«Nuestra manera» presenta un video ambiental generado con Runway Gen-4.5 a
+partir de `table-detail.jpg`. El marco recto conserva la proporción 1104 × 832,
+sin recorte ni inclinación, y se apila sobre el texto en móvil. El bucle de cuatro
+segundos se sirve en WebM/MP4 y una variante de 720 px para móvil. `AmbientVideo`
+permite pausar y detiene la reproducción fuera de pantalla o con la pestaña
+oculta; usa un póster cuando se solicita movimiento reducido o falla el video.
+La procedencia y el montaje reproducible están en
+`docs/video/manifesto-production.json` y `docs/video/render_manifesto_film.py`.
+
+La escena del hero ocupa una columna algo mayor y alinea su borde superior con
+el titular. `HeroReactions` añade hojas y destellos al montaje fresco, corazones
+al cálido y un brindis al de sobremesa. Sus seis trazos flotan con GSAP sin tapar
+la comida; comparten los controles de pausa, visibilidad y movimiento reducido.

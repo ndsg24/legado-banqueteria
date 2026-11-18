@@ -22,7 +22,7 @@ export default function App() {
 
   return (
     <AppMotionProvider>
-      <div className="site-shell">
+      <div className="site-shell site-texture">
         <Header
           activeSection={activeSection}
           theme={theme}

@@ -1,3 +1,7 @@
 @import './tokens.css';
 @import './layout.css';
 @import './responsive.css';
+
+@import "./hero.css";
+
+@import "./editorial.css";
