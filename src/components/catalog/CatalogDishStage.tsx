@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import type { CatalogItem } from '../../types/catalog'
 
 type CatalogDishStageProps = {
@@ -9,6 +9,7 @@ type CatalogDishStageProps = {
 }
 
 export function CatalogDishStage({ item, index, selected, onToggle }: CatalogDishStageProps) {
+  const [imageSettled, setImageSettled] = useState(false)
   const bounds = item.imageBounds
   const longest = Math.max(bounds.width, bounds.height)
   const imageStyle = {
@@ -19,7 +20,7 @@ export function CatalogDishStage({ item, index, selected, onToggle }: CatalogDis
   } satisfies CSSProperties
 
   return (
-    <div className="catalog-card__image" data-product={item.id}>
+    <div className="catalog-card__image" data-product={item.id} data-image-settled={imageSettled}>
       <div className="catalog-card__fallback">
         <img
           style={imageStyle}
@@ -34,6 +35,8 @@ export function CatalogDishStage({ item, index, selected, onToggle }: CatalogDis
           height={item.imageHeight}
           alt={item.name}
           draggable={false}
+          onLoad={() => setImageSettled(true)}
+          onError={() => setImageSettled(true)}
         />
       </div>
       <span className="catalog-card__index">{String(index + 1).padStart(2, '0')}</span>

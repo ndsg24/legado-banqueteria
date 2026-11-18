@@ -17,6 +17,11 @@ type CatalogCardProps = {
 export function CatalogCard({ item, selected, onToggle, index }: CatalogCardProps) {
   return (
     <article className={`catalog-card${selected ? ' is-selected' : ''}`}>
+      <div className="catalog-card__skeleton" aria-hidden="true">
+        <span className="catalog-skeleton__image" />
+        <div className="catalog-skeleton__heading"><span /><span /></div>
+        <span className="catalog-skeleton__description" />
+      </div>
       <CatalogDishStage item={item} index={index} selected={selected} onToggle={onToggle} />
       <div className="catalog-card__heading" data-catalog-copy>
         <h3>{item.name}</h3>

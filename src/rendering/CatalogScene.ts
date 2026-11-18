@@ -112,13 +112,12 @@ export class CatalogScene {
       const scene = new Scene()
       const atmosphere = createAtmosphere(item, this.geometry)
       scene.add(mesh, atmosphere)
-      const state: MotionState = { reveal: 0, scale: 0.9, x: 0, y: -0.12, focus: 0, sweep: -0.4, opacity: 1, blur: 0, atmosphere: 0 }
+      const state: MotionState = { reveal: 0, scale: 1, x: 0, y: 0.035, focus: 0, sweep: -0.4, opacity: 1, blur: 0, atmosphere: 0 }
       const copy = stage.closest('article')?.querySelectorAll<HTMLElement>('[data-catalog-copy]') ?? []
       const timeline = gsap.timeline({ paused: true, onUpdate: this.requestRender })
       const delay = (index % 4) * 0.065
-      timeline.to(state, { reveal: 1, duration: 1.25, ease: 'power2.inOut' }, delay)
-      timeline.to(state, { scale: 1, y: 0.035, duration: 1.4, ease: 'power3.out' }, delay)
-      timeline.fromTo(copy, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.75, stagger: 0.055, ease: 'power3.out' }, 0.2)
+      timeline.to(state, { reveal: 1, duration: 0.9, ease: 'sine.inOut' }, delay)
+      timeline.fromTo(copy, { opacity: 0 }, { opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' }, 0.2)
 
       const view: ProductView = {
         stage, scene, mesh, atmosphere, state, timeline, visible: false, ready: false,

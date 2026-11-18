@@ -24,8 +24,8 @@ export const catalogFragmentShader = /* glsl */ `
   void main() {
     vec2 sampleUv = uBounds.xy + vUv * uBounds.zw;
     vec4 color = texture2D(uMap, sampleUv);
-    if (uReveal < 0.995 || uBlur > 0.00001) {
-      float blur = pow(1.0 - uReveal, 2.0) * 0.006 + uBlur;
+    if (uBlur > 0.00001) {
+      float blur = uBlur;
       color *= 0.5;
       color += texture2D(uMap, sampleUv + vec2(blur, 0.0)) * 0.125;
       color += texture2D(uMap, sampleUv - vec2(blur, 0.0)) * 0.125;
@@ -33,13 +33,10 @@ export const catalogFragmentShader = /* glsl */ `
       color += texture2D(uMap, sampleUv - vec2(0.0, blur)) * 0.125;
     }
 
-    float position = vUv.y + vUv.x * 0.12;
-    float curtain = mix(-0.2, 1.25, uReveal);
-    float visible = 1.0 - smoothstep(curtain - 0.1, curtain + 0.035, position);
     float sweep = exp(-pow((vUv.x * 0.8 + vUv.y * 0.4 - uSweep) * 8.0, 2.0));
     float highlights = smoothstep(0.35, 0.9, dot(color.rgb, vec3(0.2126, 0.7152, 0.0722)));
     color.rgb += vec3(0.075, 0.065, 0.045) * sweep * uFocus * highlights;
-    gl_FragColor = vec4(color.rgb, color.a * visible * uOpacity);
+    gl_FragColor = vec4(color.rgb, color.a * uReveal * uOpacity);
     #include <colorspace_fragment>
   }
 `
