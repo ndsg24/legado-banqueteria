@@ -34,33 +34,23 @@ Cocina casera para matrimonios, encuentros y celebraciones.
 | Estilos | CSS con design tokens (`tokens.css`), layout y reglas responsive separadas |
 | Animación | Framer Motion en secciones; GSAP y Three.js en hero, carta y estudio |
 | Build | Vite |
-| Calidad | ESLint, typescript-eslint, `tsc` |
+| Calidad | Prettier, ESLint, TypeScript y Playwright |
 | CI/CD | GitHub Actions → GitHub Pages |
 
 ## 🗂️ Arquitectura
 
-```text
-src/
-├── app/                    # Composición raíz y proveedores globales
-├── components/
-│   ├── decorative/         # Elementos visuales sin contenido
-│   ├── layout/             # Header, footer y navegación transversal
-│   ├── sections/           # Secciones editoriales de la landing
-│   └── ui/                 # Piezas de interfaz reutilizables
-├── config/                 # Navegación, contenido y datos del sitio
-├── hooks/                  # Comportamiento reutilizable del navegador
-├── styles/                 # Tokens, layout y reglas responsive
-└── types/                  # Contratos compartidos
-```
+Vite construye cuatro documentos HTML que GitHub Pages puede servir directamente.
+Cada uno tiene sus metadatos y monta React desde su propia entrada.
 
-### Criterios de diseño
+| Página | Entrada React | Función |
+| --- | --- | --- |
+| `index.html` | `src/main.tsx` | Portada, historia, servicios y galería |
+| `carta.html` | `src/catalog.tsx` | Carta pública de exhibición |
+| `ambientacion.html` | `src/table.tsx` | Mesa 3D y distribución del salón |
+| `cotizar.html` | `src/quote.tsx` | Cotizador por pasos, revisión y PDF |
 
-- `app/` compone; no contiene detalles de interacción.
-- Las secciones no conocen el estado global.
-- La navegación se define una sola vez en `config/navigation.ts`.
-- Los datos reemplazables viven en `config/`, no dentro del JSX.
-- Los hooks encapsulan efectos del navegador y limpian sus listeners.
-- Se usan imports directos para conservar un bundle analizable.
+La guía de contribución explica dónde ubicar componentes, estilos, reglas de negocio
+y pruebas. [Ver AGENTS.md](AGENTS.md)
 
 ## 🚀 Desarrollo local
 
@@ -75,12 +65,18 @@ Usa Node.js 22, la misma versión principal que utiliza GitHub Actions. Si tiene
 `nvm`, ejecuta `nvm install` y `nvm use` desde la raíz del proyecto.
 
 ```bash
-npm install
+npm ci
 npm run dev     # servidor de desarrollo
-npm run check   # typecheck + lint + build (control requerido antes de publicar)
+npm run format  # aplica el formato del proyecto
+npm run check   # verifica formato, lint, tipos y compilación
 npm run build   # build de producción
 npm run preview # previsualizar el build
 ```
+
+Para probar la compilación, ejecuta `npx playwright install chromium` una vez y luego
+`npm run test:e2e`. Las pruebas levantan su propio servidor en el puerto 4189 y recorren las
+cuatro páginas en escritorio y móvil. El workflow de Pages ejecuta estos controles antes
+de desplegar. Para publicar, sube la revisión a `main` y comprueba el resultado en GitHub Actions.
 
 <details>
 <summary>📝 Contenido pendiente antes de la publicación definitiva</summary>
@@ -144,7 +140,7 @@ y las huellas SHA-256 de los archivos están en `docs/catalog-generated-assets.j
 La escala óptica se normaliza con `imageBounds`, conservando las proporciones de
 cada producto. `CatalogProductGrid` mantiene un único lienzo WebGL compartido:
 `CatalogScene` renderiza cada fotografía con scissor, materiales GLSL y texturas
-sRGB. GSAP coordina el revelado con máscara, el enfoque, el barrido de luz y la
+sRGB. GSAP coordina el fundido de entrada, el enfoque, el barrido de luz y la
 entrada de los textos. Al explorar un producto, el resto se suaviza temporalmente.
 `catalogAtmosphere` añade vapor a platos calientes, partículas a preparaciones
 frescas y burbujas con reflejos de hielo facetado a bebidas, con shaders
@@ -196,7 +192,7 @@ landing para que no oculte las rutas de navegación de las páginas independient
 El hero conserva el mensaje «Hay mesas que se quedan contigo», las llamadas a la
 acción y la firma Legado, sobre fondo negro con la textura de puntos compartida
 por las páginas del sitio.
-GSAP coordina la entrada tipográfica y ScrollTrigger separa las capas al desplazarse.
+GSAP coordina la entrada del texto y de la primera mesa al cargar la portada.
 La invitación a deslizar incorpora una flecha y un punto de luz animados y enlaza
 con la historia. El movimiento ambiental se pausa fuera de pantalla y al ocultar
 la pestaña, y se respeta movimiento reducido. La mitad derecha presenta tres montajes fotorrealistas generados con ImageGen:
@@ -204,9 +200,7 @@ lino marfil con ceviche y vino blanco; satén azul con medallones y vino tinto;
 lino rosa con tiramisú, café y espumante. Cada montaje cambia textiles, vajilla,
 cubiertos, flores y bebestibles manteniendo el encuadre. Las imágenes WebP con
 alfa se sirven en dos resoluciones (720 y 1254 px). No representan eventos reales.
-El hero vuelve a las tres imágenes originales con transparencia. GSAP coordina un
-fundido de 1,85 segundos y un acercamiento del 1,5% sin superar el tamaño natural
-del encuadre. Las mesas permanecen completas, sin deformaciones ni desenfoque.
+Las tres imágenes se alternan con un fundido de opacidad de 1,5 segundos. Las mesas permanecen completas, sin deformaciones ni desenfoque.
 La secuencia cambia cada siete segundos, permite elegir y pausar, y se detiene
 fuera de pantalla, al ocultar la pestaña o con movimiento reducido.
 La grilla adapta la composición de dos columnas a una en móvil.

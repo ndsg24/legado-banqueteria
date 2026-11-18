@@ -17,6 +17,11 @@ export const navigationItems = [
     label: 'La carta',
     railLabel: 'La carta',
   },
-  { href: `${import.meta.env.BASE_URL}ambientacion.html`, id: 'ambientacion', label: 'Tu mesa', railLabel: 'Tu mesa' },
+  {
+    href: `${import.meta.env.BASE_URL}ambientacion.html`,
+    id: 'ambientacion',
+    label: 'Tu mesa',
+    railLabel: 'Tu mesa',
+  },
   ...sectionNavigationItems.slice(3),
 ] as const satisfies readonly NavigationItem[]

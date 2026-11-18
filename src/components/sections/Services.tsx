@@ -9,7 +9,11 @@ export function Services() {
           <span>La mesa</span>
           <strong>02 — 04</strong>
         </div>
-        <h2>Hay días que piden<br /><em>una mesa distinta.</em></h2>
+        <h2>
+          Hay días que piden
+          <br />
+          <em>una mesa distinta.</em>
+        </h2>
       </div>
       <div className="services__list">
         {services.map((service, index) => (
@@ -20,7 +24,9 @@ export function Services() {
               <h3>{service.title}</h3>
               <p>{service.copy}</p>
             </div>
-            <i aria-hidden="true"><EditorialArrow /></i>
+            <i aria-hidden="true">
+              <EditorialArrow />
+            </i>
           </article>
         ))}
       </div>

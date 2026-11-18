@@ -24,10 +24,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - run: npm run check
         env:
           VITE_QUOTE_ENDPOINT: ${{ vars.VITE_QUOTE_ENDPOINT }}
           VITE_WHATSAPP_NUMBER: ${{ vars.VITE_WHATSAPP_NUMBER }}
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

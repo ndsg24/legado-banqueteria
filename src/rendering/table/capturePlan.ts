@@ -13,12 +13,16 @@ export async function capturePlan(svg: SVGSVGElement, resolution: number) {
   context.fillRect(0, 0, canvas.width, canvas.height)
   copy.setAttribute('width', String(canvas.width))
   copy.setAttribute('height', String(canvas.height))
-  const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)], { type: 'image/svg+xml' }))
+  const url = URL.createObjectURL(
+    new Blob([new XMLSerializer().serializeToString(copy)], { type: 'image/svg+xml' }),
+  )
   try {
     const image = new Image()
     image.src = url
     await image.decode()
     context.drawImage(image, 0, 0)
     return canvas.toDataURL('image/png')
-  } finally { URL.revokeObjectURL(url) }
+  } finally {
+    URL.revokeObjectURL(url)
+  }
 }

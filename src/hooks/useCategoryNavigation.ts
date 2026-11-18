@@ -27,9 +27,15 @@ export function useCategoryNavigation(
     const dishes = document.getElementById('catalog-dishes')
     if (!navigation || !dishes || getComputedStyle(navigation).position !== 'sticky') return
 
-    const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 68
+    const headerHeight =
+      document.querySelector('.site-header')?.getBoundingClientRect().height ?? 68
     window.scrollTo({
-      top: window.scrollY + dishes.getBoundingClientRect().top - headerHeight - navigation.offsetHeight - 16,
+      top:
+        window.scrollY +
+        dishes.getBoundingClientRect().top -
+        headerHeight -
+        navigation.offsetHeight -
+        16,
       behavior: reducedMotion ? 'instant' : 'smooth',
     })
   }, [activeId, reducedMotion])

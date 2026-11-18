@@ -1,6 +1,14 @@
 import {
-  Mesh, PerspectiveCamera, PlaneGeometry, Scene, ShaderMaterial,
-  SRGBColorSpace, TextureLoader, Vector2, Vector4, WebGLRenderer,
+  Mesh,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Scene,
+  ShaderMaterial,
+  SRGBColorSpace,
+  TextureLoader,
+  Vector2,
+  Vector4,
+  WebGLRenderer,
 } from 'three'
 import { gsap } from 'gsap'
 import type { CatalogItem } from '../types/catalog'
@@ -8,7 +16,15 @@ import { createAtmosphere } from './catalogAtmosphere'
 import { catalogFragmentShader, catalogVertexShader } from './catalogShaders'
 
 type MotionState = {
-  reveal: number; scale: number; x: number; y: number; focus: number; sweep: number; opacity: number; blur: number; atmosphere: number
+  reveal: number
+  scale: number
+  x: number
+  y: number
+  focus: number
+  sweep: number
+  opacity: number
+  blur: number
+  atmosphere: number
 }
 
 type ProductView = {
@@ -42,8 +58,16 @@ export class CatalogScene {
   private width = 0
   private height = 0
 
-  constructor(private container: HTMLDivElement, private canvas: HTMLCanvasElement) {
-    this.renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' })
+  constructor(
+    private container: HTMLDivElement,
+    private canvas: HTMLCanvasElement,
+  ) {
+    this.renderer = new WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: 'low-power',
+    })
     this.renderer.outputColorSpace = SRGBColorSpace
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
     this.renderer.setClearColor(0x000000, 0)
@@ -57,20 +81,26 @@ export class CatalogScene {
       }
       this.requestRender()
     })
-    this.themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    this.themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    })
     this.camera.position.z = 3
     this.resizeObserver = new ResizeObserver(this.resize)
     this.resizeObserver.observe(container)
-    this.visibilityObserver = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        const view = this.views.find((candidate) => candidate.stage === entry.target)
-        if (!view) continue
-        view.visible = entry.isIntersecting
-        if (view.visible && view.ready) view.timeline.play()
-        if (!view.visible && view.state.atmosphere > 0) this.focusView(null)
-      }
-      this.requestRender()
-    }, { threshold: 0.12 })
+    this.visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const view = this.views.find((candidate) => candidate.stage === entry.target)
+          if (!view) continue
+          view.visible = entry.isIntersecting
+          if (view.visible && view.ready) view.timeline.play()
+          if (!view.visible && view.state.atmosphere > 0) this.focusView(null)
+        }
+        this.requestRender()
+      },
+      { threshold: 0.12 },
+    )
     this.canvas.addEventListener('webglcontextlost', this.contextLost)
     document.addEventListener('visibilitychange', this.visibilityChanged)
     document.fonts.addEventListener('loadingdone', this.resize)
@@ -80,7 +110,10 @@ export class CatalogScene {
   setItems(items: readonly CatalogItem[]) {
     this.clearViews()
     const generation = this.generation
-    if (this.failed) { this.container.dataset.visuals = 'fallback'; return }
+    if (this.failed) {
+      this.container.dataset.visuals = 'fallback'
+      return
+    }
     this.container.dataset.visuals = 'ready'
 
     items.forEach((item, index) => {
@@ -96,9 +129,19 @@ export class CatalogScene {
       const material = new ShaderMaterial({
         uniforms: {
           uMap: { value: null },
-          uBounds: { value: new Vector4(x / item.imageWidth, 1 - (y + height) / item.imageHeight, width / item.imageWidth, height / item.imageHeight) },
-          uReveal: { value: 0 }, uFocus: { value: 0 }, uSweep: { value: -0.4 },
-          uOpacity: { value: 1 }, uBlur: { value: 0 },
+          uBounds: {
+            value: new Vector4(
+              x / item.imageWidth,
+              1 - (y + height) / item.imageHeight,
+              width / item.imageWidth,
+              height / item.imageHeight,
+            ),
+          },
+          uReveal: { value: 0 },
+          uFocus: { value: 0 },
+          uSweep: { value: -0.4 },
+          uOpacity: { value: 1 },
+          uBlur: { value: 0 },
         },
         vertexShader: catalogVertexShader,
         fragmentShader: catalogFragmentShader,
@@ -108,26 +151,59 @@ export class CatalogScene {
         toneMapped: false,
       })
       const mesh = new Mesh(this.geometry, material)
-      mesh.scale.set(width / longest * 1.7, height / longest * 1.7, 1)
+      mesh.scale.set((width / longest) * 1.7, (height / longest) * 1.7, 1)
       const scene = new Scene()
       const atmosphere = createAtmosphere(item, this.geometry)
       scene.add(mesh, atmosphere)
-      const state: MotionState = { reveal: 0, scale: 1, x: 0, y: 0.035, focus: 0, sweep: -0.4, opacity: 1, blur: 0, atmosphere: 0 }
-      const copy = stage.closest('article')?.querySelectorAll<HTMLElement>('[data-catalog-copy]') ?? []
+      const state: MotionState = {
+        reveal: 0,
+        scale: 1,
+        x: 0,
+        y: 0.035,
+        focus: 0,
+        sweep: -0.4,
+        opacity: 1,
+        blur: 0,
+        atmosphere: 0,
+      }
+      const copy =
+        stage.closest('article')?.querySelectorAll<HTMLElement>('[data-catalog-copy]') ?? []
       const timeline = gsap.timeline({ paused: true, onUpdate: this.requestRender })
       const delay = (index % 4) * 0.065
       timeline.to(state, { reveal: 1, duration: 0.9, ease: 'sine.inOut' }, delay)
-      timeline.fromTo(copy, { opacity: 0 }, { opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' }, 0.2)
+      timeline.fromTo(
+        copy,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.75, stagger: 0.055, ease: 'power3.out' },
+        0.2,
+      )
 
       const view: ProductView = {
-        stage, scene, mesh, atmosphere, state, timeline, visible: false, ready: false,
-        size: new Vector2(width / longest * 1.7, height / longest * 1.7),
-        rect: { x: 0, y: 0, width: 0, height: 0 }, dispose: () => {},
+        stage,
+        scene,
+        mesh,
+        atmosphere,
+        state,
+        timeline,
+        visible: false,
+        ready: false,
+        size: new Vector2((width / longest) * 1.7, (height / longest) * 1.7),
+        rect: { x: 0, y: 0, width: 0, height: 0 },
+        dispose: () => {},
       }
-      const xTo = gsap.quickTo(state, 'x', { duration: 0.75, ease: 'power3.out', onUpdate: this.requestRender })
-      const yTo = gsap.quickTo(state, 'y', { duration: 0.75, ease: 'power3.out', onUpdate: this.requestRender })
+      const xTo = gsap.quickTo(state, 'x', {
+        duration: 0.75,
+        ease: 'power3.out',
+        onUpdate: this.requestRender,
+      })
+      const yTo = gsap.quickTo(state, 'y', {
+        duration: 0.75,
+        ease: 'power3.out',
+        onUpdate: this.requestRender,
+      })
       const enter = (event: Event) => {
-        if (this.media.matches || (event instanceof PointerEvent && event.pointerType !== 'mouse')) return
+        if (this.media.matches || (event instanceof PointerEvent && event.pointerType !== 'mouse'))
+          return
         this.focusView(view)
       }
       const move = (event: PointerEvent) => {
@@ -173,26 +249,36 @@ export class CatalogScene {
         stage.dataset.failed = 'true'
         timeline.progress(1).pause()
       }, 4000)
-      const source = stage.querySelector('img')?.currentSrc || `${import.meta.env.BASE_URL}${item.imageSmall ?? item.image}`
-      new TextureLoader().load(source, (texture) => {
-        if (this.disposed || generation !== this.generation) { texture.dispose(); return }
-        window.clearTimeout(loadTimeout)
-        delete stage.dataset.failed
-        texture.colorSpace = SRGBColorSpace
-        texture.anisotropy = Math.min(this.renderer.capabilities.getMaxAnisotropy(), 4)
-        material.uniforms.uMap.value = texture
-        view.ready = true
-        stage.dataset.rendered = 'true'
-        if (this.media.matches) this.finishView(view)
-        else if (view.visible) timeline.play()
-        this.requestRender()
-      }, undefined, () => {
-        if (this.disposed || generation !== this.generation) return
-        window.clearTimeout(loadTimeout)
-        timeline.progress(1).pause()
-        stage.dataset.failed = 'true'
-        delete stage.dataset.rendered
-      })
+      const source =
+        stage.querySelector('img')?.currentSrc ||
+        `${import.meta.env.BASE_URL}${item.imageSmall ?? item.image}`
+      new TextureLoader().load(
+        source,
+        (texture) => {
+          if (this.disposed || generation !== this.generation) {
+            texture.dispose()
+            return
+          }
+          window.clearTimeout(loadTimeout)
+          delete stage.dataset.failed
+          texture.colorSpace = SRGBColorSpace
+          texture.anisotropy = Math.min(this.renderer.capabilities.getMaxAnisotropy(), 4)
+          material.uniforms.uMap.value = texture
+          view.ready = true
+          stage.dataset.rendered = 'true'
+          if (this.media.matches) this.finishView(view)
+          else if (view.visible) timeline.play()
+          this.requestRender()
+        },
+        undefined,
+        () => {
+          if (this.disposed || generation !== this.generation) return
+          window.clearTimeout(loadTimeout)
+          timeline.progress(1).pause()
+          stage.dataset.failed = 'true'
+          delete stage.dataset.rendered
+        },
+      )
     })
     this.resize()
   }
@@ -211,7 +297,9 @@ export class CatalogScene {
         blur: background ? 0.0022 : 0,
         ...(focused ? { sweep: 1.7 } : {}),
         duration: focused ? 1.05 : 0.75,
-        ease: 'power3.out', overwrite: 'auto', onUpdate: this.requestRender,
+        ease: 'power3.out',
+        overwrite: 'auto',
+        onUpdate: this.requestRender,
       })
     }
   }
@@ -219,7 +307,16 @@ export class CatalogScene {
   private finishView(view: ProductView) {
     view.timeline.progress(1).pause()
     gsap.killTweensOf(view.state)
-    Object.assign(view.state, { reveal: 1, scale: 1, x: 0, y: 0.035, focus: 0, opacity: 1, blur: 0, atmosphere: 0 })
+    Object.assign(view.state, {
+      reveal: 1,
+      scale: 1,
+      x: 0,
+      y: 0.035,
+      focus: 0,
+      opacity: 1,
+      blur: 0,
+      atmosphere: 0,
+    })
   }
 
   private resize = () => {
@@ -231,7 +328,12 @@ export class CatalogScene {
     this.renderer.setSize(this.width, this.height, false)
     for (const view of this.views) {
       const rect = view.stage.getBoundingClientRect()
-      view.rect = { x: rect.left - root.left, y: root.height - (rect.bottom - root.top), width: rect.width, height: rect.height }
+      view.rect = {
+        x: rect.left - root.left,
+        y: root.height - (rect.bottom - root.top),
+        width: rect.width,
+        height: rect.height,
+      }
     }
     this.requestRender()
   }
@@ -266,27 +368,42 @@ export class CatalogScene {
       this.renderer.setScissor(rect.x, rect.y, rect.width, rect.height)
       this.renderer.render(view.scene, this.camera)
     }
-    if (!this.media.matches && this.views.some((view) => view.visible && view.ready && view.state.atmosphere > 0.001)) this.requestRender()
+    if (
+      !this.media.matches &&
+      this.views.some((view) => view.visible && view.ready && view.state.atmosphere > 0.001)
+    )
+      this.requestRender()
   }
 
-  private visibilityChanged = () => { if (!document.hidden) this.requestRender() }
+  private visibilityChanged = () => {
+    if (!document.hidden) this.requestRender()
+  }
   private motionPreferenceChanged = () => {
     if (this.media.matches) for (const view of this.views) this.finishView(view)
     this.requestRender()
   }
-  private contextLost = (event: Event) => { event.preventDefault(); this.fallback() }
+  private contextLost = (event: Event) => {
+    event.preventDefault()
+    this.fallback()
+  }
   private fallback = () => {
     this.failed = true
     cancelAnimationFrame(this.frame)
     this.frame = 0
     this.container.dataset.visuals = 'fallback'
-    for (const view of this.views) { this.finishView(view); delete view.stage.dataset.rendered }
+    for (const view of this.views) {
+      this.finishView(view)
+      delete view.stage.dataset.rendered
+    }
     this.canvas.style.visibility = 'hidden'
   }
 
   private clearViews() {
     this.generation += 1
-    for (const view of this.views) { this.visibilityObserver.unobserve(view.stage); view.dispose() }
+    for (const view of this.views) {
+      this.visibilityObserver.unobserve(view.stage)
+      view.dispose()
+    }
     this.views = []
   }
 

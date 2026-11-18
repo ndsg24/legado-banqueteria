@@ -1,11 +1,22 @@
 import js from '@eslint/js'
+import stylistic from '@stylistic/eslint-plugin'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist/**', 'test-results/**', 'playwright-report/**'] },
+  {
+    files: ['**/*.{js,ts,tsx}'],
+    plugins: { '@stylistic': stylistic },
+    rules: { '@stylistic/max-len': ['error', { code: 120, tabWidth: 2 }] },
+  },
+  {
+    files: ['public/*.js', 'eslint.config.js'],
+    extends: [js.configs.recommended],
+    languageOptions: { globals: globals.browser },
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],

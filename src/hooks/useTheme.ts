@@ -20,13 +20,11 @@ export function useTheme() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem(siteConfig.themeStorageKey, theme)
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', themeColors[theme])
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColors[theme])
   }, [theme])
 
   const toggleTheme = useCallback(() => {
-    setTheme((current) => current === 'light' ? 'dark' : 'light')
+    setTheme((current) => (current === 'light' ? 'dark' : 'light'))
   }, [])
 
   return { theme, toggleTheme }

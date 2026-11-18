@@ -15,7 +15,7 @@ export function useActiveSection() {
 
   useEffect(() => {
     const header = document.querySelector<HTMLElement>('.site-header')
-    const sections = reversedSectionIds.flatMap(id => {
+    const sections = reversedSectionIds.flatMap((id) => {
       const element = document.getElementById(id)
       return element ? [{ id, element }] : []
     })
@@ -30,11 +30,14 @@ export function useActiveSection() {
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(() => {
         const reachedPageEnd =
-          window.scrollY + window.innerHeight >=
-          document.documentElement.scrollHeight - 24
+          window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 24
 
-        const positions = sections.map(({ id, element }) => ({ id, top: element.getBoundingClientRect().top }))
-        const sectionAt = (line: number) => positions.find(section => section.top <= line)?.id ?? 'inicio'
+        const positions = sections.map(({ id, element }) => ({
+          id,
+          top: element.getBoundingClientRect().top,
+        }))
+        const sectionAt = (line: number) =>
+          positions.find((section) => section.top <= line)?.id ?? 'inicio'
         setHeaderSection(sectionAt((header?.offsetHeight ?? 0) + 1))
         setActiveSection(reachedPageEnd ? 'contacto' : sectionAt(window.innerHeight * 0.42))
       })

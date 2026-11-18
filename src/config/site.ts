@@ -5,7 +5,11 @@ export const siteConfig = {
   email: 'legadobanqueteria@gmail.com',
   location: 'Concepción, Chile',
   themeStorageKey: 'legado-theme',
-  whatsappUrl: whatsappNumber && /^[1-9]\d{7,14}$/.test(whatsappNumber)
-    ? 'https://wa.me/' + whatsappNumber + '?text=' + encodeURIComponent('Hola Legado, quiero cotizar una celebración')
-    : undefined,
+  whatsappUrl:
+    whatsappNumber && /^[1-9]\d{7,14}$/.test(whatsappNumber)
+      ? 'https://wa.me/' +
+        whatsappNumber +
+        '?text=' +
+        encodeURIComponent('Hola Legado, quiero cotizar una celebración')
+      : undefined,
 } as const

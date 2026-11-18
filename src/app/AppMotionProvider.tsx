@@ -5,7 +5,10 @@ import { PageTransition } from '../components/layout/PageTransition'
 export function AppMotionProvider({ children }: PropsWithChildren) {
   return (
     <LazyMotion features={domAnimation} strict>
-      <MotionConfig reducedMotion="user"><PageTransition />{children}</MotionConfig>
+      <MotionConfig reducedMotion="user">
+        <PageTransition />
+        {children}
+      </MotionConfig>
     </LazyMotion>
   )
 }

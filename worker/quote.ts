@@ -11,16 +11,30 @@ interface Environment {
 }
 
 // Normalize payloads from clients predating quantities or the seating plan.
-const incomingQuote = z.preprocess(quote => {
+const incomingQuote = z.preprocess((quote) => {
   if (!quote || typeof quote !== 'object' || !('items' in quote)) return quote
   const { items } = quote
   const table = 'table' in quote ? quote.table : undefined
   return {
     ...quote,
-    items: Array.isArray(items) && items.every(id => typeof id === 'string')
-      ? Object.fromEntries(items.map(id => [id, 1])) : items,
-    table: table && typeof table === 'object' ? { ...defaultLayout, ...floralDefaults, napkinFold: 'flat', overlayStyle: 'traditional', ...table,
-      bottleOutfit: migrateBottleOutfit('bottleOutfit' in table ? table.bottleOutfit : undefined, 'floral' in table ? table.floral : undefined) } : table,
+    items:
+      Array.isArray(items) && items.every((id) => typeof id === 'string')
+        ? Object.fromEntries(items.map((id) => [id, 1]))
+        : items,
+    table:
+      table && typeof table === 'object'
+        ? {
+            ...defaultLayout,
+            ...floralDefaults,
+            napkinFold: 'flat',
+            overlayStyle: 'traditional',
+            ...table,
+            bottleOutfit: migrateBottleOutfit(
+              'bottleOutfit' in table ? table.bottleOutfit : undefined,
+              'floral' in table ? table.floral : undefined,
+            ),
+          }
+        : table,
   }
 }, quoteSchema)
 const envelope = z.strictObject({ id: z.uuid(), quote: incomingQuote })
@@ -47,37 +61,63 @@ async function readBody(request: Request) {
 
 export default {
   async fetch(request: Request, env: Environment): Promise<Response> {
-    if (new URL(request.url).pathname !== '/cotizaciones') return new Response(null, { status: 404 })
-    if (request.headers.get('Origin') !== env.SITE_ORIGIN) return new Response(null, { status: 403 })
+    if (new URL(request.url).pathname !== '/cotizaciones')
+      return new Response(null, { status: 404 })
+    if (request.headers.get('Origin') !== env.SITE_ORIGIN)
+      return new Response(null, { status: 403 })
     const headers = {
-      'Access-Control-Allow-Origin': env.SITE_ORIGIN, 'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type', 'Cache-Control': 'no-store', Vary: 'Origin',
+      'Access-Control-Allow-Origin': env.SITE_ORIGIN,
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Cache-Control': 'no-store',
+      Vary: 'Origin',
     }
-    const reply = (status: number) => Response.json({ accepted: status === 202 }, { status, headers })
+    const reply = (status: number) =>
+      Response.json({ accepted: status === 202 }, { status, headers })
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers })
     if (request.method !== 'POST') return reply(405)
-    if (request.headers.get('Content-Type')?.split(';')[0].trim() !== 'application/json') return reply(415)
+    if (request.headers.get('Content-Type')?.split(';')[0].trim() !== 'application/json')
+      return reply(415)
     if (!env.MAIL_FROM || !env.MAIL_TO || !env.RESEND_API_KEY) return reply(503)
 
-    const { success } = await env.QUOTE_LIMIT.limit({ key: request.headers.get('CF-Connecting-IP') || 'unknown' })
+    const { success } = await env.QUOTE_LIMIT.limit({
+      key: request.headers.get('CF-Connecting-IP') || 'unknown',
+    })
     if (!success) return reply(429)
     let body: unknown
-    try { body = await readBody(request) } catch (error) { return reply(error instanceof RangeError ? 413 : 400) }
+    try {
+      body = await readBody(request)
+    } catch (error) {
+      return reply(error instanceof RangeError ? 413 : 400)
+    }
     const result = envelope.safeParse(body)
     if (!result.success) return reply(422)
     const { id, quote } = result.data
     try {
       const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',
-        headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json', 'Idempotency-Key': 'quote/' + id },
+        headers: {
+          Authorization: 'Bearer ' + env.RESEND_API_KEY,
+          'Content-Type': 'application/json',
+          'Idempotency-Key': 'quote/' + id,
+        },
         body: JSON.stringify({
-          from: env.MAIL_FROM, to: [env.MAIL_TO], reply_to: quote.email,
-          subject: ['Cotización Legado', quote.event, quote.date || 'Fecha por definir', quote.guests + ' invitados'].join(' · '),
+          from: env.MAIL_FROM,
+          to: [env.MAIL_TO],
+          reply_to: quote.email,
+          subject: [
+            'Cotización Legado',
+            quote.event,
+            quote.date || 'Fecha por definir',
+            quote.guests + ' invitados',
+          ].join(' · '),
           text: quoteMessage(quote),
         }),
         signal: AbortSignal.timeout(12000),
       })
       return reply(response.ok ? 202 : 502)
-    } catch { return reply(503) }
+    } catch {
+      return reply(503)
+    }
   },
 }

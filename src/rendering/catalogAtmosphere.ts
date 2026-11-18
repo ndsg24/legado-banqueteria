@@ -4,20 +4,30 @@ import type { CatalogItem } from '../types/catalog'
 /** Culinary atmosphere: warm dishes breathe, chilled dishes sparkle, drinks effervesce. */
 export function atmosphereKind(item: CatalogItem): number {
   if (/^(aperitivos|bajativos|bar)-/.test(item.id)) return 2
-  if (/^(principales|guarniciones|salsas|nocturnos)-/.test(item.id) && !/ceviche|ensalada|frí[oa]/i.test(item.name)) return 0
+  if (
+    /^(principales|guarniciones|salsas|nocturnos)-/.test(item.id) &&
+    !/ceviche|ensalada|frí[oa]/i.test(item.name)
+  )
+    return 0
   return 1
 }
 
 export function createAtmosphere(item: CatalogItem, geometry: PlaneGeometry) {
   const style = getComputedStyle(document.documentElement)
   const material = new ShaderMaterial({
-    transparent: true, depthTest: false, depthWrite: false, toneMapped: false,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false,
+    toneMapped: false,
     uniforms: {
-      uTime: { value: 0 }, uStrength: { value: 0 }, uKind: { value: atmosphereKind(item) },
+      uTime: { value: 0 },
+      uStrength: { value: 0 },
+      uKind: { value: atmosphereKind(item) },
       uGold: { value: new Color(style.getPropertyValue('--gold').trim()) },
       uMist: { value: new Color(style.getPropertyValue('--muted').trim()) },
     },
-    vertexShader: 'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+    vertexShader:
+      'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
     fragmentShader: `
       varying vec2 vUv;
       uniform float uTime, uStrength, uKind;
@@ -74,7 +84,9 @@ export function createAtmosphere(item: CatalogItem, geometry: PlaneGeometry) {
         }
         if(uKind>1.5){
           // Slow faceted ice reflections at the edges of the glass, never baked into the photograph.
-          float ice=iceCube(uv,vec2(0.30+sin(uTime*0.45)*0.013,0.46+cos(uTime*0.55)*0.016),-0.22+sin(uTime*0.3)*0.12,0.043);
+          float ice=iceCube(uv,
+            vec2(0.30+sin(uTime*0.45)*0.013,0.46+cos(uTime*0.55)*0.016),
+            -0.22+sin(uTime*0.3)*0.12,0.043);
           ice+=iceCube(uv,vec2(0.69+cos(uTime*0.4)*0.012,0.64+sin(uTime*0.48)*0.018),0.32+cos(uTime*0.35)*0.1,0.032);
           ice+=iceCube(uv,vec2(0.60+sin(uTime*0.35)*0.01,0.29+cos(uTime*0.4)*0.01),-0.35,0.024);
           float sparkle=pow(max(0.0,sin(uTime*1.4)),8.0);

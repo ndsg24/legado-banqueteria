@@ -3,9 +3,9 @@ import type { Quantities } from './quantities'
 
 export type SauceChoices = Record<string, string>
 
-const mainCourses = catalogCategories.find(category => category.id === 'principales')!.items
-export const mainCourseIds = new Set(mainCourses.map(item => item.id))
-const saucesById = new Map(menuSauces.map(item => [item.id, item]))
+const mainCourses = catalogCategories.find((category) => category.id === 'principales')!.items
+export const mainCourseIds = new Set(mainCourses.map((item) => item.id))
+const saucesById = new Map(menuSauces.map((item) => [item.id, item]))
 
 export function selectedSauce(main: string, choices: SauceChoices) {
   return saucesById.get(choices[main])

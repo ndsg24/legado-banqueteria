@@ -20,7 +20,10 @@ export function EditableSeatingPlan({ design, planRef, onChange }: Props) {
   }
 
   const isHead = selected === 'head'
-  const currentCount = typeof selected === 'number' ? design.roundSeats?.[selected] ?? design.chairs : design.headSeats
+  const currentCount =
+    typeof selected === 'number'
+      ? (design.roundSeats?.[selected] ?? design.chairs)
+      : design.headSeats
   const first = isHead ? 2 : 6
   const last = isHead ? maxHeadSeats : 10
 
@@ -30,29 +33,59 @@ export function EditableSeatingPlan({ design, planRef, onChange }: Props) {
     close()
   }
 
-  return <div className="seating-editor">
-    <div className="table-studio__plan" aria-describedby={hint}>
-      <SeatingPlan design={design} planRef={planRef} selected={selected} onPick={(table, node) => {
-        anchor.current = node
-        node.focus({ preventScroll: true })
-        setSelected(table)
-      }} />
+  return (
+    <div className="seating-editor">
+      <div className="table-studio__plan" aria-describedby={hint}>
+        <SeatingPlan
+          design={design}
+          planRef={planRef}
+          selected={selected}
+          onPick={(table, node) => {
+            anchor.current = node
+            node.focus({ preventScroll: true })
+            setSelected(table)
+          }}
+        />
+      </div>
+      <p id={hint}>Toca una mesa para ajustar sus puestos.</p>
+      <Popover
+        isOpen={selected !== null}
+        onOpenChange={(open) => {
+          if (!open) close()
+        }}
+        triggerRef={anchor}
+        placement="bottom"
+        offset={4}
+        containerPadding={10}
+        className="seating-popover"
+      >
+        <Dialog aria-label="Editar puestos" className="seating-popover__dialog">
+          <header>
+            <Heading slot="title">{isHead ? 'Cabecera' : `Mesa ${Number(selected) + 1}`}</Heading>
+            <Button onPress={close} aria-label="Cerrar editor de puestos">
+              ×
+            </Button>
+          </header>
+          <fieldset>
+            <legend>Cantidad de puestos</legend>
+            <div>
+              {Array.from({ length: last - first + 1 }, (_, index) => first + index).map(
+                (count) => (
+                  <Button
+                    key={count}
+                    aria-label={`${count} puestos`}
+                    aria-pressed={count === currentCount}
+                    autoFocus={count === currentCount}
+                    onPress={() => choose(count)}
+                  >
+                    {count}
+                  </Button>
+                ),
+              )}
+            </div>
+          </fieldset>
+        </Dialog>
+      </Popover>
     </div>
-    <p id={hint}>Toca una mesa para ajustar sus puestos.</p>
-    <Popover isOpen={selected !== null} onOpenChange={open => { if (!open) close() }}
-      triggerRef={anchor} placement="bottom" offset={4} containerPadding={10} className="seating-popover">
-      <Dialog aria-label="Editar puestos" className="seating-popover__dialog">
-        <header>
-          <Heading slot="title">{isHead ? 'Cabecera' : `Mesa ${Number(selected) + 1}`}</Heading>
-          <Button onPress={close} aria-label="Cerrar editor de puestos">×</Button>
-        </header>
-        <fieldset><legend>Cantidad de puestos</legend>
-          <div>{Array.from({ length: last - first + 1 }, (_, index) => first + index).map(count => (
-            <Button key={count} aria-label={`${count} puestos`} aria-pressed={count === currentCount}
-              autoFocus={count === currentCount} onPress={() => choose(count)}>{count}</Button>
-          ))}</div>
-        </fieldset>
-      </Dialog>
-    </Popover>
-  </div>
+  )
 }
