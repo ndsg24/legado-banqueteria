@@ -5,7 +5,6 @@
 >
   <url>
     <loc>https://ndsg24.github.io/legado-banqueteria/</loc>
-    <lastmod>2026-07-23</lastmod>
     <image:image>
       <image:loc>https://ndsg24.github.io/legado-banqueteria/images/hero-table.jpg</image:loc>
       <image:title>Mesa familiar servida por Legado Banquetería</image:title>
@@ -14,6 +13,11 @@
   </url>
   <url>
     <loc>https://ndsg24.github.io/legado-banqueteria/carta.html</loc>
-    <lastmod>2026-11-17</lastmod>
+  </url>
+  <url>
+    <loc>https://ndsg24.github.io/legado-banqueteria/ambientacion.html</loc>
+  </url>
+  <url>
+    <loc>https://ndsg24.github.io/legado-banqueteria/cotizar.html</loc>
   </url>
 </urlset>

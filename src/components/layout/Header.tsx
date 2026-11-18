@@ -8,7 +8,7 @@ import { ThemeToggle } from './ThemeToggle'
 import { EditorialArrow } from '../ui/EditorialArrow'
 
 type HeaderProps = {
-  activeSection: SectionId | 'carta' | 'ambientacion'
+  activeSection: SectionId | 'carta' | 'ambientacion' | 'cotizar'
   theme: Theme
   onThemeToggle: () => void
 }
@@ -25,10 +25,10 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
     return () => document.removeEventListener('pointerdown', dismiss)
   }, [])
 
-  const isCatalogPage = activeSection === 'carta' || activeSection === 'ambientacion'
+  const isStandalonePage = activeSection === 'carta' || activeSection === 'ambientacion' || activeSection === 'cotizar'
   const items = navigationItems.map((item) => ({
     ...item,
-    href: isCatalogPage && item.href.startsWith('#')
+    href: isStandalonePage && item.href.startsWith('#')
       ? `${import.meta.env.BASE_URL}${item.href}`
       : item.href,
   }))
@@ -37,11 +37,11 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
     <>
       <header className={`site-header${isOpen ? ' menu-open' : ''}`}>
         <div className="site-header__inner">
-          <Brand href={isCatalogPage ? `${import.meta.env.BASE_URL}#inicio` : '#inicio'} />
+          <Brand href={isStandalonePage ? `${import.meta.env.BASE_URL}#inicio` : '#inicio'} />
           <nav className="desktop-nav" aria-label="Navegación principal">
             <div className="desktop-nav__primary">
               {items.filter((item) => ['inicio', 'carta', 'ambientacion'].includes(item.id)).map((item) => (
-                <a className={activeSection === item.id ? 'active' : undefined} href={item.href} aria-current={activeSection === item.id ? (isCatalogPage ? 'page' : 'location') : undefined} key={item.id}>{item.id === 'ambientacion' ? 'Diseña tu mesa' : item.label}</a>
+                <a className={activeSection === item.id ? 'active' : undefined} href={item.href} aria-current={activeSection === item.id ? (isStandalonePage ? 'page' : 'location') : undefined} key={item.id}>{item.id === 'ambientacion' ? 'Diseña tu mesa' : item.label}</a>
               ))}
             </div>
             <details ref={exploreRef} className="desktop-nav__explore" onKeyDown={(event) => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus() } }}>

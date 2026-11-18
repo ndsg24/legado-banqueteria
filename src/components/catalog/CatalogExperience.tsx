@@ -96,7 +96,8 @@ export function CatalogExperience() {
       </p>
       <CatalogSelection
         items={catalog.selectedItems}
-        onRemove={catalog.toggleItem}
+        quantities={catalog.quantities}
+        onQuantityChange={catalog.setQuantity}
         onClear={catalog.clearSelection}
       />
     </section>

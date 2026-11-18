@@ -85,12 +85,25 @@ npm run preview # previsualizar el build
 <details>
 <summary>📝 Contenido pendiente antes de la publicación definitiva</summary>
 
-- Reemplazar el número de WhatsApp en `src/config/site.ts`.
+- Configurar el número de WhatsApp de atención en la variable de GitHub Actions `VITE_WHATSAPP_NUMBER` con código de país y solo dígitos.
 - Confirmar el correo de contacto.
 - Sustituir las fotografías referenciales por material propio.
 - Revisar textos finales de servicios, ubicación y trayectoria.
 
 </details>
+
+## Cotizaciones por correo
+
+El formulario está en `cotizar.html`. Los enlaces antiguos a `#cotizar` conservan su selección y redirigen a esa página. El calendario de React Aria permite elegir desde hoy hasta la misma fecha del año siguiente en la zona de Santiago. React Hook Form y la función de recepción usan el mismo esquema Zod en `src/quote/request.ts`. La selección de la carta se conserva durante la sesión. El diseño incluye puestos, telas, texturas, flores y vajilla. Las consultas llegan como texto, con el correo del cliente en Reply-To.
+
+Para activar el envío automático:
+
+1. Verificar un dominio remitente en Resend y generar una clave para envío.
+2. En Cloudflare, desplegar `worker/quote.ts` con la configuración de `worker/wrangler.jsonc` usando `npx wrangler@4 deploy --config worker/wrangler.jsonc`. Configurar los secretos `RESEND_API_KEY`, `MAIL_FROM` (remitente verificado) y `MAIL_TO` (buzón que recibirá las solicitudes) en el Worker. El origen permitido está en `SITE_ORIGIN`.
+3. En las variables de GitHub Actions, establecer `VITE_QUOTE_ENDPOINT` con la URL HTTPS del Worker terminada en `/cotizaciones`. Volver a ejecutar el workflow de Pages. La clave de correo pertenece exclusivamente al Worker.
+4. Probar desde el sitio publicado y verificar la recepción en el buzón elegido. Para desarrollo local, Vite lee la misma URL desde `.env.local`. Configurar el origen del servidor de desarrollo en el Worker de pruebas.
+
+Mientras falte el endpoint, el botón «Preparar correo» abre un borrador en la aplicación de correo del visitante. El modo automático confirma la solicitud cuando el proveedor acepta el mensaje.
 
 ## 📸 Créditos fotográficos
 

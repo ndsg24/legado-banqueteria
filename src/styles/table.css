@@ -117,6 +117,8 @@
 .table-studio__flowers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .table-studio__flowers button { display: flex; align-items: center; gap: 10px; background: var(--canvas); border: 1px solid var(--line); text-align: left; padding: 12px 10px; font-size: .6rem; cursor: pointer; }
 .table-studio__flowers button[aria-pressed='true'] { border-color: var(--gold); }
+.plate-sample { width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; border: 2px solid #8885; box-shadow: inset 0 0 0 3px #fff4, inset 0 0 5px 4px #0002; }
+.plate-sample[data-rim='true'] { border-color: #b59961; }
 .floral-sample { display: grid; place-items: center; width: 35px; height: 35px; border-radius: 50%; background: var(--surface); font: 1.5rem var(--serif); color: #b7ac90; }
 .floral-sample--rose { color: #c88e9c; }
 .floral-sample--botanical { color: #647d58; }

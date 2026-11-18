@@ -47,7 +47,7 @@ export function PageTransition() {
       if (!anchor || anchor.hasAttribute('download') || (anchor.target && anchor.target !== '_self')) return
       const url = new URL(anchor.href, location.href)
       if (url.origin !== location.origin || !url.pathname.startsWith(import.meta.env.BASE_URL) || url.pathname === location.pathname) return
-      if (!['/', '/index.html', '/carta.html', '/ambientacion.html'].includes('/' + url.pathname.slice(import.meta.env.BASE_URL.length))) return
+      if (!['/', '/index.html', '/carta.html', '/ambientacion.html', '/cotizar.html'].includes('/' + url.pathname.slice(import.meta.env.BASE_URL.length))) return
       event.preventDefault()
       if (navigating) return
       navigating = true

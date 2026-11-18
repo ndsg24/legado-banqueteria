@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { TableDesign, TablePart } from '../types/table'
 import type { TableScene, TableView } from '../rendering/table/TableScene'
 
-export function useTableScene(design: TableDesign, onSelect: (part: TablePart) => void) {
+export function useTableScene(design: TableDesign, onSelect?: (part: TablePart) => void) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sceneRef = useRef<TableScene | null>(null)
   const latest = useRef({ design, onSelect })
@@ -13,11 +13,12 @@ export function useTableScene(design: TableDesign, onSelect: (part: TablePart) =
     import('../rendering/table/TableScene').then(({ TableScene }) => {
       if (cancelled || !canvasRef.current) return
       try {
-        const scene = new TableScene(canvasRef.current, (part) => latest.current.onSelect(part), () => setStatus('error'))
+        const select = latest.current.onSelect ? (part: TablePart) => latest.current.onSelect?.(part) : undefined
+        const scene = new TableScene(canvasRef.current, select, () => setStatus('error'))
         sceneRef.current = scene; scene.setDesign(latest.current.design); setStatus('ready')
       } catch { setStatus('error') }
     }).catch(() => { if (!cancelled) setStatus('error') })
     return () => { cancelled = true; sceneRef.current?.dispose(); sceneRef.current = null }
   }, [])
-  return { canvasRef, status, setView: (view: TableView) => sceneRef.current?.setView(view), saveImage: () => sceneRef.current?.saveImage() }
+  return { canvasRef, status, capturePreview: () => status === 'ready' ? sceneRef.current?.capturePreview() : undefined, setView: (view: TableView) => sceneRef.current?.setView(view), saveImage: () => sceneRef.current?.saveImage() }
 }

@@ -1,8 +1,11 @@
+const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER?.trim()
+
 export const siteConfig = {
   brandName: 'Legado',
   email: 'legadobanqueteria@gmail.com',
   location: 'Concepción, Chile',
   themeStorageKey: 'legado-theme',
-  whatsappUrl:
-    'https://wa.me/56900000000?text=Hola%20Legado,%20quiero%20cotizar%20una%20celebración',
+  whatsappUrl: whatsappNumber && /^[1-9]\d{7,14}$/.test(whatsappNumber)
+    ? 'https://wa.me/' + whatsappNumber + '?text=' + encodeURIComponent('Hola Legado, quiero cotizar una celebración')
+    : undefined,
 } as const

@@ -9,8 +9,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { gsap } from 'gsap'
 import { createFlowers } from './flowers'
-import { floralStyles } from '../../config/table'
-import { fabricColor } from '../../config/table'
+import { dinnerwareStyles, fabricColor, floralStyles } from '../../config/table'
 import { tableParts } from '../../types/table'
 import type { TableDesign, TablePart } from '../../types/table'
 import { bowLoopGeometry, fabricMaterial, overlayGeometry, tableclothGeometry } from './fabrics'
@@ -26,6 +25,8 @@ export class TableScene {
   private tableSurface = new Group()
   private chairs: Group[] = []
   private settings: Group[] = []
+  private plateMaterial = new MeshPhysicalMaterial()
+  private plateRims: Mesh[] = []
   private flowers = new Map<string, Group>()
   private resizeObserver: ResizeObserver
   private frame = 0
@@ -35,7 +36,7 @@ export class TableScene {
   private press = new Vector2()
   private reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 
-  constructor(private canvas: HTMLCanvasElement, private onSelect: (part: TablePart) => void, private onError: () => void) {
+  constructor(private canvas: HTMLCanvasElement, private onSelect: ((part: TablePart) => void) | undefined, private onError: () => void) {
     this.renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true })
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75))
     this.renderer.setClearColor(0x000000, 0)
@@ -66,9 +67,11 @@ export class TableScene {
     this.build()
     this.resizeObserver = new ResizeObserver(this.resize)
     this.resizeObserver.observe(canvas.parentElement!)
-    canvas.addEventListener('pointerdown', this.pointerDown)
-    canvas.addEventListener('pointerup', this.pointerUp)
-    canvas.addEventListener('pointermove', this.pointerMove)
+    if (onSelect) {
+      canvas.addEventListener('pointerdown', this.pointerDown)
+      canvas.addEventListener('pointerup', this.pointerUp)
+      canvas.addEventListener('pointermove', this.pointerMove)
+    }
     canvas.addEventListener('webglcontextlost', this.contextLost)
     this.resize()
   }
@@ -119,10 +122,12 @@ export class TableScene {
       const setting = new Group()
       setting.position.set(Math.sin(angle) * 0.82, 1.07, Math.cos(angle) * 0.82)
       setting.rotation.y = angle; this.scene.add(setting); this.settings.push(setting)
-      const plate = this.mesh(new LatheGeometry([new Vector2(0, 0), new Vector2(0.15, 0), new Vector2(0.20, 0.012), new Vector2(0.23, 0.025), new Vector2(0.235, 0.032)], 48), ceramic, setting)
-      plate.receiveShadow = true
+      // Trace the profile from the outer lip toward the center so its glazed face points up.
+      const plateProfile = [new Vector2(0.235, 0.032), new Vector2(0.23, 0.025), new Vector2(0.20, 0.012), new Vector2(0.15, 0), new Vector2(0, 0)]
+      this.mesh(new LatheGeometry(plateProfile, 64), this.plateMaterial, setting)
       const lip = this.mesh(new TorusGeometry(0.232, 0.002, 6, 64), gold, setting)
       lip.rotation.x = Math.PI / 2; lip.position.y = 0.032
+      this.plateRims.push(lip)
       const napkin = this.mesh(new RoundedBoxGeometry(0.17, 0.025, 0.25, 2, 0.006), this.fabrics.napkin, setting, 'napkin')
       napkin.position.y = 0.04; napkin.rotation.y = 0.1
       for (const side of [-1, 1]) {
@@ -144,6 +149,11 @@ export class TableScene {
   }
 
   setDesign(design: TableDesign) {
+    const finish = dinnerwareStyles[design.dinnerware]
+    this.plateMaterial.color.set(finish.color)
+    this.plateMaterial.roughness = finish.roughness
+    this.plateMaterial.clearcoat = finish.clearcoat
+    this.plateRims.forEach((rim) => { rim.visible = design.dinnerware === 'goldRim' })
     const scale = 1 + (design.chairs - 6) * 0.06
     this.tableSurface.scale.set(scale, 1, scale)
     this.chairs.forEach((chair, index) => {
@@ -156,6 +166,7 @@ export class TableScene {
       setting.position.set(Math.sin(angle) * 0.82 * scale, 1.07, Math.cos(angle) * 0.82 * scale)
       setting.rotation.y = angle
     })
+    this.requestRender()
     this.flowers.forEach((group, id) => { group.visible = id === design.floral })
     for (const part of tableParts) {
       const material = this.fabrics[part], target = new Color(fabricColor(design[part]).hex)
@@ -170,6 +181,19 @@ export class TableScene {
   setView(view: TableView) {
     const position = view === 'overhead' ? { x: 0.01, y: 7.5, z: 0.8 } : view === 'chairs' ? { x: 3.8, y: 2.1, z: 3.6 } : { x: 4.6, y: 3.5, z: 5.4 }
     gsap.to(this.camera.position, { ...position, duration: this.reducedMotion.matches ? 0 : 1.2, ease: 'power3.inOut', overwrite: true, onUpdate: () => { this.controls.update(); this.requestRender() } })
+  }
+
+  capturePreview() {
+    this.renderer.render(this.scene, this.camera)
+    const picture = document.createElement('canvas')
+    picture.width = Math.min(1200, this.canvas.width)
+    picture.height = Math.max(1, Math.round(picture.width * this.canvas.height / this.canvas.width))
+    const context = picture.getContext('2d')
+    if (!context) return undefined
+    context.fillStyle = '#e5dfd2'
+    context.fillRect(0, 0, picture.width, picture.height)
+    context.drawImage(this.canvas, 0, 0, picture.width, picture.height)
+    return picture.toDataURL('image/jpeg', 0.9)
   }
 
   async saveImage() {
@@ -204,7 +228,7 @@ export class TableScene {
   private pointerUp = (event: PointerEvent) => {
     if (this.press.distanceTo(new Vector2(event.clientX, event.clientY)) > 6) return
     const part = this.hit(event)
-    if (part) this.onSelect(part)
+    if (part) this.onSelect?.(part)
   }
   private pointerMove = (event: PointerEvent) => { this.canvas.style.cursor = this.hit(event) ? 'pointer' : 'grab' }
   private contextLost = (event: Event) => { event.preventDefault(); this.onError() }

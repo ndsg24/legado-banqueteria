@@ -67,9 +67,9 @@
 .catalog-selection__body > p { font-size: .85rem; }
 .catalog-selection ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
 .catalog-selection li { display: flex; align-items: center; gap: 10px; padding: 5px 5px 5px 12px; border: 1px solid var(--line); border-radius: 30px; font-size: .65rem; }
-.catalog-selection li button { width: 30px; height: 30px; border: 0; background: transparent; cursor: pointer; font-size: 1.2rem; }
 .catalog-selection__actions { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin: 24px 0; }
 .catalog-selection__actions > button { padding: 10px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; font-size: .65rem; cursor: pointer; }
+.catalog-selection__remove { background: transparent; border: 0; min-height: 44px; cursor: pointer; color: var(--muted); text-decoration: underline; text-underline-offset: .3em; }
 .catalog-selection__body > small { display: block; max-width: 440px; color: var(--muted); font-size: .63rem; line-height: 1.7; }
 @keyframes catalog-enter { from { opacity: 0; } to { opacity: 1; } }
 @media (max-width: 1100px) { .catalog__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .tasting-menu__course-list--full { justify-content: flex-start; } .desktop-nav { gap: 18px; font-size: .58rem; } }
