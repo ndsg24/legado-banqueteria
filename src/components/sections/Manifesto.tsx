@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { RingLines, WaveLines } from '../decorative/BackgroundMotifs'
 import { AmbientVideo } from '../ui/AmbientVideo'
 import { useEditorialMotion } from '../../hooks/useEditorialMotion'
 import { EditorialArrow } from '../ui/EditorialArrow'
@@ -16,6 +17,8 @@ export function Manifesto() {
   useEditorialMotion(details, 'manifesto')
   return (
     <section className="manifesto manifesto--film" id="manera">
+      <svg className="manifesto__motif manifesto__motif--rings" viewBox="0 0 220 220" aria-hidden="true"><RingLines /></svg>
+      <svg className="manifesto__motif manifesto__motif--waves" viewBox="0 0 300 180" aria-hidden="true"><WaveLines /></svg>
       <div className="manifesto__ticker" ref={ribbon} aria-hidden="true">
         <div className="ribbon__track">
           {[0, 1].map(copy => <div className="ribbon__group" key={copy}>

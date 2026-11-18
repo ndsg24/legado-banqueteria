@@ -32,26 +32,46 @@
 }
 .quote-field :is(input, select, textarea, .quote-date-trigger):focus,
 .quote-field .quote-date-trigger[aria-expanded=true],
-.quote-commune-search:focus-within input,
+.quote-commune-trigger:is(:focus-visible, [aria-expanded=true]),
 :is(.quote-form, .quote-summary) .quantity-control input:focus {
   outline: none; border-bottom-color: var(--field-focus, var(--gold));
   box-shadow: inset 0 -1px var(--field-focus, var(--gold));
 }
-.quote-commune-search button:focus { outline: none; }
 @media (forced-colors: active) {
   .quote-field :is(input, select, textarea, button):focus-visible,
   :is(.quote-form, .quote-summary) .quantity-control input:focus-visible { outline: 2px solid Highlight; outline-offset: 1px; }
 }
 .quote-field option { background: var(--canvas); color: var(--ink); }
-.quote-commune-search { position: relative; }
-.quote-commune-search input { padding-inline-end: 2.75rem; }
-.quote-commune-search button { position: absolute; inset: 0 0 0 auto; width: 44px; padding: 0; display: grid; place-items: center; border: 0; background: transparent; color: var(--gold); cursor: pointer; }
-.quote-communes { z-index: 100; width: var(--trigger-width); overflow-y: auto; padding: .25rem; border: 1px solid var(--line); background: var(--canvas); color: var(--ink); }
-.quote-communes [role=listbox] { max-height: min(15rem, 36dvh); overflow-y: auto; overscroll-behavior: contain; }
-.quote-communes__empty { display: block; padding: .85rem .75rem; color: var(--muted); font-size: .85rem; }
-.quote-communes [role=option] { display: flex; align-items: center; min-height: 44px; padding: .5rem .75rem; font-size: .85rem; cursor: pointer; }
-.quote-communes [data-focused] { outline: none; background: color-mix(in srgb, var(--gold) 14%, var(--canvas)); }
-.quote-communes [aria-selected=true] { font-weight: 700; }
+.quote-commune-trigger {
+  display: flex; align-items: center; gap: .65rem; min-width: 0; min-height: 48px;
+  padding: .6rem .25rem; border: 0; border-bottom: 1px solid var(--line);
+  background: transparent; color: var(--ink); font: inherit; text-align: start; cursor: pointer;
+}
+.quote-field[data-invalid] .quote-commune-trigger { --field-focus: var(--quote-error); border-color: var(--quote-error); }
+.quote-commune-trigger svg, .quote-communes svg {
+  flex: none; width: 18px; height: 18px; fill: none; stroke: currentColor;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; color: var(--gold);
+}
+.quote-commune-trigger .quote-commune-chevron { margin-inline-start: auto; width: 15px; }
+.quote-commune-trigger[aria-expanded=true] .quote-commune-chevron { rotate: 180deg; }
+.quote-communes {
+  display: flex; flex-direction: column; z-index: 100;
+  width: min(max(var(--trigger-width), 16rem), calc(100vw - 24px)); padding: .45rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); border-radius: 12px;
+  background: var(--canvas); color: var(--ink); box-shadow: 0 12px 36px #0003;
+}
+.quote-communes__search {
+  flex: none; display: flex; align-items: center; gap: .6rem; padding: 0 .65rem;
+  background: var(--surface); border-radius: 7px; border: 1px solid transparent;
+}
+.quote-communes__search:focus-within { border-color: color-mix(in srgb, var(--gold) 55%, transparent); }
+.quote-communes__search input { min-width: 0; width: 100%; height: 44px; padding: 0; outline: none; border: 0; color: var(--ink); background: transparent; font: 400 1rem var(--sans); }
+.quote-communes__search input::placeholder { color: var(--muted); }
+.quote-communes [role=listbox] { min-height: 0; margin-top: .3rem; max-height: min(15rem, 32dvh); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+.quote-communes__empty { display: block; padding: .85rem .65rem; color: var(--muted); font-size: .85rem; }
+.quote-communes [role=option] { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: .5rem .7rem; border-radius: 6px; font-size: .875rem; cursor: pointer; }
+.quote-communes [role=option]:is([data-focused], [data-hovered]) { outline: none; background: var(--surface); }
+.quote-communes [role=option][aria-selected=true] { font-weight: 700; background: color-mix(in srgb, var(--gold) 13%, var(--canvas)); }
 .quote-date-trigger { display: flex; align-items: center; justify-content: space-between; gap: .5rem; text-align: left; cursor: pointer; }
 .quote-date-trigger svg { color: var(--gold); }
 .quote-field textarea { resize: vertical; }

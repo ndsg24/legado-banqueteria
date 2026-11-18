@@ -9,11 +9,12 @@ import { EditorialArrow } from '../ui/EditorialArrow'
 
 type HeaderProps = {
   activeSection: SectionId | 'carta' | 'ambientacion' | 'cotizar'
+  headerSection?: SectionId
   theme: Theme
   onThemeToggle: () => void
 }
 
-export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
+export function Header({ activeSection, headerSection, theme, onThemeToggle }: HeaderProps) {
   const { closeMenu, isOpen, menuRef, navigateToSection, toggleMenu, triggerRef } = useMobileMenu()
 
   const exploreRef = useRef<HTMLDetailsElement>(null)
@@ -26,6 +27,9 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
   }, [])
 
   const isStandalonePage = activeSection === 'carta' || activeSection === 'ambientacion' || activeSection === 'cotizar'
+  let headerTone = theme
+  if (!isOpen && headerSection === 'inicio') headerTone = 'dark'
+  if (!isOpen && headerSection === 'servicios') headerTone = theme === 'dark' ? 'light' : 'dark'
   const items = navigationItems.map((item) => ({
     ...item,
     href: isStandalonePage && item.href.startsWith('#')
@@ -35,7 +39,7 @@ export function Header({ activeSection, theme, onThemeToggle }: HeaderProps) {
 
   return (
     <>
-      <header className={`site-header${isOpen ? ' menu-open' : ''}`}>
+      <header data-tone={headerTone} data-section={isOpen ? undefined : headerSection} className={`site-header${isOpen ? ' menu-open' : ''}`}>
         <div className="site-header__inner">
           <Brand href={isStandalonePage ? `${import.meta.env.BASE_URL}#inicio` : '#inicio'} />
           <nav className="desktop-nav" aria-label="Navegación principal">

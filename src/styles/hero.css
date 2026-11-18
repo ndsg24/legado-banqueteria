@@ -1,6 +1,6 @@
 .hero--living { position: relative; width: 100%; height: auto; min-height: calc(100svh - 78px); padding-inline: 0; isolation: isolate; overflow: hidden; background-color: #080808; color: #f8f4e9; }
 .hero--living .hero__meta { position: relative; z-index: 4; width: min(calc(100% - 80px), 2000px); color: #f3e9cfb3; padding-top: 28px; font-size: .52rem; }
-.hero--living .hero__signature { position: absolute; inset: auto 0 -5%; width: 100%; height: auto; z-index: 0; pointer-events: none; overflow: visible; }
+.hero--living .hero__signature { position: absolute; inset: auto 0 min(0px, calc(32px - 2.6vw)); width: 100%; height: auto; z-index: 0; pointer-events: none; overflow: visible; }
 .hero__signature-base { stroke: #f6edc9; stroke-opacity: .10; stroke-width: 1px; }
 .hero__signature-trace { opacity: 0; stroke-linecap: round; }
 .hero__signature-trail { stroke: #aa8c58; stroke-opacity: .65; stroke-width: 1px; stroke-dasharray: 8 100; }

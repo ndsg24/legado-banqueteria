@@ -16,7 +16,7 @@ import { AppMotionProvider } from './AppMotionProvider'
 
 export default function App() {
   const { theme, toggleTheme } = useTheme()
-  const activeSection = useActiveSection()
+  const { activeSection, headerSection } = useActiveSection()
   useScrollReveal()
   useInitialHash()
 
@@ -25,6 +25,7 @@ export default function App() {
       <div className="site-shell site-texture">
         <Header
           activeSection={activeSection}
+          headerSection={headerSection}
           theme={theme}
           onThemeToggle={toggleTheme}
         />

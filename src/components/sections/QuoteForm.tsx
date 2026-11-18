@@ -217,7 +217,7 @@ export default function QuoteForm() {
             } />
             <Controller name="location" control={control} render={({ field, fieldState }) =>
               <EventCommuneSelect value={field.value} onChange={field.onChange} onBlur={field.onBlur}
-                inputRef={field.ref} error={fieldState.error?.message} />
+                triggerRef={field.ref} error={fieldState.error?.message} />
             } />
             <Controller name="date" control={control} render={({ field, fieldState }) =>
               <EventDatePicker value={field.value} onChange={field.onChange} onBlur={field.onBlur}

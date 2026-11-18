@@ -19,6 +19,7 @@ export const services = [
 export const galleryItems = [
   {
     src: 'event-night-1600.webp',
+    sketch: 'stars',
     srcSet: 'event-night-800.webp 800w, event-night-1600.webp 1600w, event-night-3200.webp 3200w',
     fullSrc: 'event-night-3200.webp',
     alt: 'Celebración nocturna en un jardín con mesas, invitados y palmeras iluminadas',
@@ -29,6 +30,7 @@ export const galleryItems = [
   },
   {
     src: 'event-04.jpg',
+    sketch: 'citrus',
     alt: 'Puesto de mesa con flores, limones y cubiertos dorados',
     title: 'Todo está en los detalles',
     detail: 'Mesa de celebración',
@@ -37,6 +39,7 @@ export const galleryItems = [
   },
   {
     src: 'event-01.jpg',
+    sketch: 'toast',
     alt: 'Invitados compartiendo durante una celebración familiar',
     title: 'La gente es el centro',
     detail: 'Encuentro íntimo',
@@ -45,6 +48,7 @@ export const galleryItems = [
   },
   {
     src: 'event-03.jpg',
+    sketch: 'candle',
     alt: 'Mesa preparada con flores, velas y cristalería',
     title: 'Antes de que lleguen',
     detail: 'Preparación',
@@ -53,6 +57,7 @@ export const galleryItems = [
   },
   {
     src: 'event-06.jpg',
+    sketch: 'leaves',
     alt: 'Mesa larga iluminada con velas y follaje',
     title: 'Una mesa que espera',
     detail: 'Cena familiar',

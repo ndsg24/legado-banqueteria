@@ -17,12 +17,10 @@
     margin: 0;
     padding: 0 14px;
     border-bottom: 1px solid var(--line);
-    background: color-mix(in srgb, var(--canvas) 78%, transparent);
   }
   .site-header__inner { grid-template-columns: 1fr auto; }
   .site-header.menu-open {
     border-color: color-mix(in srgb, var(--gold) 38%, transparent);
-    background: color-mix(in srgb, var(--canvas) 88%, transparent);
   }
   .desktop-nav,
   .site-header .theme-toggle { display: none; }
@@ -138,10 +136,9 @@
     margin: 0;
     padding: 0 14px;
     border-bottom: 1px solid var(--line);
-    background: color-mix(in srgb, var(--canvas) 78%, transparent);
   }
   .site-header__inner { grid-template-columns: 1fr auto; }
-  .site-header.menu-open { border-color: color-mix(in srgb, var(--gold) 38%, transparent); background: color-mix(in srgb, var(--canvas) 88%, transparent); }
+  .site-header.menu-open { border-color: color-mix(in srgb, var(--gold) 38%, transparent); }
   .desktop-nav, .site-header .theme-toggle { display: none; }
   .brand small { display: none; }
   .header-actions { gap: 0; }

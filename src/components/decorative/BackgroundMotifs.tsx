@@ -7,19 +7,31 @@ const reveal = (from: 'left' | 'right') => ({
   transition: { duration: 1.25, ease: [0.22, 1, 0.36, 1] as const },
 })
 
+export function RingLines() {
+  return <>
+    <circle cx="110" cy="110" r="88" />
+    <circle cx="110" cy="110" r="61" />
+    <circle cx="110" cy="110" r="18" />
+  </>
+}
+
+export function WaveLines() {
+  return <>
+    <path d="M-12 44C36 10 74 78 122 44S208 10 256 44s86-34 134 0" />
+    <path d="M-12 82c48-34 86 34 134 0s86-34 134 0 86-34 134 0" />
+    <path d="M-12 120c48-34 86 34 134 0s86-34 134 0 86-34 134 0" />
+  </>
+}
+
 export function BackgroundMotifs() {
   return (
     <div className="background-motifs" aria-hidden="true">
       <m.svg className="background-motif background-motif--rings" viewBox="0 0 220 220" {...reveal('right')}>
-        <circle cx="110" cy="110" r="88" />
-        <circle cx="110" cy="110" r="61" />
-        <circle cx="110" cy="110" r="18" />
+        <RingLines />
       </m.svg>
 
       <m.svg className="background-motif background-motif--waves" viewBox="0 0 300 180" {...reveal('left')}>
-        <path d="M-12 44C36 10 74 78 122 44S208 10 256 44s86-34 134 0" />
-        <path d="M-12 82c48-34 86 34 134 0s86-34 134 0 86-34 134 0" />
-        <path d="M-12 120c48-34 86 34 134 0s86-34 134 0 86-34 134 0" />
+        <WaveLines />
       </m.svg>
 
       <m.svg className="background-motif background-motif--stitches" viewBox="0 0 220 260" {...reveal('right')}>

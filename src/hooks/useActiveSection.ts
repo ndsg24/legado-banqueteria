@@ -11,7 +11,14 @@ function isSectionId(value: string): value is SectionId {
 export function useActiveSection() {
   const [activeSection, setActiveSection] = useState<SectionId>('inicio')
 
+  const [headerSection, setHeaderSection] = useState<SectionId>('inicio')
+
   useEffect(() => {
+    const header = document.querySelector<HTMLElement>('.site-header')
+    const sections = reversedSectionIds.flatMap(id => {
+      const element = document.getElementById(id)
+      return element ? [{ id, element }] : []
+    })
     let frame = 0
 
     const syncHash = () => {
@@ -26,18 +33,10 @@ export function useActiveSection() {
           window.scrollY + window.innerHeight >=
           document.documentElement.scrollHeight - 24
 
-        if (reachedPageEnd) {
-          setActiveSection('contacto')
-          return
-        }
-
-        const readingLine = window.innerHeight * 0.42
-        const currentSection = reversedSectionIds.find((id) => {
-            const section = document.getElementById(id)
-            return section ? section.getBoundingClientRect().top <= readingLine : false
-          })
-
-        if (currentSection) setActiveSection(currentSection)
+        const positions = sections.map(({ id, element }) => ({ id, top: element.getBoundingClientRect().top }))
+        const sectionAt = (line: number) => positions.find(section => section.top <= line)?.id ?? 'inicio'
+        setHeaderSection(sectionAt((header?.offsetHeight ?? 0) + 1))
+        setActiveSection(reachedPageEnd ? 'contacto' : sectionAt(window.innerHeight * 0.42))
       })
     }
 
@@ -55,5 +54,5 @@ export function useActiveSection() {
     }
   }, [])
 
-  return activeSection
+  return { activeSection, headerSection }
 }

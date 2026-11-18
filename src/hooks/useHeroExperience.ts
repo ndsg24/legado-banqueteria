@@ -1,9 +1,6 @@
 import { useLayoutEffect } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { RefObject } from 'react'
-
-gsap.registerPlugin(ScrollTrigger)
 
 export function useHeroExperience(root: RefObject<HTMLElement | null>) {
   useLayoutEffect(() => {
@@ -13,13 +10,22 @@ export function useHeroExperience(root: RefObject<HTMLElement | null>) {
     media.add('(prefers-reduced-motion: no-preference)', () => {
       const intro = gsap.timeline({ defaults: { ease: 'power3.out' } })
       intro.from('.living-hero__line > span', { yPercent: 115, rotation: 3, opacity: 0, duration: 1.3, stagger: 0.13 }, 0.15)
+      const firstPhoto = element.querySelector<HTMLImageElement>('.hero-table__look[data-active="true"] img')
+      const tableEntrance = gsap.from('.hero-food', {
+        y: 18, opacity: 0, duration: 1.3, ease: 'power3.out', paused: true, clearProps: 'opacity,transform',
+      })
+      const revealTable = () => { tableEntrance.play() }
+      intro.call(() => {
+        if (!firstPhoto || firstPhoto.complete) revealTable()
+        else {
+          firstPhoto.addEventListener('load', revealTable, { once: true })
+          firstPhoto.addEventListener('error', revealTable, { once: true })
+        }
+      }, [], 0.15)
       intro.from('.hero__meta, .living-hero__eyebrow', { y: 12, opacity: 0, duration: 1, stagger: 0.12 }, 0.2)
       intro.from('.living-hero__description, .living-hero__actions', { y: 18, opacity: 0, duration: 1, stagger: 0.15 }, 0.7)
-      intro.from('.hero__signature', { yPercent: 35, opacity: 0, duration: 1.8 }, 0.4)
+      intro.from('.hero__signature', { opacity: 0, duration: 1.8 }, 0.4)
       intro.from('.hero__scroll', { opacity: 0, duration: 0.6 }, 1.2)
-      gsap.timeline({ scrollTrigger: { trigger: element, start: 'top top', end: 'bottom top', scrub: 0.9 } })
-        .to('.living-hero__content', { y: -60, opacity: 0.25, ease: 'none' }, 0)
-        .to('.hero__signature', { y: -90, ease: 'none' }, 0)
       const glint = gsap.timeline({ delay: 2.6, repeat: -1, repeatDelay: 6 })
       element.querySelectorAll('.hero__signature-trace').forEach((letter, index) => {
         const start = index * 2.4
@@ -41,7 +47,12 @@ export function useHeroExperience(root: RefObject<HTMLElement | null>) {
       const observer = new IntersectionObserver(update)
       observer.observe(element)
       document.addEventListener('visibilitychange', update)
-      return () => { observer.disconnect(); document.removeEventListener('visibilitychange', update) }
+      return () => {
+        observer.disconnect()
+        document.removeEventListener('visibilitychange', update)
+        firstPhoto?.removeEventListener('load', revealTable)
+        firstPhoto?.removeEventListener('error', revealTable)
+      }
     })
     return () => media.revert()
   }, [root])
