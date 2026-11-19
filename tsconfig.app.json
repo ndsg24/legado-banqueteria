@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "worker/quote.ts"]
+  "include": ["src", "worker/quote.ts", "tests/worker.spec.ts"]
 }

@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
+    "target": "ES2022",
     "composite": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -8,5 +10,6 @@
     "strict": true,
     "noEmit": true
   },
-  "include": ["vite.config.ts", "playwright.config.ts", "tests/**/*.ts"]
+  "include": ["vite.config.ts", "playwright.config.ts", "tests/**/*.ts", "src/app/routing/metadata.ts", "src/shared/i18n/messages.ts", "src/shared/i18n/locales/es/**/*", "src/shared/config/heroPhoto.ts"],
+  "exclude": ["tests/worker.spec.ts"]
 }

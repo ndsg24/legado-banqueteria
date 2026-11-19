@@ -39,33 +39,27 @@ Cocina casera para matrimonios, encuentros y celebraciones.
 
 ## 🗂️ Arquitectura
 
-Vite construye cuatro documentos HTML que GitHub Pages puede servir directamente.
-Cada uno tiene sus metadatos y monta React desde su propia entrada.
+React Router gestiona Inicio, Carta, Diseña tu mesa y Cotizar desde `src/app/main.tsx` y un único
+`index.html` fuente. Las rutas públicas conservan sus nombres. Al compilar, Vite genera
+`carta.html`, `ambientacion.html` y `cotizar.html` con la misma entrada React y los metadatos
+de cada página definidos en `src/app/routing/metadata.ts`. Así GitHub Pages admite enlaces
+directos, recargas y vistas previas al compartir.
 
-| Página | Entrada React | Función |
-| --- | --- | --- |
-| `index.html` | `src/main.tsx` | Portada, historia, servicios y galería |
-| `carta.html` | `src/catalog.tsx` | Carta pública de exhibición |
-| `ambientacion.html` | `src/table.tsx` | Mesa 3D y distribución del salón |
-| `cotizar.html` | `src/quote.tsx` | Cotizador por pasos, revisión y PDF |
-
-La guía de contribución explica dónde ubicar componentes, estilos, reglas de negocio
-y pruebas. [Ver AGENTS.md](AGENTS.md)
+El frontend sigue Feature-Sliced Design. Cada página compone widgets y funcionalidades
+a partir de los modelos de carta, mesa y cotización. La guía de contribución describe
+las capas, las APIs públicas y las reglas de importación. [Ver AGENTS.md](AGENTS.md)
 
 ## 🚀 Desarrollo local
 
-La navegación entre Inicio, La carta y Tu mesa usa `PageTransition`, con una
-campana SVG animada mediante GSAP y colores del tema seleccionado. El arranque
-en `public/page-transition.js` conserva el tema antes del primer pintado y una
-marca de sesión conecta ambos documentos. Los enlaces internos a secciones,
-descargas y enlaces externos conservan su comportamiento nativo. La transición
-respeta movimiento reducido y se libera al volver con el historial del navegador.
+Los enlaces internos usan `Link`. React Router gestiona el historial, los capítulos por ancla y
+la restauración del scroll. La transición usa el tema seleccionado y respeta movimiento reducido.
+Los enlaces externos y las descargas usan el comportamiento nativo del navegador.
 
 Usa Node.js 22, la misma versión principal que utiliza GitHub Actions. Si tienes
 `nvm`, ejecuta `nvm install` y `nvm use` desde la raíz del proyecto.
 
 ```bash
-npm ci
+npm ci --ignore-scripts
 npm run dev     # servidor de desarrollo
 npm run format  # aplica el formato del proyecto
 npm run check   # verifica formato, lint, tipos y compilación
@@ -90,7 +84,7 @@ de desplegar. Para publicar, sube la revisión a `main` y comprueba el resultado
 
 ## Cotizaciones por correo
 
-El formulario está en `cotizar.html`. Los enlaces antiguos a `#cotizar` conservan su selección y redirigen a esa página. El calendario de React Aria permite elegir desde hoy hasta la misma fecha del año siguiente en la zona de Santiago. React Hook Form y la función de recepción usan el mismo esquema Zod en `src/quote/request.ts`. La selección de la carta se conserva durante la sesión. El diseño incluye puestos, telas, texturas, flores y vajilla. Las consultas llegan como texto, con el correo del cliente en Reply-To.
+El formulario está en `cotizar.html`. Los enlaces antiguos a `#cotizar` conservan su selección y redirigen a esa página. El calendario de React Aria permite elegir desde hoy hasta la misma fecha del año siguiente en la zona de Santiago. React Hook Form y la función de recepción usan el mismo esquema Zod en `src/entities/quote/model/request.ts`. La selección de la carta se conserva durante la sesión. El diseño incluye puestos, telas, texturas, flores y vajilla. Las consultas llegan como texto, con el correo del cliente en Reply-To.
 
 Para activar el envío automático:
 
@@ -122,7 +116,7 @@ Hecho por **[Nelson Daniel Silva Gutiérrez](https://github.com/ndsg24)** · [Li
 
 La página `carta.html` presenta fotos, nombres y descripciones en tres colecciones:
 Cóctel & bocados, Menú & celebración y Bebestibles & bar. Las categorías e imágenes
-provienen de `src/config/catalog.ts`. La selección de platos para un evento se hace
+provienen de `src/entities/menu/model/catalog.ts`. La selección de platos para un evento se hace
 en el cotizador (`cotizar.html`).
 
 El selector de categorías se presenta como un recorrido horizontal ilustrado,
@@ -150,7 +144,9 @@ La atmósfera solo se anima mientras el producto explorado está visible; se apa
 al salir y respeta el movimiento reducido.
 No hay balanceo continuo ni duplicación de fotografías para simular volumen.
 
-Three.js se carga de forma diferida, fuera del bundle de la landing. El renderizado
+En la carta, las fotografías HTML se muestran primero. Three.js se descarga cuando la
+cuadrícula se acerca al área visible en dispositivos con hover y animaciones habilitadas.
+La portada prioriza su primera foto y solicita las demás al avanzar en el carrusel. El renderizado
 se solicita solo al cargar, redimensionar, entrar en pantalla o animar. Se liberan
 texturas, materiales, observadores y timelines al cambiar de categoría o desmontar.
 La preferencia de movimiento reducido muestra los productos sin revelado; si WebGL
@@ -164,7 +160,7 @@ se conserva como referencia. La versión activa usa archivos con sufijo `v2`.
 
 `ambientacion.html` permite combinar mantel, carpeta, fundas, rosones y servilletas
 sobre una mesa 3D de seis a diez puestos. Las paletas y combinaciones de referencia se
-definen en `src/config/table.ts`; no representan un inventario confirmado.
+definen en `src/entities/table/model/options.ts`; no representan un inventario confirmado.
 `useTableDesign` valida los colores, conserva el diseño localmente y lo incluye
 en la URL para compartirlo. La consulta por correo contiene la combinación actual.
 
@@ -230,3 +226,9 @@ La escena del hero ocupa una columna algo mayor y alinea su borde superior con
 el titular. `HeroReactions` añade hojas y destellos al montaje fresco, corazones
 al cálido y un brindis al de sobremesa. Sus seis trazos flotan con GSAP sin tapar
 la comida; comparten los controles de pausa, visibilidad y movimiento reducido.
+
+## Seguridad
+
+El alcance del sitio estático y del Worker, la verificación de dependencias y los controles
+operativos están en la [guía de seguridad](docs/seguridad.md). Ejecuta `npm run audit:security`
+al modificar dependencias o preparar una publicación.

@@ -14,9 +14,15 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   projects: [
-    { name: 'escritorio', use: { viewport: { width: 1280, height: 850 } } },
+    { name: 'worker', testMatch: 'worker.spec.ts' },
+    {
+      name: 'escritorio',
+      testIgnore: 'worker.spec.ts',
+      use: { viewport: { width: 1280, height: 850 } },
+    },
     {
       name: 'movil',
+      testIgnore: 'worker.spec.ts',
       use: { viewport: { width: 390, height: 844 }, hasTouch: true, colorScheme: 'dark' },
     },
   ],
