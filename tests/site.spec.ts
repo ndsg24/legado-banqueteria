@@ -81,6 +81,7 @@ test('el selector de temas muestra sus paletas y conserva Piscina al navegar', a
 
 async function chooseCatalogFilter(page: Page, name: string) {
   const picker = page.getByRole('button', { name: /Categorías de la carta/ })
+  await expect(picker.or(page.getByRole('group', { name: 'Categorías de la carta' }))).toBeVisible()
   if (await picker.isVisible()) {
     await picker.click()
     await page.getByRole('option', { name, exact: true }).click()
@@ -94,6 +95,7 @@ async function chooseCatalogFilter(page: Page, name: string) {
 
 async function expectCatalogFilter(page: Page, name: string) {
   const picker = page.getByRole('button', { name: /Categorías de la carta/ })
+  await expect(picker.or(page.getByRole('group', { name: 'Categorías de la carta' }))).toBeVisible()
   if (await picker.isVisible()) await expect(picker).toHaveText(name)
   else
     await expect(
