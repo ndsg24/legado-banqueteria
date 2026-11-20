@@ -6,6 +6,7 @@ export function useTableScene(
   design: TableDesign,
   onSelect?: (part: TablePart) => void,
   enabled = true,
+  serveSalmon = false,
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sceneRef = useRef<TableScene | null>(null)
@@ -18,14 +19,22 @@ export function useTableScene(
   useEffect(() => {
     if (!enabled) return
     let cancelled = false
-    import('../lib/TableScene')
-      .then(({ TableScene }) => {
+    Promise.all([
+      import('../lib/TableScene'),
+      serveSalmon ? import('../lib/sundayMain') : undefined,
+    ])
+      .then(([{ TableScene }, main]) => {
         if (cancelled || !canvasRef.current) return
         try {
           const select = latest.current.onSelect
             ? (part: TablePart) => latest.current.onSelect?.(part)
             : undefined
-          const scene = new TableScene(canvasRef.current, select, () => setStatus('error'))
+          const scene = new TableScene(
+            canvasRef.current,
+            select,
+            () => setStatus('error'),
+            main?.createSundayMain,
+          )
           sceneRef.current = scene
           scene.setDesign(latest.current.design)
           setStatus('ready')
@@ -41,7 +50,7 @@ export function useTableScene(
       sceneRef.current?.dispose()
       sceneRef.current = null
     }
-  }, [enabled])
+  }, [enabled, serveSalmon])
   return {
     canvasRef,
     status,

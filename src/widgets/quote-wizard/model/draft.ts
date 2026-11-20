@@ -1,3 +1,4 @@
+import { isIdeasPreview, readTableIdea, tableIdeas } from '../../../shared/config/tableIdea'
 import { z } from 'zod'
 import { readOmissions, readQuantities, readSauceChoices } from '../../../entities/menu'
 import {
@@ -10,7 +11,7 @@ import {
 import { parseTableDesign, type TableDesign } from '../../../entities/table'
 import { steps } from './steps'
 
-const key = 'legado-quote-draft-v1'
+const standardDraftKey = 'legado-quote-draft-v1'
 // Older drafts stored the position in the original five-step flow.
 const previousSteps = ['event', 'menu', 'table', 'contact', 'review'] as const
 const draftSchema = z.object({
@@ -25,6 +26,8 @@ const draftSchema = z.object({
   ]),
   design: designSchema,
   included: z.boolean(),
+  editingReview: z.boolean().optional(), // Previous drafts only tracked a return from review.
+  furthestStep: z.enum(steps.map(({ id }) => id)).optional(),
   values: z.object({
     event: quoteSchema.shape.event.nullish(),
     guests: z.number().nullish(),
@@ -44,7 +47,7 @@ const draftSchema = z.object({
   attempt: z.object({ payload: z.string(), id: z.uuid() }).nullable(),
 })
 
-function readDraft() {
+function readDraft(key: string) {
   try {
     return draftSchema.safeParse(JSON.parse(sessionStorage.getItem(key) ?? 'null')).data
   } catch {
@@ -53,13 +56,18 @@ function readDraft() {
 }
 
 export function initialQuote(params: URLSearchParams) {
-  const draft = readDraft()
+  const idea = readTableIdea(params)
+  const scope = idea ? '-' + tableIdeas[idea].id : ''
+  const key = standardDraftKey + (isIdeasPreview ? '-ideas' : '') + scope
+  const draft = readDraft(key)
   const saved = draft?.values
   const design = params.has('mesa')
     ? parseTableDesign(params)
     : (draft?.design ?? parseTableDesign())
   const included = params.has('mesa') ? params.get('mesa') === '1' : draft?.included
-  const items = params.has('plato') || !saved ? readQuantities(params) : saved.items
+  const items = params.has('plato')
+    ? readQuantities(params)
+    : (saved?.items ?? (isIdeasPreview || idea ? {} : readQuantities()))
   const localPhone = localMobileDigits(saved?.phone ?? '')
   const values = {
     event: saved?.event ?? undefined,
@@ -99,14 +107,30 @@ export function initialQuote(params: URLSearchParams) {
     step = Math.min(step, first >= 0 ? first : 0)
   }
   const review = step === steps.length - 1 ? result.data : undefined
-  return { values, design, step, review: review ?? null, attempt: draft?.attempt ?? null }
+  const furthestStep = draft?.editingReview
+    ? steps.length - 1
+    : Math.max(
+        step,
+        steps.findIndex(({ id }) => id === (draft?.furthestStep ?? draft?.step)),
+      )
+  return {
+    key,
+    values,
+    design,
+    step,
+    furthestStep,
+    review: review ?? null,
+    attempt: draft?.attempt ?? null,
+  }
 }
 
 export function saveDraft(
+  key: string,
   step: number,
   { table, ...values }: QuoteRequest,
   design: TableDesign,
   attempt: { id: string; payload: string } | null,
+  furthestStep: number,
 ) {
   try {
     sessionStorage.setItem(
@@ -116,6 +140,7 @@ export function saveDraft(
         values,
         design: table ?? design,
         included: !!table,
+        furthestStep: steps[furthestStep].id,
         attempt,
       }),
     )
@@ -124,7 +149,7 @@ export function saveDraft(
   }
 }
 
-export function clearDraft() {
+export function clearDraft(key: string) {
   try {
     sessionStorage.removeItem(key)
   } catch {

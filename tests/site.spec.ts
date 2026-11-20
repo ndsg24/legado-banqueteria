@@ -1,4 +1,4 @@
-import { expect, test as base } from '@playwright/test'
+import { expect, test as base, type Page } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 
 declare global {
@@ -36,6 +36,73 @@ test.beforeEach(async ({ page }) => {
   await page.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, (route) => route.abort())
 })
 
+test('el selector de temas muestra sus paletas y conserva Piscina al navegar', async ({ page }) => {
+  await page.goto('./')
+  const root = page.locator('html')
+  const openMenu = page.getByRole('button', { name: 'Abrir menú' })
+  const picker = page.getByLabel(/^Tema de color:/).filter({ visible: true })
+  const options = page.getByRole('group', { name: 'Tema de color' })
+
+  async function openPicker() {
+    await expect(page.locator('.site-header')).toBeVisible()
+    if (await openMenu.isVisible()) await openMenu.click()
+    await picker.click()
+  }
+
+  await openPicker()
+  await expect(options.getByRole('button')).toHaveCount(4)
+  for (const [label, value] of [
+    ['Noche', 'dark'],
+    ['Día', 'light'],
+    ['Jardín', 'garden'],
+    ['Piscina', 'pool'],
+  ]) {
+    await options.getByRole('button', { name: label, exact: true }).click()
+    await expect(root).toHaveAttribute('data-theme', value)
+    await expect(picker).toBeFocused()
+    await picker.press('Enter')
+    await expect(options.getByRole('button', { name: label, pressed: true })).toBeVisible()
+  }
+
+  await picker.press('Escape')
+  await expect(options).toBeHidden()
+  await expect(picker).toBeFocused()
+  for (const path of ['carta.html', 'ambientacion.html', 'cotizar.html']) {
+    await page.goto(path)
+    await expect(page.locator('h1')).toBeVisible()
+    await expect(root).toHaveAttribute('data-theme', 'pool')
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(225, 242, 239)')
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#e1f2ef')
+  }
+  await page.reload()
+  await openPicker()
+  await expect(options.getByRole('button', { name: 'Piscina', pressed: true })).toBeVisible()
+})
+
+async function chooseCatalogFilter(page: Page, name: string) {
+  const picker = page.getByRole('button', { name: /Categorías de la carta/ })
+  if (await picker.isVisible()) {
+    await picker.click()
+    await page.getByRole('option', { name, exact: true }).click()
+  } else {
+    await page
+      .getByRole('group', { name: 'Categorías de la carta' })
+      .getByRole('button', { name, exact: true })
+      .click()
+  }
+}
+
+async function expectCatalogFilter(page: Page, name: string) {
+  const picker = page.getByRole('button', { name: /Categorías de la carta/ })
+  if (await picker.isVisible()) await expect(picker).toHaveText(name)
+  else
+    await expect(
+      page
+        .getByRole('group', { name: 'Categorías de la carta' })
+        .getByRole('button', { name, exact: true }),
+    ).toHaveAttribute('aria-pressed', 'true')
+}
+
 test('el álbum conserva las flechas y devuelve el foco a la foto', async ({ page }) => {
   await page.goto('./#galeria')
   const opener = page.getByRole('button', { name: 'Ampliar: Cuando cae la noche' })
@@ -50,10 +117,39 @@ test('el álbum conserva las flechas y devuelve el foco a la foto', async ({ pag
   await expect(opener).toBeFocused()
 })
 
+test('la carta distingue escritorio de iPad horizontal al mismo ancho', async ({
+  page,
+}, testInfo) => {
+  const touch = testInfo.project.use.hasTouch === true
+  await page.setViewportSize({ width: 1194, height: 834 })
+  await page.goto('carta.html?categoria=principales')
+  const catalog = page.locator('#carta')
+  const invite = catalog.getByRole('link', { name: 'Diseña tu mesa' })
+  const cards = catalog.locator('.catalog-card')
+  if (touch) {
+    await expect(catalog.locator('h1')).toHaveText('La carta.')
+    await expect(cards.first()).toBeInViewport()
+    await expect(cards.first().locator('.quote-dish__tag')).toHaveCount(0)
+    await expect(invite).not.toBeInViewport()
+    await page.setViewportSize({ width: 834, height: 1194 })
+    await expectCatalogFilter(page, 'Principales')
+    await expect(cards.first()).toBeInViewport()
+  } else {
+    await expect(catalog.locator('h1')).toContainText('El sabor de')
+    await expect(catalog.locator('header')).toContainText('La mesa también')
+    await expect(invite).toBeInViewport()
+    await expect(cards.first().locator('.quote-dish__tag')).toHaveText('Principales')
+    await expect(catalog.locator('.catalog__toolbar')).toHaveCSS('position', 'static')
+  }
+})
+
 test('la carta exhibe las salsas y permite volver a la galería', async ({ page }) => {
   await page.goto('carta.html')
-  await page.getByRole('button', { name: /Menú & celebración/ }).click()
-  await page.getByRole('button', { name: /Salsas/ }).click()
+  await page
+    .getByRole('group', { name: 'Elige una carta' })
+    .getByRole('button', { name: /Menú/ })
+    .click()
+  await chooseCatalogFilter(page, 'Salsas')
   await expect(page.getByRole('heading', { name: 'Salsa de carne', exact: true })).toBeVisible()
   const menu = page.getByRole('button', { name: 'Abrir menú' })
   if (await menu.isVisible()) {
@@ -68,6 +164,128 @@ test('la carta exhibe las salsas y permite volver a la galería', async ({ page 
   }
   await expect(page).toHaveURL(/\/#galeria$/)
   await expect(page.locator('#gallery-title')).toBeInViewport()
+})
+
+test('Cóctel reúne todas sus categorías y permite filtrarlas', async ({ page }) => {
+  await page.goto('carta.html?origen=portada')
+  const cards = page.locator('.catalog-card')
+  await expectCatalogFilter(page, 'Todos')
+  await expect(
+    cards.filter({ has: page.locator('.quote-dish__tag', { hasText: 'Salados' }) }),
+  ).toHaveCount(5)
+  await expect(
+    cards.filter({ has: page.locator('.quote-dish__tag', { hasText: 'Dulces' }) }),
+  ).toHaveCount(5)
+  await expect(
+    cards.filter({ has: page.locator('.quote-dish__tag', { hasText: 'Extras' }) }),
+  ).toHaveCount(2)
+  await page.getByRole('button', { name: 'Ver ficha de Pincho' }).click()
+  await page.getByRole('button', { name: 'Plato siguiente' }).click()
+  const cupcake = page.getByRole('dialog', { name: 'Cupcake', exact: true })
+  await expect(cupcake.getByText('Dulces', { exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await chooseCatalogFilter(page, 'Dulces')
+  await page.reload()
+  await expect(cards).toHaveCount(5)
+  await expectCatalogFilter(page, 'Dulces')
+  await chooseCatalogFilter(page, 'Todos')
+  await expect(cards).toHaveCount(12)
+  await expect(page).toHaveURL(/carta\.html\?origen=portada$/)
+})
+
+test('Todos muestra únicamente la colección elegida en Menú y Bebestibles', async ({ page }) => {
+  await page.goto('carta.html?origen=portada')
+  const cards = page.locator('.catalog-card')
+  for (const [name, filter] of [
+    ['Menú', 'Postres'],
+    ['Bebestibles', 'Bar'],
+  ]) {
+    await page
+      .getByRole('group', { name: 'Elige una carta' })
+      .getByRole('button', { name: new RegExp(name) })
+      .click()
+    await expectCatalogFilter(page, 'Todos')
+    await expect(page.locator('#catalog-category-title')).toHaveText(name + '.')
+    const categories =
+      name === 'Menú'
+        ? ['Entradas', 'Principales', 'Guarniciones', 'Salsas', 'Postres', 'Nocturnos']
+        : ['Aperitivos', 'Bajativos', 'Bar']
+    expect(new Set(await cards.locator('.quote-dish__tag').allTextContents())).toEqual(
+      new Set(categories),
+    )
+    const collectionUrl = page.url()
+    await chooseCatalogFilter(page, filter)
+    await expectCatalogFilter(page, filter)
+    await chooseCatalogFilter(page, 'Todos')
+    await expect(page).toHaveURL(collectionUrl)
+    await page.reload()
+    await expect(page.locator('#catalog-category-title')).toHaveText(name + '.')
+    await expectCatalogFilter(page, 'Todos')
+    await page.goBack()
+    await expect(page.locator('#catalog-category-title')).toHaveText(filter + '.')
+  }
+})
+
+test('la carta abre las fichas con ingredientes y devuelve el foco al plato', async ({ page }) => {
+  await page.goto('carta.html?categoria=salados')
+  const opener = page.getByRole('button', { name: 'Ver ficha de Pincho' })
+  await opener.focus()
+  await opener.press('Enter')
+  const dish = page.getByRole('dialog', { name: 'Pincho', exact: true })
+  const ingredients = dish.getByRole('region', { name: 'Ingredientes principales' })
+  await expect(ingredients.getByText('Jamón')).toBeVisible()
+  await ingredients
+    .locator('li img')
+    .first()
+    .evaluate((img: HTMLImageElement) => img.decode())
+  await expect(dish.getByRole('checkbox')).toHaveCount(0)
+  await expect(dish.getByRole('button', { name: /cotización/ })).toHaveCount(0)
+  await dish.getByRole('button', { name: 'Plato siguiente' }).click()
+  const first = page.getByRole('dialog', { name: 'Mini tapadito', exact: true })
+  const guide = first.getByRole('region', { name: 'Referencia de ingredientes y presentación' })
+  await expect(guide).toContainText('lechuga')
+  const ask = first.getByRole('link', { name: 'Consultar ingredientes' })
+  await expect(ask).toBeVisible()
+  expect(decodeURIComponent((await ask.getAttribute('href'))!)).toContain(' · Mini tapadito')
+  await first.getByRole('button', { name: 'Plato anterior' }).click()
+  await expect(dish).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(opener).toBeFocused()
+  await expect(page).toHaveURL(/categoria=salados$/)
+})
+
+test('la categoría de la carta se comparte, se restaura y respeta el historial', async ({
+  page,
+  context,
+}) => {
+  await page.goto('carta.html?origen=portada')
+  await page
+    .getByRole('group', { name: 'Elige una carta' })
+    .getByRole('button', { name: /Menú/ })
+    .click()
+  await chooseCatalogFilter(page, 'Postres')
+  await expect(page.locator('#catalog-category-title')).toHaveText('Postres.')
+  const link = page.url()
+  expect(new URL(link).searchParams.get('categoria')).toBe('postres')
+  expect(new URL(link).searchParams.get('origen')).toBe('portada')
+  await page.reload()
+  await expect(page.locator('#catalog-category-title')).toHaveText('Postres.')
+  const shared = await context.newPage()
+  await shared.goto(link)
+  await expect(shared.locator('#catalog-category-title')).toHaveText('Postres.')
+  await shared.close()
+  await chooseCatalogFilter(page, 'Salsas')
+  await page.goBack()
+  await expect(page.locator('#catalog-category-title')).toHaveText('Postres.')
+  await page.goForward()
+  await expect(page.locator('#catalog-category-title')).toHaveText('Salsas.')
+})
+
+test('la llamada principal de la portada abre el cotizador', async ({ page }) => {
+  await page.goto('./')
+  await page.getByRole('link', { name: 'Imaginemos tu celebración' }).click()
+  await expect(page).toHaveURL(/cotizar\.html$/)
+  await expect(page.getByRole('heading', { name: '¿Qué celebramos?' })).toBeVisible()
 })
 
 test('la carta permite hasta dos principales y dos guarniciones por separado', async ({ page }) => {
@@ -225,10 +443,12 @@ test('las fotos lentas reservan su espacio y permiten elegir el plato', async ({
     await route.continue()
   })
   await page.reload({ waitUntil: 'domcontentloaded' })
+  const loading = page
+    .locator('.quote-form')
+    .getByRole('status')
+    .filter({ hasText: 'Cargando · Carta' })
   try {
-    await expect(
-      page.locator('.quote-form').getByRole('status', { name: 'Cargando página' }),
-    ).toBeVisible()
+    await expect(loading).toBeVisible()
   } finally {
     showMenu()
   }
@@ -237,6 +457,7 @@ test('las fotos lentas reservan su espacio y permiten elegir el plato', async ({
     .filter({ has: page.getByRole('button', { name: 'Sumar uno de Mini tapadito', exact: true }) })
   try {
     await expect(card.locator('.quote-dish__skeleton')).toBeVisible()
+    await expect(loading).toHaveCount(0)
     await card.getByRole('button', { name: 'Sumar uno de Mini tapadito', exact: true }).click()
     await expect(card.getByRole('textbox')).toHaveValue('1')
     const before = await card.boundingBox()
@@ -519,6 +740,96 @@ test('el cotizador valida el evento y conserva los campos al retroceder', async 
   }
 })
 
+test('revisión permite corregir un bloque y elegir o quitar la mesa inicial', async ({ page }) => {
+  await page.goto('cotizar.html')
+  await page.getByRole('heading', { name: '¿Qué celebramos?' }).waitFor()
+  await page.evaluate(() => {
+    const key = 'legado-quote-draft-v1'
+    const draft = JSON.parse(sessionStorage.getItem(key)!)
+    Object.assign(draft.values, {
+      event: 'Matrimonio',
+      guests: 48,
+      location: 'Concepción',
+      date: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
+      name: 'Prueba',
+      email: 'prueba@example.org',
+    })
+    draft.step = 'review'
+    sessionStorage.setItem(key, JSON.stringify(draft))
+  })
+  await page.reload()
+  const edit = (name: string) => page.getByRole('button', { name: 'Editar ' + name, exact: true })
+  const save = page.getByRole('button', { name: 'Guardar y volver a revisión' })
+  const review = page.locator('.quote-review')
+  for (const label of ['Evento', 'Carta', 'Alimentación', 'Mesa', 'Contacto']) {
+    await expect(edit(label)).toBeVisible()
+  }
+  await edit('Contacto').click()
+  const email = page.getByLabel('Correo electrónico')
+  await email.fill('incorrecto')
+  await save.click()
+  await expect(email).toHaveAttribute('aria-invalid', 'true')
+  await email.fill('corregido@example.org')
+  await page.reload()
+  await save.click()
+  await expect(review).toContainText('corregido@example.org')
+  await edit('Mesa').click()
+  await page.getByRole('button', { name: 'Usar esta mesa' }).click()
+  await expect(page).toHaveURL(/mesa=1/)
+  await save.click()
+  await expect(review.getByRole('heading', { name: 'Detalle de la mesa' })).toBeVisible()
+  await edit('Mesa').click()
+  await page.getByRole('button', { name: 'Mesa incluida' }).click()
+  await expect(page).toHaveURL(/mesa=0/)
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Usar esta mesa' })).toBeVisible()
+  await save.click()
+  await expect(review).toBeVisible()
+  await expect(review.getByRole('heading', { name: 'Detalle de la mesa' })).toHaveCount(0)
+})
+
+test('el índice recuerda las etapas alcanzadas al retroceder y valida los saltos', async ({
+  page,
+}) => {
+  await page.goto('cotizar.html')
+  await page.getByRole('heading', { name: '¿Qué celebramos?' }).waitFor()
+  await page.evaluate(() => {
+    const key = 'legado-quote-draft-v1'
+    const draft = JSON.parse(sessionStorage.getItem(key)!)
+    Object.assign(draft.values, {
+      event: 'Matrimonio',
+      guests: 48,
+      location: 'Concepción',
+      date: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
+    })
+    draft.step = 'menu'
+    sessionStorage.setItem(key, JSON.stringify(draft))
+  })
+  await page.reload()
+  const next = page.getByRole('button', { name: 'Continuar' })
+  await next.click()
+  await expect(page.locator('[aria-current="step"]')).toHaveAccessibleName('Paso 3, Alimentación')
+  const index = page.locator('.quote-progress')
+  async function openIndex() {
+    const toggle = index.getByRole('button', { name: 'Ver etapas' })
+    if (await toggle.isVisible()) await toggle.click()
+  }
+  await openIndex()
+  await index.getByRole('button', { name: /Paso 1, Evento/ }).click()
+  await page.reload()
+  const guests = page.getByLabel('Invitados aproximados')
+  await guests.fill('')
+  await openIndex()
+  await expect(index.getByRole('button', { name: /Paso 4, Mesa/ })).toBeDisabled()
+  const dietary = index.getByRole('button', { name: /Paso 3, Alimentación/ })
+  await dietary.click()
+  await expect(guests).toHaveAttribute('aria-invalid', 'true')
+  await guests.fill('50')
+  await openIndex()
+  await dietary.click()
+  await expect(page.locator('[aria-current="step"]')).toHaveAccessibleName('Paso 3, Alimentación')
+})
+
 test('el plano abre sin solicitar Three.js hasta ver el detalle', async ({ page }) => {
   const sceneRequests: string[] = []
   page.on('request', (request) => {
@@ -551,7 +862,85 @@ test('la vajilla y los puestos se conservan al recargar el diseño', async ({ pa
   await expect(plate).toHaveAttribute('aria-pressed', 'true')
 })
 
-test('las cuatro páginas aplican la política antes de cargar recursos', async ({ request }) => {
+test('la mesa de portada lleva su diseño y menú al cotizador habitual', async ({ page }) => {
+  await page.goto('./')
+  await expect(
+    page.locator('#galeria').getByRole('link', { name: 'Ideas de la casa' }),
+  ).toHaveCount(0)
+  await page.locator('.cover-stage').getByRole('link', { name: 'Cotizar esta mesa' }).click()
+  await expect(page).toHaveURL(/ambientacion\.html\?.*idea=domingo/)
+  await page.reload()
+  await expect(page.getByText(/Prueba local/)).toHaveCount(0)
+  await expect(page.locator('.table-studio__idea-menu')).toContainText('Salmón a la plancha')
+  await page.getByRole('tab', { name: 'Montaje y vajilla' }).click()
+  await page.getByRole('button', { name: 'Porcelana blanca' }).click()
+  await page.getByRole('link', { name: 'Cotizar esta mesa' }).click()
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Cotiza tu')
+  await page.reload()
+  const params = new URL(page.url()).searchParams
+  expect(params.get('dinnerware')).toBe('porcelain')
+  expect(params.getAll('plato')).toEqual(['principales-6', 'guarniciones-7'])
+  expect(params.get('salsa')).toBe('principales-6:salsas-8')
+  await expect(page.getByText(/Prueba local/)).toHaveCount(0)
+  const drafts = await page.evaluate(() => ({
+    standard: sessionStorage.getItem('legado-quote-draft-v1'),
+    idea: JSON.parse(sessionStorage.getItem('legado-quote-draft-v1-domingo') ?? 'null'),
+  }))
+  expect(drafts.standard).toBeNull()
+  expect(drafts.idea.values.items).toEqual({ 'principales-6': 1, 'guarniciones-7': 1 })
+  expect(drafts.idea.design.dinnerware).toBe('porcelain')
+  const back = page.getByRole('link', { name: 'Volver a la mesa' })
+  await expect(back).toHaveAttribute('href', /ambientacion\.html\?.*dinnerware=porcelain/)
+})
+
+for (const [color, id, overlay, floral, fold] of [
+  ['Azul rey', 'azul-rey', 'royalBlue', 'cascade', 'crown'],
+  ['Burdeos', 'burdeos', 'wine', 'burgundy', 'doubleV'],
+]) {
+  test(`la mesa ${color} se puede cotizar desde la foto`, async ({ page }) => {
+    test.slow() // The reload and return trip each initialize a new 3D scene.
+    await page.goto('./')
+    const stage = page.locator('.cover-stage')
+    await stage.getByRole('button', { name: color, exact: true }).click()
+    const start = stage.getByRole('link', { name: 'Cotizar esta mesa' })
+    await expect(start).toHaveAttribute('href', new RegExp('idea=' + id))
+    await start.click()
+    await expect(page).toHaveURL(/ambientacion\.html\?/)
+    const quote = page.locator('.table-studio').getByRole('link', { name: 'Cotizar esta mesa' })
+    await expect(quote).toHaveAttribute('href', new RegExp('overlay=' + overlay))
+    await page.reload()
+    await quote.click()
+    await expect(page).toHaveURL(/cotizar\.html\?/)
+    const params = new URL(page.url()).searchParams
+    expect(params.get('idea')).toBe(id)
+    expect(params.get('floral')).toBe(floral)
+    expect(params.get('napkinFold')).toBe(fold)
+    expect(params.get('dinnerware')).toBe('porcelain')
+    expect(params.has('plato')).toBe(false)
+    await expect
+      .poll(() =>
+        page.evaluate((key) => {
+          const value = sessionStorage.getItem('legado-quote-draft-v1-' + key)
+          return value && JSON.parse(value).design.overlay
+        }, id),
+      )
+      .toBe(overlay)
+    await page.getByRole('link', { name: 'Volver a la mesa' }).click()
+    await page.getByRole('link', { name: 'Volver a la foto' }).click()
+    await expect(stage.getByRole('button', { name: color, exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+  })
+}
+
+test('el enlace anterior a la foto abre directamente su montaje', async ({ page }) => {
+  await page.goto('./ideas-de-la-casa.html')
+  await expect(page).toHaveURL(/ambientacion\.html\?.*idea=domingo/)
+  await expect(page.getByRole('link', { name: 'Cotizar esta mesa' })).toBeVisible()
+})
+
+test('las páginas aplican la política antes de cargar recursos', async ({ request }) => {
   for (const path of ['index.html', 'carta.html', 'ambientacion.html', 'cotizar.html']) {
     const response = await request.get(path)
     expect(response.ok()).toBe(true)
@@ -579,7 +968,7 @@ test('carta, mesa y cotización comparten documento e historial', async ({ page 
   })
   await page.getByRole('link', { name: 'Descubre la carta' }).click()
   await expect(page).toHaveTitle(/Carta de cóctel/)
-  await page.locator('.catalog__studio-invite').click()
+  await page.locator('.catalog').getByRole('link', { name: 'Diseña tu mesa', exact: true }).click()
   await expect(page).toHaveTitle(/Diseña tu mesa/)
   await page.getByRole('link', { name: 'Consultar esta ambientación' }).click()
   await expect(page).toHaveURL(/cotizar\.html\?.*mesa=1/)
@@ -663,6 +1052,50 @@ test('las mesas de portada se pueden elegir, avanzar y pausar con teclado', asyn
   await play.click()
   await stage.getByRole('button', { name: 'Pausar secuencia' }).click()
   await expect(play).toBeVisible()
+})
+
+test('la nueva foto cubre el centro y la cotización sigue a la mesa visible', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('./')
+  const stage = page.locator('.cover-stage')
+  const front = stage.locator('.cover-panel[data-front="true"]')
+  const gold = stage.getByRole('button', { name: 'Dorado', exact: true })
+  const blue = stage.getByRole('button', { name: 'Azul rey', exact: true })
+  const wine = stage.getByRole('button', { name: 'Burdeos', exact: true })
+  const quote = stage.getByRole('link', { name: 'Cotizar esta mesa' })
+  const before = await quote.boundingBox()
+  await blue.evaluate(async (button) => {
+    if (!(button instanceof HTMLButtonElement)) throw new Error('Se esperaba una miniatura')
+    button.click()
+    const photos = document.querySelector('.cover-scene-photos')!
+    let travel: Animation | undefined
+    while (!travel) {
+      await new Promise(requestAnimationFrame)
+      travel = photos.querySelector('[data-front="true"]')?.getAnimations()[0]
+    }
+    travel.pause()
+    travel.currentTime = 0
+  })
+  const offset = await front.evaluate((el) => {
+    const x = new DOMMatrix(getComputedStyle(el).transform).m41
+    return x / el.getBoundingClientRect().width
+  })
+  expect(offset).toBeGreaterThan(0)
+  expect(offset).toBeLessThan(0.07)
+  await expect(stage.locator('.cover-panel[data-front="false"]:visible')).toHaveCSS(
+    'transform',
+    'none',
+  )
+  await expect(blue).toHaveAttribute('aria-pressed', 'true')
+  await expect(stage.locator('.cover-caption')).toHaveText('La mesa de honor')
+  await expect(quote).toHaveAttribute('href', /idea=azul-rey/)
+  expect(await quote.boundingBox()).toEqual(before)
+
+  await gold.click()
+  await wine.click()
+  await front.evaluate((el) => el.getAnimations()[0].play())
+  await expect(wine).toHaveAttribute('aria-pressed', 'true')
+  await expect(quote).toHaveAttribute('href', /idea=burdeos/)
 })
 
 test('la portada cambia de mesa en reposo y detiene la secuencia al pausar', async ({ page }) => {
@@ -771,11 +1204,11 @@ test.describe('idiomas del sitio', () => {
     if (await page.locator('.mobile-menu.open').isVisible()) await menu.click()
     await expect(page.locator('h1')).toContainText('Some tables')
     await page.getByRole('link', { name: 'Discover the menu', exact: true }).click()
-    await expect(page.getByRole('heading', { name: 'Savory bites.' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Cocktails.', exact: true })).toBeVisible()
     await choose('Français')
     await page.reload()
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr-FR')
-    await expect(page.getByRole('heading', { name: 'Bouchées salées.' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Cocktail.', exact: true })).toBeVisible()
     await page.goto('ambientacion.html')
     await expect(page.locator('h1')).toContainText('Votre table.')
     await page.goto('cotizar.html')

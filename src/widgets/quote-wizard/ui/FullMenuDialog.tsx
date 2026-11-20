@@ -1,3 +1,4 @@
+import { ReviewActionIcon } from './ReviewActionIcon'
 import { ActionButton } from '../../../shared/ui/ActionButton'
 import { DialogTrigger } from 'react-aria-components'
 import type { menuGroups } from '../../../entities/quote'
@@ -18,7 +19,10 @@ export function FullMenuDialog({
         if (open) onOpen()
       }}
     >
-      <ActionButton variant="secondary">{t('quote.tasting.full')}</ActionButton>
+      <ActionButton variant="secondary">
+        <ReviewActionIcon action="menu" />
+        {t('quote.tasting.full')}
+      </ActionButton>
       <MenuDrawer
         getMenu={() => menu}
         title={t('quote.tasting.fullTitle')}

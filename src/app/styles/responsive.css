@@ -32,11 +32,11 @@
     scroll-margin-top: 68px;
   }
   .site-shell {
-    padding-top: 68px;
+    --site-header-height: 68px;
   }
   .site-header {
     width: 100%;
-    height: 68px;
+    height: var(--site-header-height);
     inset: 0 0 auto;
     margin: 0;
     padding: 0 14px;
@@ -210,11 +210,11 @@
     scroll-margin-top: 68px;
   }
   .site-shell {
-    padding-top: 68px;
+    --site-header-height: 68px;
   }
   .site-header {
     width: 100%;
-    height: 68px;
+    height: var(--site-header-height);
     inset: 0 0 auto;
     margin: 0;
     padding: 0 14px;

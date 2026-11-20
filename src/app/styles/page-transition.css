@@ -6,8 +6,8 @@
   place-items: center;
   visibility: hidden;
   opacity: 0;
-  background: #f2f2ef;
-  color: #10110f;
+  background: var(--canvas, #f2f2ef);
+  color: var(--ink, #10110f);
   pointer-events: none;
 }
 [data-theme='dark'] .page-transition {
@@ -32,7 +32,7 @@
   height: 160px;
   margin: 0 auto 28px;
   overflow: visible;
-  color: #a97920;
+  color: var(--gold, #a97920);
 }
 [data-theme='dark'] .page-transition__mark {
   color: #c49331;

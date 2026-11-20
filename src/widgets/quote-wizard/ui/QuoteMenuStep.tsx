@@ -13,7 +13,13 @@ import {
   type SauceChoices,
 } from '../../../entities/menu'
 
-export default function QuoteMenuStep({ form }: { form: UseFormReturn<QuoteRequest> }) {
+export default function QuoteMenuStep({
+  form,
+  rememberSelection,
+}: {
+  form: UseFormReturn<QuoteRequest>
+  rememberSelection: boolean
+}) {
   const { t } = useI18n()
   const navigate = useNavigate()
   const {
@@ -63,10 +69,10 @@ export default function QuoteMenuStep({ form }: { form: UseFormReturn<QuoteReque
         setValue('sauces', choices, { shouldDirty: true })
       }
       setValue('items', next, { shouldDirty: true })
-      saveQuantities(next)
+      if (rememberSelection) saveQuantities(next)
       updateMenuLink(next, choices)
     },
-    [getValues, setValue, updateMenuLink],
+    [getValues, setValue, updateMenuLink, rememberSelection],
   )
 
   const setSauce = useCallback(

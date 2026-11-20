@@ -28,11 +28,11 @@ export function InteriorPage({
   mainId,
   children,
 }: Props) {
-  const { theme, toggleTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   return (
     <div className={`site-shell site-texture ${className}`.trimEnd()}>
       <DottedTexture />
-      <Header activeSection={section} theme={theme} onThemeToggle={toggleTheme} />
+      <Header activeSection={section} theme={theme} onThemeChange={setTheme} />
       <main id={mainId} className={mainClassName}>
         <PagePath href={backHref} backLabel={backLabel} current={current} />
         {children}

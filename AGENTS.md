@@ -17,7 +17,7 @@ Usa Node.js 22 y el archivo de bloqueo de npm. Desde un checkout nuevo, ejecuta
 
 ## Arquitectura Feature-Sliced Design
 
-React Router monta las cuatro rutas desde `src/app/main.tsx`. Usa `Link` para navegación interna
+React Router monta las rutas desde `src/app/main.tsx`. Usa `Link` para navegación interna
 y conserva las rutas públicas, sus metadatos y los HTML generados para GitHub Pages. Las capas se ordenan así, de mayor a menor responsabilidad.
 
 | Capa | Qué se ubica allí |
@@ -50,7 +50,8 @@ almacenamiento, los identificadores de platos y los parámetros de los diseños 
   Usa `--canvas` y `--surface` para fondos, `--ink` y `--muted` para texto y `--line`
   para separadores. Usa `--gold` y `--gold-hot` para acentos, `--on-gold` para texto
   sobre dorado y `--error` para validación. Deriva velos y sombras con `color-mix`
-  sobre estos colores. Si falta un rol de interfaz, defínelo aquí para día y noche.
+  sobre estos colores. Si falta un rol de interfaz, defínelo aquí para Día, Noche, Jardín y Piscina. Jardín combina fondo bosque, superficies laurel,
+  texto marfil y acciones champagne. Piscina usa agua clara, tinta azul petróleo y acentos turquesa.
   Los colores elegidos para manteles, vajilla y flores pertenecen al diseño de la mesa.
 - Compara cada elemento nuevo con su equivalente en la carta o el diseñador. Usa
   Syne para títulos y opciones, Manrope para texto y controles e Instrument Serif
@@ -65,11 +66,11 @@ almacenamiento, los identificadores de platos y los parámetros de los diseños 
   El pie común lo presenta en todas las páginas y el cotizador lo incorpora al formulario.
   Ajusta su posición o tamaño con `--table-mark-position` y `--table-mark-size`.
   Comprueba que el motivo quede detrás del contenido y que las etiquetas, el foco y
-  los mensajes de error se lean en ambos temas, también en celular.
+  los mensajes de error se lean en los cuatro temas, también en celular.
 
 ## Flujos que conviene preservar
 
-- **Inicio y galería.** Los enlaces a capítulos funcionan desde las cuatro páginas.
+- **Inicio y galería.** Los enlaces a capítulos funcionan desde todas las páginas.
   Las fotos conservan sus proporciones. El visor admite teclado, gestos y cierre con Escape,
   devuelve el foco a la miniatura y mantiene los controles fijos al cambiar de foto.
 - **Carta y cotizador.** La carta pública exhibe la oferta. La selección ocurre en el
@@ -80,7 +81,7 @@ almacenamiento, los identificadores de platos y los parámetros de los diseños 
   cotizador. Mantén la carga diferida de Three.js y del PDF, libera recursos al desmontar
   y conserva la alternativa HTML si WebGL falla.
 - **Presentación.** Reutiliza los colores de tema. Comprueba teclado, foco, modo claro,
-  modo oscuro y movimiento reducido cuando cambies una interacción.
+  modo oscuro, Jardín, Piscina y movimiento reducido cuando cambies una interacción.
 
 ## Publicación
 

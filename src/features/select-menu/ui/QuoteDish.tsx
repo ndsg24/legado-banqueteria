@@ -2,10 +2,9 @@ import { SelectionCardPhoto } from './SelectionCardPhoto'
 import { memo } from 'react'
 import { useI18n } from '../../../shared/i18n'
 import { isSingleChoice, type CatalogCategory, type CatalogItem } from '../../../entities/menu'
-import { CatalogItemPhoto } from '../../../entities/menu/ui'
+import { CatalogItemPhoto, DishWatermark, DishDetailsLabel } from '../../../entities/menu/ui'
 import { SelectionCard } from './SelectionCard'
 import { QuantityControl } from '../../../shared/ui/QuantityControl'
-import { DishWatermark } from './DishWatermark'
 import { MainSaucePicker, type SaucePickerProps } from './MainSaucePicker'
 
 type Props = Pick<SaucePickerProps, 'onSauceChange'> & {
@@ -76,9 +75,7 @@ export const QuoteDish = memo(function QuoteDish({
         <>
           {t(item.name)}
           <small id={descriptionId}>{t(item.description)}</small>
-          <span className="quote-dish__details-label">
-            {t('quote.selection.viewDetails')} <span aria-hidden="true">↗</span>
-          </span>
+          <DishDetailsLabel />
         </>
       }
     >

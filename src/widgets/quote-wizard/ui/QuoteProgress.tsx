@@ -9,13 +9,14 @@ import { steps } from '../model/steps'
 type Props = {
   control: Control<QuoteRequest>
   step: number
+  furthestStep: number
   sent: boolean
   busy: boolean
   onGoTo: (step: number) => void
   ref: Ref<HTMLElement>
 }
 
-export function QuoteProgress({ control, step, sent, busy, onGoTo, ref }: Props) {
+export function QuoteProgress({ control, step, furthestStep, sent, busy, onGoTo, ref }: Props) {
   const { t, locale } = useI18n()
   const [expanded, setExpanded] = useState(false)
   const listId = useId()
@@ -49,7 +50,7 @@ export function QuoteProgress({ control, step, sent, busy, onGoTo, ref }: Props)
         <ol id={listId}>
           {steps.map((part, index) => {
             const featured = index === step
-            const completed = index < step || sent
+            const completed = (!featured && index < furthestStep) || sent
             const detail = (featured || completed) && details[part.id]
             return (
               <li key={part.id} data-featured={featured} data-completed={completed}>
@@ -59,7 +60,7 @@ export function QuoteProgress({ control, step, sent, busy, onGoTo, ref }: Props)
                     setExpanded(false)
                     onGoTo(index)
                   }}
-                  disabled={index >= step || sent || busy}
+                  disabled={featured || index > furthestStep || sent || busy}
                   aria-current={featured && !sent ? 'step' : undefined}
                   aria-describedby={detail ? listId + part.id : undefined}
                   aria-label={

@@ -1,3 +1,4 @@
+import { sundayMenu, type TableIdea } from '../../../shared/config/tableIdea'
 import { FabricSample } from '../../../entities/table/ui'
 import { ActionLink } from '../../../shared/ui/ActionLink'
 import { type MessageKey, useI18n } from '../../../shared/i18n'
@@ -12,7 +13,7 @@ import {
 } from '../../../features/preview-table'
 import { SeatingControls } from './SeatingControls'
 import { EditorialArrow } from '../../../shared/ui/EditorialArrow'
-import { useCallback, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useRef, useState, type ReactNode, type CSSProperties } from 'react'
 import {
   overlayStyleLabels,
   napkinFoldLabels,
@@ -40,18 +41,36 @@ const views: readonly { id: TableView; label: MessageKey }[] = [
   { id: 'centerpiece', label: 'table.view.centerpiece' },
   { id: 'setting', label: 'table.view.setting' },
 ]
-export function TableConfigurator() {
-  const { design, setDesign } = useTableDesign()
-  return <TableEditor design={design} onChange={setDesign} standalone />
+export function TableConfigurator({ idea }: { idea?: TableIdea }) {
+  const { design, setDesign } = useTableDesign(!!idea)
+  return (
+    <TableEditor
+      design={design}
+      onChange={setDesign}
+      standalone
+      idea={idea}
+      serveSalmon={idea === 'dorada'}
+    />
+  )
 }
 
 type TableEditorProps = {
   design: TableDesign
   onChange: (design: TableDesign) => void
+  previewAction?: ReactNode
+  idea?: TableIdea
+  serveSalmon?: boolean
   standalone?: boolean
 }
 
-export function TableEditor({ design, onChange, standalone = false }: TableEditorProps) {
+export function TableEditor({
+  design,
+  onChange,
+  previewAction,
+  standalone = false,
+  idea,
+  serveSalmon = false,
+}: TableEditorProps) {
   const { t } = useI18n()
   const [activePart, setActivePart] = useState<TablePart>('tablecloth')
   const patchDesign = (patch: Partial<TableDesign>) => onChange({ ...design, ...patch })
@@ -70,6 +89,7 @@ export function TableEditor({ design, onChange, standalone = false }: TableEdito
     design,
     selectPart,
     sceneRequested,
+    serveSalmon,
   )
   const [view, setActiveView] = useState<TableView>('table')
   function changeView(next: TableView) {
@@ -162,7 +182,54 @@ export function TableEditor({ design, onChange, standalone = false }: TableEdito
               {t('table.intro.title')} <em>{t('table.intro.accent')}</em>
             </h1>
           </div>
-          <p>{t('table.intro.description')}</p>
+          {idea ? (
+            <div className="table-studio__idea-menu">
+              {idea === 'dorada' ? (
+                <>
+                  <img
+                    src={
+                      import.meta.env.BASE_URL +
+                      'images/catalog/banquet/' +
+                      sundayMenu.main +
+                      '-320.webp'
+                    }
+                    alt=""
+                  />
+                  <div>
+                    <small>
+                      {t('quote.idea.lead')} {t('quote.idea.accent')}
+                    </small>
+                    <strong>{t(`menu.dishes.${sundayMenu.main}.name`)}</strong>
+                    <span>
+                      {t(`menu.dishes.${sundayMenu.sauce}.name`)} ·{' '}
+                      {t(`menu.dishes.${sundayMenu.garnish}.name`)}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <img
+                    className="table-studio__idea-photo"
+                    src={
+                      import.meta.env.BASE_URL + 'images/hero-place-settings/' + idea + '-480.avif'
+                    }
+                    alt=""
+                  />
+                  <div>
+                    <strong>
+                      {t(`home.hero.${idea}.title`)} {t(`home.hero.${idea}.titleAccent`)}
+                    </strong>
+                    <span>{t(`home.hero.${idea}.detail`)}</span>
+                  </div>
+                </>
+              )}
+              <ActionLink to={quoteHref(quoteParams)}>
+                {t('quote.idea.quoteTable')} <EditorialArrow />
+              </ActionLink>
+            </div>
+          ) : (
+            <p>{t('table.intro.description')}</p>
+          )}
         </header>
       )}
       <div className="table-studio__modes" role="group" aria-label={t('table.view.label')}>
@@ -240,6 +307,7 @@ export function TableEditor({ design, onChange, standalone = false }: TableEdito
               ))}
             </div>
           </div>
+          {previewAction}
           <div className="table-studio__presets" hidden={showPlan}>
             <span>{t('table.designer.presets')}</span>
             <div>
@@ -407,7 +475,7 @@ export function TableEditor({ design, onChange, standalone = false }: TableEdito
             </Tabs>
           )}
           <div className="table-studio__actions">
-            {standalone && (
+            {standalone && !idea && (
               <ActionLink to={quoteHref(quoteParams)}>
                 {t('table.designer.quote')}{' '}
                 <span aria-hidden="true">

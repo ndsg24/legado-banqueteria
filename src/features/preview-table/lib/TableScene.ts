@@ -72,6 +72,7 @@ export class TableScene {
     private canvas: HTMLCanvasElement,
     private onSelect: ((part: TablePart) => void) | undefined,
     private onError: () => void,
+    createMain?: (onLoad: () => void) => Mesh,
   ) {
     this.renderer = new WebGLRenderer({
       canvas,
@@ -108,7 +109,7 @@ export class TableScene {
     const rim = new DirectionalLight(0xe0eaff, 1.8)
     rim.position.set(4, 4, -4)
     this.scene.add(rim)
-    this.build()
+    this.build(createMain?.(this.requestRender))
     this.syncTheme()
     this.themeObserver.observe(document.documentElement, {
       attributes: true,
@@ -141,7 +142,7 @@ export class TableScene {
     this.requestRender()
   }
 
-  private build() {
+  private build(main?: Mesh) {
     const gold = new MeshStandardMaterial({ color: 0xb59961, metalness: 0.75, roughness: 0.27 })
     const glass = new MeshPhysicalMaterial({
       color: 0xffffff,
@@ -251,9 +252,11 @@ export class TableScene {
       lip.position.y = 0.032
       this.plateRims.push(lip)
       setting.add(cutlery.clone())
+      if (main) setting.add(main.clone())
       for (const { fold, model } of foldedNapkins) {
         const folded = model.clone()
         this.napkins.get(fold)!.push(folded)
+        if (main && fold === 'flat') folded.position.set(-0.31, 0.004, 0)
         setting.add(folded)
       }
       const glassGroup = new Group()

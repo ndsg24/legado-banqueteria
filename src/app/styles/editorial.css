@@ -704,18 +704,20 @@
   position: relative;
   isolation: isolate;
 }
-:root[data-theme='dark'] .memory-viewer {
+:root:is([data-theme='dark'], [data-theme='garden']) .memory-viewer {
   --ink: #fff;
   --muted: var(--gold-hot);
   --line: color-mix(in srgb, var(--gold-hot) 40%, transparent);
 }
-:root[data-theme='dark'] :is(.memory-viewer, .menu-tasting__arrows) button {
+:root:is([data-theme='dark'], [data-theme='garden'])
+  :is(.memory-viewer, .menu-tasting__arrows)
+  button {
   color: var(--gold-hot);
 }
 .memory-viewer::backdrop {
   background: #363027b8;
 }
-:root[data-theme='dark'] .memory-viewer::backdrop {
+:root:is([data-theme='dark'], [data-theme='garden']) .memory-viewer::backdrop {
   background: #080908e8;
 }
 body:has(.memory-viewer[open]) {
@@ -827,7 +829,7 @@ body:has(.memory-viewer[open]) {
 :is(.memory-viewer, .menu-tasting__arrows) {
   --print-paper: #f6f1e5;
 }
-:root[data-theme='dark'] :is(.memory-viewer, .menu-tasting__arrows) {
+:root:is([data-theme='dark'], [data-theme='garden']) :is(.memory-viewer, .menu-tasting__arrows) {
   --print-paper: #000;
 }
 .album-arrows button {

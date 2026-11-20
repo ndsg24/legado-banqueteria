@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:ideas": "vite --mode ideas --port 5184 --strictPort",
     "typecheck": "tsc -b --pretty false",
     "build": "tsc -b && vite build",
     "check": "npm run check:i18n && npm run format:check && npm run lint && npm run build",

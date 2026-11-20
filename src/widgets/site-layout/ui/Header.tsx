@@ -13,10 +13,10 @@ type HeaderProps = {
   activeSection: SectionId | 'carta' | 'ambientacion' | 'cotizar'
   headerSection?: SectionId
   theme: Theme
-  onThemeToggle: () => void
+  onThemeChange: (theme: Theme) => void
 }
 
-export function Header({ activeSection, headerSection, theme, onThemeToggle }: HeaderProps) {
+export function Header({ activeSection, headerSection, theme, onThemeChange }: HeaderProps) {
   const { t } = useI18n()
 
   const { closeMenu, isOpen, menuRef, toggleMenu, triggerRef } = useMobileMenu()
@@ -38,7 +38,8 @@ export function Header({ activeSection, headerSection, theme, onThemeToggle }: H
   const isStandalonePage =
     activeSection === 'carta' || activeSection === 'ambientacion' || activeSection === 'cotizar'
   let headerTone = theme
-  if (!isOpen && headerSection === 'servicios') headerTone = theme === 'dark' ? 'light' : 'dark'
+  if (!isOpen && headerSection === 'servicios')
+    headerTone = theme === 'light' || theme === 'pool' ? 'dark' : 'light'
   const items = navigationItems.map((item) => ({
     ...item,
     href: isStandalonePage && item.href.startsWith('#') ? `/${item.href}` : item.href,
@@ -151,7 +152,7 @@ export function Header({ activeSection, headerSection, theme, onThemeToggle }: H
           </nav>
           <div className="header-actions">
             {(!isOpen || isStandalonePage) && <LanguagePicker />}
-            <ThemeToggle theme={theme} onToggle={onThemeToggle} />
+            <ThemeToggle theme={theme} onChange={onThemeChange} />
             <button
               className="menu-toggle"
               type="button"
@@ -194,7 +195,7 @@ export function Header({ activeSection, headerSection, theme, onThemeToggle }: H
         <div className="mobile-menu__footer">
           <span>{t('common.nav.mobileSignature')}</span>
           {isOpen && !isStandalonePage && <LanguagePicker />}
-          <ThemeToggle theme={theme} onToggle={onThemeToggle} />
+          <ThemeToggle theme={theme} onChange={onThemeChange} />
         </div>
       </div>
     </>

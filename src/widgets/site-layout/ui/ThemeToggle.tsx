@@ -1,26 +1,51 @@
 import { useI18n } from '../../../shared/i18n'
-import type { Theme } from '../../../shared/theme'
+import { themes, type Theme } from '../../../shared/theme'
+import { usePickerDisclosure } from '../model/usePickerDisclosure'
 
-type ThemeToggleProps = {
+const labels = {
+  light: 'common.theme.day',
+  dark: 'common.theme.night',
+  garden: 'common.theme.garden',
+  pool: 'common.theme.pool',
+} as const
+
+export function ThemeToggle({
+  theme,
+  onChange,
+}: {
   theme: Theme
-  onToggle: () => void
-}
-
-export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
+  onChange: (value: Theme) => void
+}) {
   const { t } = useI18n()
-
-  const nextTheme = theme === 'light' ? 'common.theme.switchDark' : 'common.theme.switchLight'
+  const { close, trigger, disclosure } = usePickerDisclosure()
+  const label = t('common.theme.label')
 
   return (
-    <button className="theme-toggle" type="button" onClick={onToggle} aria-label={t(nextTheme)}>
-      <span className="theme-toggle__label" aria-hidden="true">
-        {theme === 'light' ? t('common.theme.day') : t('common.theme.night')}
-      </span>
-      <span className="theme-toggle__orbit" aria-hidden="true">
-        <i className="theme-toggle__sun">✦</i>
-        <i className="theme-toggle__moon">◐</i>
-        <i className="theme-toggle__bead" />
-      </span>
-    </button>
+    <details className="theme-toggle" {...disclosure}>
+      <summary ref={trigger} aria-label={label + ': ' + t(labels[theme])}>
+        <span data-sample={theme} className="theme-toggle__chip" aria-hidden="true" />
+        {t(labels[theme])}
+      </summary>
+      <div role="group" aria-label={label} className="theme-toggle__options">
+        <span className="theme-toggle__title" aria-hidden="true">
+          {label}
+        </span>
+        {themes.map((value) => (
+          <button
+            type="button"
+            key={value}
+            aria-pressed={value === theme}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              onChange(value)
+              close()
+            }}
+          >
+            <span className="theme-toggle__sample" data-sample={value} aria-hidden="true" />
+            <span className="theme-toggle__name">{t(labels[value])}</span>
+          </button>
+        ))}
+      </div>
+    </details>
   )
 }

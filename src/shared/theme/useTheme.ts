@@ -1,20 +1,17 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { siteConfig } from '../config/site'
-import type { Theme } from './types'
-
-const themeColors: Record<Theme, string> = {
-  dark: '#0a0a09',
-  light: '#f2f2ef',
-}
+import { isTheme, type Theme } from './types'
 
 function getInitialTheme(): Theme {
   try {
     const savedTheme = localStorage.getItem(siteConfig.themeStorageKey)
-    if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme
+    if (isTheme(savedTheme)) return savedTheme
   } catch {
     /* Follow the device setting when browser storage is unavailable. */
   }
 
+  const current = document.documentElement.dataset.theme
+  if (isTheme(current)) return current
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
@@ -28,12 +25,11 @@ export function useTheme() {
     } catch {
       /* The selected theme still applies to the open page. */
     }
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColors[theme])
+    const canvasColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--canvas')
+      .trim()
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', canvasColor)
   }, [theme])
 
-  const toggleTheme = useCallback(() => {
-    setTheme((current) => (current === 'light' ? 'dark' : 'light'))
-  }, [])
-
-  return { theme, toggleTheme }
+  return { theme, setTheme }
 }

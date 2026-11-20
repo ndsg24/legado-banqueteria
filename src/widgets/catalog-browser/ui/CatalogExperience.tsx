@@ -1,143 +1,108 @@
-import { useI18n } from '../../../shared/i18n'
-import { Link } from 'react-router'
-import { EditorialArrow } from '../../../shared/ui/EditorialArrow'
 import { useRef } from 'react'
-import { useCatalogIntro } from '../model/useCatalogIntro'
-import { useCatalog } from '../model/useCatalog'
+import { useI18n } from '../../../shared/i18n'
+import { CategoryMotif } from '../../../entities/menu/ui'
+import { catalogCollections, useCatalog } from '../model/useCatalog'
 import { CatalogProductGrid } from './CatalogProductGrid'
 import { CatalogCategoryPicker } from './CatalogCategoryPicker'
-import { CategoryMotif } from '../../../entities/menu/ui'
+import { useCatalogLayout } from '../model/useCatalogLayout'
+import { CatalogDesktopHeader } from './CatalogDesktopHeader'
+import { CatalogStudioInvite } from './CatalogStudioInvite'
 
 export function CatalogExperience() {
   const { t } = useI18n()
-
   const catalog = useCatalog()
-  const headerRef = useRef<HTMLElement>(null)
-  useCatalogIntro(headerRef)
+  const layout = useCatalogLayout()
+  const desktop = layout === 'desktop'
+  const explorerRef = useRef<HTMLDivElement>(null)
+  const count = catalog.visibleCategories.reduce(
+    (total, category) => total + category.items.length,
+    0,
+  )
+  const drinks = catalog.collection === 'drinks'
+
+  function chooseCategory(id: string | null) {
+    if (id === (catalog.activeCategory?.id ?? null)) return
+    const explorer = explorerRef.current
+    if (
+      !desktop &&
+      explorer &&
+      explorer.getBoundingClientRect().top < parseFloat(getComputedStyle(explorer).scrollMarginTop)
+    ) {
+      explorer.scrollIntoView({ block: 'start', behavior: 'instant' })
+    }
+    catalog.setCategoryId(id)
+  }
 
   return (
-    <section className="catalog" id="carta" aria-labelledby="catalog-title">
-      <header className="catalog__header" ref={headerRef}>
-        <div className="catalog__eyebrow" data-intro-meta>
-          <span>{t('catalog.intro.eyebrow')}</span>
-          <span>{t('catalog.intro.overline')}</span>
-        </div>
-        <div className="catalog__introduction">
+    <section
+      className={desktop ? 'catalog catalog--desktop' : 'catalog'}
+      id="carta"
+      aria-labelledby="catalog-title"
+    >
+      {desktop ? (
+        <CatalogDesktopHeader collection={catalog.collection} onChoose={catalog.changeCollection} />
+      ) : (
+        <header className="catalog__header">
           <div>
             <h1 id="catalog-title">
-              <span className="catalog__title-line">
-                <span data-title-line>{t('catalog.intro.titleLead')}</span>
-              </span>
-              <span className="catalog__title-line">
-                <span data-title-line>
-                  <em>{t('catalog.intro.titleAccent')}</em>
-                </span>
-              </span>
-            </h1>
-            <p data-intro-copy>{t('catalog.intro.description')}</p>
-          </div>
-          <Link className="catalog__studio-invite" to="/ambientacion.html">
-            <span>
-              {t('catalog.intro.studioOverline')}{' '}
-              <i aria-hidden="true">
-                <EditorialArrow direction="up-right" />
-              </i>
-            </span>
-            <strong>
-              {t('catalog.intro.studioTitle')}
-              <br />
-              <em>{t('catalog.intro.studioAccent')}</em>
-            </strong>
-            <small>{t('catalog.intro.studioDescription')}</small>
-            <span className="catalog__studio-swatches" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-              <i />
-            </span>
-            <b>
-              {t('catalog.intro.designTable')} <EditorialArrow direction="up-right" />
-            </b>
-          </Link>
-        </div>
-      </header>
-
-      <div
-        className="catalog__collections"
-        role="group"
-        aria-label={t('catalog.collections.choose')}
-      >
-        <button
-          type="button"
-          aria-pressed={catalog.collection === 'cocktail'}
-          onClick={() => catalog.changeCollection('cocktail')}
-        >
-          <small>
-            <CategoryMotif categoryId="extras" />
-            {t('catalog.collections.cocktailOverline')}
-          </small>
-          <span>
-            {t('catalog.collections.cocktail')} <em>{t('catalog.collections.cocktailAccent')}</em>
-          </span>
-          <i aria-hidden="true">
-            <EditorialArrow direction="up-right" />
-          </i>
-        </button>
-        <button
-          type="button"
-          aria-pressed={catalog.collection === 'banquet'}
-          onClick={() => catalog.changeCollection('banquet')}
-        >
-          <small>
-            <CategoryMotif categoryId="principales" />
-            {t('catalog.collections.menuOverline')}
-          </small>
-          <span>
-            {t('catalog.collections.menu')} <em>{t('catalog.collections.menuAccent')}</em>
-          </span>
-          <i aria-hidden="true">
-            <EditorialArrow direction="up-right" />
-          </i>
-        </button>
-        <button
-          type="button"
-          aria-pressed={catalog.collection === 'drinks'}
-          onClick={() => catalog.changeCollection('drinks')}
-        >
-          <small>
-            <CategoryMotif categoryId="aperitivos" />
-            {t('catalog.collections.drinksOverline')}
-          </small>
-          <span>
-            {t('catalog.collections.drinks')} <em>{t('catalog.collections.drinksAccent')}</em>
-          </span>
-          <i aria-hidden="true">
-            <EditorialArrow direction="up-right" />
-          </i>
-        </button>
-      </div>
-
-      <div className="catalog__explorer">
-        <CatalogCategoryPicker
-          categories={catalog.categories}
-          activeId={catalog.activeCategory.id}
-          onSelect={catalog.setCategoryId}
-        />
-        <div
-          id="catalog-dishes"
-          className="catalog__dishes"
-          aria-labelledby="catalog-category-title"
-        >
-          <div className="catalog__category-heading">
-            <h2 id="catalog-category-title">
-              {t(catalog.activeCategory.label)}
+              {t('common.nav.catalog')}
               <em>.</em>
-            </h2>
-            <p className="catalog__note">{t('catalog.explorer.disclaimer')}</p>
+            </h1>
+            {catalog.isOverview && <p>{t('catalog.intro.description')}</p>}
           </div>
-          <CatalogProductGrid items={catalog.activeCategory.items} />
+          <div
+            className="catalog__collections"
+            role="group"
+            aria-label={t('catalog.collections.choose')}
+          >
+            {catalogCollections.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                aria-pressed={catalog.collection === option.id}
+                onClick={() => catalog.changeCollection(option)}
+              >
+                <CategoryMotif categoryId={option.motif} />
+                {t(option.label)}
+              </button>
+            ))}
+          </div>
+        </header>
+      )}
+
+      <div className="catalog__explorer" ref={explorerRef}>
+        <div className="catalog__toolbar">
+          <h2
+            id="catalog-category-title"
+            className={desktop ? 'catalog__desktop-title' : 'catalog__accessible-title'}
+          >
+            {t(catalog.title)}
+            <em>.</em>
+          </h2>
+          <CatalogCategoryPicker
+            compact={layout === 'compact'}
+            categories={catalog.categories}
+            activeId={catalog.activeCategory?.id}
+            onSelect={chooseCategory}
+          />
+          {!desktop && (
+            <span className="catalog__count" role="status">
+              {t(drinks ? 'catalog.explorer.drinksCount' : 'catalog.explorer.dishCount', { count })}
+            </span>
+          )}
         </div>
+        <section id="catalog-dishes" aria-labelledby="catalog-category-title">
+          <CatalogProductGrid
+            categories={catalog.visibleCategories}
+            showCategory={desktop || !catalog.activeCategory}
+          />
+        </section>
       </div>
+      <div className="catalog__note">
+        <p>{t('catalog.explorer.presentation')}</p>
+        <p>{t('catalog.explorer.dietary')}</p>
+      </div>
+      {!desktop && <CatalogStudioInvite />}
     </section>
   )
 }

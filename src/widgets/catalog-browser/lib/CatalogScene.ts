@@ -208,6 +208,7 @@ export class CatalogScene {
         ease: 'power3.out',
         onUpdate: this.requestRender,
       })
+      const card = stage.closest('article') ?? stage
       const enter = (event: Event) => {
         if (this.media.matches || (event instanceof PointerEvent && event.pointerType !== 'mouse'))
           return
@@ -215,7 +216,7 @@ export class CatalogScene {
       }
       const move = (event: PointerEvent) => {
         if (this.media.matches || event.pointerType !== 'mouse') return
-        const rect = stage.getBoundingClientRect()
+        const rect = card.getBoundingClientRect()
         xTo(((event.clientX - rect.left) / rect.width - 0.5) * 0.085)
         yTo(0.035 - ((event.clientY - rect.top) / rect.height - 0.5) * 0.055)
       }
@@ -224,11 +225,11 @@ export class CatalogScene {
         yTo(0.035)
         this.focusView(null)
       }
-      stage.addEventListener('pointerenter', enter)
-      stage.addEventListener('pointermove', move)
-      stage.addEventListener('pointerleave', leave)
-      stage.addEventListener('focusin', enter)
-      stage.addEventListener('focusout', leave)
+      card.addEventListener('pointerenter', enter)
+      card.addEventListener('pointermove', move)
+      card.addEventListener('pointerleave', leave)
+      card.addEventListener('focusin', enter)
+      card.addEventListener('focusout', leave)
       let loadTimeout = 0
       view.dispose = () => {
         window.clearTimeout(loadTimeout)
@@ -240,11 +241,11 @@ export class CatalogScene {
         material.uniforms.uMap.value?.dispose()
         material.dispose()
         atmosphere.material.dispose()
-        stage.removeEventListener('pointerenter', enter)
-        stage.removeEventListener('pointermove', move)
-        stage.removeEventListener('pointerleave', leave)
-        stage.removeEventListener('focusin', enter)
-        stage.removeEventListener('focusout', leave)
+        card.removeEventListener('pointerenter', enter)
+        card.removeEventListener('pointermove', move)
+        card.removeEventListener('pointerleave', leave)
+        card.removeEventListener('focusin', enter)
+        card.removeEventListener('focusout', leave)
         delete stage.dataset.rendered
         delete stage.dataset.failed
         delete stage.dataset.exploring

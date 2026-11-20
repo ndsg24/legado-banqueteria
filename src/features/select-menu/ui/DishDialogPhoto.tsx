@@ -1,3 +1,4 @@
+import './dish-dialog.css'
 import type { CatalogItem } from '../../../entities/menu'
 import { CatalogItemPhoto } from '../../../entities/menu/ui'
 

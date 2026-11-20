@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
+import { usePickerDisclosure } from '../model/usePickerDisclosure'
 import { languages, useI18n, type Language } from '../../../shared/i18n'
 
 import chile from 'flag-icons/flags/4x3/cl.svg?no-inline'
@@ -16,23 +17,8 @@ function Flag({ language }: { language: Language }) {
 
 export function LanguagePicker() {
   const { language, t, changeLanguage } = useI18n()
-  const panel = useRef<HTMLDetailsElement>(null)
-  const trigger = useRef<HTMLElement>(null)
+  const { close, trigger, disclosure } = usePickerDisclosure()
   const [error, setError] = useState(false)
-
-  useEffect(() => {
-    function dismiss(event: PointerEvent) {
-      if (panel.current && event.target instanceof Node && !panel.current.contains(event.target))
-        panel.current.open = false
-    }
-    document.addEventListener('pointerdown', dismiss)
-    return () => document.removeEventListener('pointerdown', dismiss)
-  }, [])
-
-  function close() {
-    if (panel.current) panel.current.open = false
-    trigger.current?.focus()
-  }
 
   async function choose(next: Language) {
     setError(false)
@@ -45,19 +31,7 @@ export function LanguagePicker() {
   }
 
   return (
-    <details
-      className="language-picker"
-      ref={panel}
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.open = false
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape' && panel.current?.open) {
-          e.stopPropagation()
-          close()
-        }
-      }}
-    >
+    <details className="language-picker" {...disclosure}>
       <summary ref={trigger} aria-label={t('common.language.label') + ': ' + languages[language]}>
         <Flag language={language} />
         <span>{language.toUpperCase()}</span>

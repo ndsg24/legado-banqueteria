@@ -1,20 +1,21 @@
 import { useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
 import {
+  parseTableDesign,
   readTableDesign,
   tableDesignUrl,
   tableStorageKey,
   type TableDesign,
 } from '../../../entities/table'
 
-export function useTableDesign() {
+export function useTableDesign(fromIdea = false) {
   const navigate = useNavigate()
   const [design, setDesign] = useState<TableDesign>(() =>
-    readTableDesign(new URLSearchParams(window.location.search)),
+    (fromIdea ? parseTableDesign : readTableDesign)(new URLSearchParams(window.location.search)),
   )
   useEffect(() => {
     try {
-      localStorage.setItem(tableStorageKey, JSON.stringify(design))
+      if (!fromIdea) localStorage.setItem(tableStorageKey, JSON.stringify(design))
     } catch {
       /* Persistence is optional. */
     }
@@ -25,6 +26,6 @@ export function useTableDesign() {
         { replace: true, preventScrollReset: true },
       )
     }
-  }, [design, navigate])
+  }, [design, navigate, fromIdea])
   return { design, setDesign }
 }

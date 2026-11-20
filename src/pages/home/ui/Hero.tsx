@@ -1,3 +1,6 @@
+import { PlaybackIcon } from '../../../shared/ui/PlaybackIcon'
+import { tableIdeaHref } from '../../../shared/config/tableIdea'
+import { quoteHref } from '../../../shared/routing'
 import { ActionLink } from '../../../shared/ui/ActionLink'
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { Link } from 'react-router'
@@ -55,13 +58,29 @@ function CoverPhoto({
 export function Hero() {
   const { t } = useI18n()
   const root = useRef<HTMLElement>(null)
-  const track = useRef<HTMLDivElement>(null)
+  const front = useRef<HTMLDivElement>(null)
+  const movement = useRef<Animation | null>(null)
   const touch = useRef<{ x: number; y: number } | null>(null)
-  const [{ current, previous }, show] = useReducer(changeSlide, { current: 0, previous: null })
-  const [requested, select] = useState(0)
+  const [initialSlide] = useState(() => {
+    const photo = new URLSearchParams(location.search).get('portada')
+    return Math.max(
+      0,
+      tableSettings.findIndex((setting) => setting === photo),
+    )
+  })
+  const [{ current, previous }, show] = useReducer(changeSlide, {
+    current: initialSlide,
+    previous: null,
+  })
+  const [requested, select] = useState(initialSlide)
   const [playing, setPlaying] = useState(() => !matchMedia(reducedMotion).matches)
   const [visible, setVisible] = useState(true)
   const key = tableSettings[current]
+  const caption = (
+    <>
+      {t(`home.hero.${key}.title`)} <em>{t(`home.hero.${key}.titleAccent`)}</em>
+    </>
+  )
   const next = (current + 1) % tableSettings.length
   const backward = previous === next
   const step = (offset: number) =>
@@ -69,28 +88,28 @@ export function Hero() {
 
   useLayoutEffect(() => {
     const motion = matchMedia(reducedMotion)
-    if (previous === null || motion.matches || !track.current) return
+    if (previous === null || motion.matches || !front.current) return
 
-    const start = backward ? 'translateX(calc(0px - var(--pitch)))' : 'translateX(var(--pitch))'
-    const timing = { duration: 950, easing: 'cubic-bezier(0.45, 0, 0.18, 1)' }
-    const travel = track.current.animate(
-      [{ transform: start }, { transform: 'translateX(0)' }],
-      timing,
+    // The new print already covers the center; only its outer edge travels into place.
+    const offset = backward ? '-6%' : '6%'
+    const travel = front.current.animate(
+      [{ transform: `translateX(${offset})` }, { transform: 'translateX(0)' }],
+      { duration: 420, easing: 'cubic-bezier(0.2, 0.75, 0.25, 1)' },
     )
-
+    movement.current = travel
     const stop = () => travel.cancel()
     motion.addEventListener('change', stop)
     return () => {
       motion.removeEventListener('change', stop)
+      movement.current = null
       stop()
     }
   }, [current, previous, backward])
 
   useEffect(() => {
     if (current === requested) return
-    // Finish the current pair's travel before reusing either slot for a third photo.
-    const travel = track.current?.getAnimations()[0]
-    if (!travel) {
+    const travel = movement.current
+    if (!travel || travel.playState === 'finished' || travel.playState === 'idle') {
       show(requested)
       return
     }
@@ -169,7 +188,7 @@ export function Hero() {
           {t('home.hero.descriptionEnd')}
         </p>
         <div className="cover-actions">
-          <ActionLink to="#contacto">
+          <ActionLink to={quoteHref()}>
             {t('home.hero.contact')} <EditorialArrow direction="up-right" />
           </ActionLink>
           <Link to="/carta.html">
@@ -206,28 +225,67 @@ export function Hero() {
         }}
       >
         <div className="cover-scene">
-          <div
-            ref={track}
-            className="cover-scene-photos"
-            role="img"
-            aria-label={t(`home.hero.${key}.alt`)}
-          >
-            {tableSettings.map((setting, index) => {
-              const offset = (index - current + tableSettings.length) % tableSettings.length
-              // When advancing, the outgoing panel finishes one place to the left.
-              const slot = offset === tableSettings.length - 1 && !backward ? -1 : offset
-              return (
-                <div key={setting} className="cover-panel" data-slot={slot}>
-                  <CoverPhoto setting={setting} active={index === current} />
-                </div>
-              )
-            })}
+          <div className="cover-preview-photo" aria-hidden="true">
+            <CoverPhoto setting={tableSettings[next]} />
+          </div>
+          <div className="cover-scene-photos" role="img" aria-label={t(`home.hero.${key}.alt`)}>
+            {tableSettings.map((setting, index) => (
+              <div
+                key={setting}
+                ref={index === current ? front : undefined}
+                className="cover-panel"
+                data-front={index === current}
+                hidden={index !== current && index !== previous}
+              >
+                <CoverPhoto setting={setting} active={index === current} />
+              </div>
+            ))}
           </div>
           <div className="cover-legend" data-setting={key}>
-            <p className="cover-caption">
-              {t(`home.hero.${key}.title`)} <em>{t(`home.hero.${key}.titleAccent`)}</em>
-            </p>
+            <p className="cover-caption">{caption}</p>
             <p className="cover-detail">{t(`home.hero.${key}.detail`)}</p>
+            <div className="cover-tools">
+              <div
+                className="cover-selector"
+                role="group"
+                aria-label={t('home.gallery.navigation')}
+              >
+                {tableSettings.map((setting, index) => (
+                  <button
+                    key={setting}
+                    data-setting={setting}
+                    aria-label={t(`home.hero.${setting}.color`)}
+                    title={t(`home.hero.${setting}.color`)}
+                    aria-pressed={index === current}
+                    onClick={() => select(index)}
+                  >
+                    <img
+                      src={base + setting + '-thumb.jpg'}
+                      alt=""
+                      width="48"
+                      height="44"
+                      decoding="async"
+                    />
+                  </button>
+                ))}
+                <button
+                  className="cover-play"
+                  aria-label={t(playing ? 'home.hero.pause' : 'home.hero.play')}
+                  onClick={() => setPlaying(!playing)}
+                >
+                  <PlaybackIcon playing={playing} />
+                </button>
+              </div>
+              <ActionLink
+                className="cover-table-action"
+                to={tableIdeaHref(key)}
+                onPointerEnter={(event) => {
+                  if (event.pointerType === 'mouse') setPlaying(false)
+                }}
+              >
+                {t('quote.idea.quoteTable')} <EditorialArrow direction="up-right" />
+              </ActionLink>
+            </div>
           </div>
           <span className="cover-edge" aria-hidden="true" />
         </div>
@@ -235,29 +293,9 @@ export function Hero() {
           className="cover-preview"
           tabIndex={-1}
           aria-label={t('home.hero.next')}
-          onClick={() => select(next)}
+          onClick={() => step(1)}
         />
         <div key={key} className="cover-seam" aria-hidden="true" />
-        <div className="cover-selector">
-          {tableSettings.map((setting, index) => (
-            <button
-              key={setting}
-              data-setting={setting}
-              aria-label={t(`home.hero.${setting}.color`)}
-              aria-pressed={index === current}
-              onClick={() => select(index)}
-            >
-              <span>{t(`home.hero.${setting}.color`)}</span>
-            </button>
-          ))}
-          <button
-            className="cover-play"
-            aria-label={t(playing ? 'home.hero.pause' : 'home.hero.play')}
-            onClick={() => setPlaying(!playing)}
-          >
-            {playing ? 'Ⅱ' : '▶'}
-          </button>
-        </div>
         <button className="cover-next" aria-label={t('home.hero.next')} onClick={() => step(1)}>
           <EditorialArrow direction="up-right" />
         </button>

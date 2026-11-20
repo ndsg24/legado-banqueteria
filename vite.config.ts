@@ -55,8 +55,9 @@ function routeDocuments(): Plugin {
       order: 'post',
       handler(html, context) {
         const path = new URL(context.originalUrl ?? context.path, 'http://localhost').pathname
-        const page =
-          metadata[('/' + path.split('/').pop()) as keyof typeof metadata] ?? metadata['/']
+        const filename = path.split('/').pop()
+        const route = filename === 'ideas-de-la-casa.html' ? 'ambientacion.html' : filename
+        const page = metadata[('/' + route) as keyof typeof metadata] ?? metadata['/']
         return renderRoute(html, page)
       },
     },
@@ -96,6 +97,9 @@ function routeDocuments(): Plugin {
           '</head>',
           preloads.join('\n') + '\n</head>',
         )
+        if (path === '/ambientacion.html') {
+          this.emitFile({ type: 'asset', fileName: 'ideas-de-la-casa.html', source })
+        }
         if (path === '/') index.source = source
         else
           this.emitFile({

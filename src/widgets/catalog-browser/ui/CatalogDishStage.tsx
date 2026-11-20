@@ -1,16 +1,12 @@
-import { useI18n } from '../../../shared/i18n'
 import { CatalogItemPhoto } from '../../../entities/menu/ui'
 import { useState } from 'react'
 import type { CatalogItem } from '../../../entities/menu'
 
 type CatalogDishStageProps = {
   item: CatalogItem
-  index: number
 }
 
-export function CatalogDishStage({ item, index }: CatalogDishStageProps) {
-  const { t } = useI18n()
-
+export function CatalogDishStage({ item }: CatalogDishStageProps) {
   const [imageSettled, setImageSettled] = useState(false)
 
   return (
@@ -18,12 +14,12 @@ export function CatalogDishStage({ item, index }: CatalogDishStageProps) {
       <div className="catalog-card__fallback">
         <CatalogItemPhoto
           item={item}
-          alt={t(item.name)}
+          alt=""
           onSettled={() => setImageSettled(true)}
-          sizes="(max-width: 760px) calc((100vw - 60px) / 2), (max-width: 1100px) calc((100vw - 128px) / 3), 330px"
+          sizes="(max-width: 600px) 42vw, 220px"
         />
       </div>
-      <span className="catalog-card__index">{String(index + 1).padStart(2, '0')}</span>
+      {!imageSettled && <span className="catalog-card__skeleton" aria-hidden="true" />}
     </div>
   )
 }

@@ -1,5 +1,6 @@
+import { PlaybackIcon } from '../../../shared/ui/PlaybackIcon'
 import { ActionButton } from '../../../shared/ui/ActionButton'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import {
   Button,
   Header,
@@ -42,7 +43,15 @@ const settings = [
   ],
 ]
 
-export function MenuTasting({ menu, design }: { menu: Menu; design?: TableDesign | null }) {
+export function MenuTasting({
+  menu,
+  design,
+  editAction,
+}: {
+  menu: Menu
+  design?: TableDesign | null
+  editAction?: ReactNode
+}) {
   const { t } = useI18n()
   const [index, setIndex] = useState(0)
   const [playing, setPlaying] = useState(() => !window.matchMedia(reducedMotion).matches)
@@ -89,7 +98,10 @@ export function MenuTasting({ menu, design }: { menu: Menu; design?: TableDesign
           <QuoteStepIcon step="menu" />
           {t('quote.tasting.title')}
         </h3>
-        <FullMenuDialog menu={menu} onOpen={() => setPlaying(false)} />
+        <div className="quote-review__tools">
+          {editAction}
+          <FullMenuDialog menu={menu} onOpen={() => setPlaying(false)} />
+        </div>
       </header>
       <div className="menu-tasting__spread">
         <div className="serving-table" aria-hidden="true">
@@ -218,7 +230,7 @@ export function MenuTasting({ menu, design }: { menu: Menu; design?: TableDesign
             aria-label={t(playing ? 'home.hero.pause' : 'home.hero.play')}
             onPress={() => setPlaying(!playing)}
           >
-            <span aria-hidden="true">{playing ? 'Ⅱ' : '▶'}</span>
+            <PlaybackIcon playing={playing} />
             <span className="menu-tasting__play-label">
               {t(playing ? 'home.hero.pause' : 'home.hero.play')}
             </span>

@@ -6,6 +6,7 @@ export type CatalogItem = {
   id: string
   name: MessageKey
   description: MessageKey
+  tastingNote?: Extract<MessageKey, `menu.dishes.${string}.tastingNote`>
   refreshment?: boolean
   ingredients?: readonly IngredientKey[]
   image: string

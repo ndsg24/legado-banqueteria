@@ -19,6 +19,7 @@ export const fabricColors: readonly FabricColor[] = [
   { id: 'forest', label: 'table.colors.forest', hex: '#304a3b' },
   { id: 'rose', label: 'table.colors.dustyRose', hex: '#b28383' },
   { id: 'wine', label: 'table.colors.burgundy', hex: '#682e3d' },
+  { id: 'royalBlue', label: 'home.hero.floral.color', hex: '#193e94' },
   { id: 'navy', label: 'table.colors.midnightBlue', hex: '#29384b' },
   { id: 'gold', label: 'table.colors.champagne', hex: '#b5955c' },
   { id: 'charcoal', label: 'table.colors.graphite', hex: '#333639' },

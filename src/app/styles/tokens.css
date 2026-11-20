@@ -51,7 +51,8 @@
 }
 
 :root,
-.site-header[data-tone='light'] {
+.site-header[data-tone='light'],
+[data-sample='light'] {
   --canvas: #f2f2ef;
   --quote-surface: #fff;
   --dish-surface: #fff;
@@ -71,7 +72,8 @@
 }
 
 :root[data-theme='dark'],
-[data-tone='dark'] {
+[data-tone='dark'],
+[data-sample='dark'] {
   --canvas: #0a0a09;
   --quote-surface: #000;
   --dish-surface: var(--shade);
@@ -88,6 +90,76 @@
   --gold-hot: #e1b658;
   --inverse: #efefe9;
   --inverse-ink: #0a0a09;
+}
+
+:root[data-theme='garden'],
+[data-sample='garden'] {
+  color-scheme: dark;
+  --canvas: #23372f;
+  --surface: #30483d;
+  --quote-surface: var(--surface);
+  --dish-surface: var(--surface);
+  --ink: #f4efe4;
+  --muted: #c2cbbb;
+  --line: rgb(244 239 228 / 25%);
+  --gold: #d8b675;
+  --gold-hot: #ecd099;
+  --on-gold: #182a22;
+  --inverse: var(--ink);
+  --inverse-ink: #23372f;
+  --gold-on-ivory: #795b26;
+  --error: #ffb5a7;
+  --ribbon-savory: #dfbd79;
+  --ribbon-sweet: #95445e;
+  --ribbon-extra: #426084;
+  --on-ribbon-color: var(--ink);
+  --hero-background: var(--canvas);
+  --table-stage-backdrop: radial-gradient(ellipse at 50% 42%, #42594a, #23372f 75%);
+  --table-stage-floor: #344a3d;
+  --table-stage-export: var(--canvas);
+}
+:root[data-theme='garden'] footer[data-tone='dark'] {
+  --canvas: #182a22;
+  --surface: #23372f;
+  --ink: inherit;
+  --muted: inherit;
+  --gold: inherit;
+  --gold-hot: inherit;
+}
+
+:root[data-theme='pool'],
+[data-sample='pool'] {
+  color-scheme: light;
+  --canvas: #e1f2ef;
+  --surface: #cbe6e1;
+  --quote-surface: #f2faf7;
+  --dish-surface: #f2faf7;
+  --ink: #103d48;
+  --muted: #426369;
+  --line: rgb(16 61 72 / 26%);
+  --gold: #076975;
+  --gold-hot: #005561;
+  --on-gold: #f5fcf8;
+  --inverse: #103d48;
+  --inverse-ink: #e1f2ef;
+  --error: #9f3441;
+  --ribbon-savory: #805a30;
+  --ribbon-sweet: #99506a;
+  --ribbon-extra: #306c83;
+  --on-ribbon-color: #fff;
+  --hero-background: var(--canvas);
+  --table-stage-backdrop: radial-gradient(ellipse at 50% 42%, #edf8f4, #b4d7d2 75%);
+  --table-stage-floor: #98bcb9;
+  --table-stage-export: var(--canvas);
+}
+:root[data-theme='pool'] [data-tone='dark'] {
+  --canvas: #103d48;
+  --surface: #1e4f59;
+  --ink: #f2faf7;
+  --muted: #b6d6d3;
+  --gold: #93dcd3;
+  --gold-hot: #b2eee5;
+  --on-gold: #103d48;
 }
 
 :root {

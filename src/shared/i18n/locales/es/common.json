@@ -45,7 +45,8 @@
   "common.quantity.quantity": "Cantidad de {name}",
   "common.quantity.subtract": "Restar uno de {name}",
   "common.theme.day": "Día",
+  "common.theme.garden": "Jardín",
+  "common.theme.label": "Tema de color",
   "common.theme.night": "Noche",
-  "common.theme.switchDark": "Cambiar a tema oscuro",
-  "common.theme.switchLight": "Cambiar a tema claro"
+  "common.theme.pool": "Piscina"
 }

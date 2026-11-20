@@ -156,31 +156,33 @@
   font: italic 1.4rem var(--serif);
   pointer-events: none;
 }
-:root[data-theme='dark'] .table-studio__scene {
+:root:is([data-theme='dark'], [data-theme='garden']) .table-studio__scene {
   border-color: #ffffff14;
   color: #e4e1da;
 }
-:root[data-theme='dark'] .table-studio__scene::after {
+:root:is([data-theme='dark'], [data-theme='garden']) .table-studio__scene::after {
   box-shadow: none;
 }
-:root[data-theme='dark'] .table-studio__scene-label > span:last-child {
+:root:is([data-theme='dark'], [data-theme='garden']) .table-studio__scene-label > span:last-child {
   color: #dcbd82;
 }
-:root[data-theme='dark'] .table-studio__gesture {
+:root:is([data-theme='dark'], [data-theme='garden']) .table-studio__gesture {
   color: #eeeae1;
   text-shadow: 0 1px 3px #000;
 }
-:root[data-theme='dark'] .table-studio__loading {
+:root:is([data-theme='dark'], [data-theme='garden']) .table-studio__loading {
   color: #e4e1da;
 }
-:root[data-theme='dark'] .table-studio__views {
+:root:is([data-theme='dark'], [data-theme='garden']) .table-studio__views {
   background: #191b1ded;
   border-color: #ffffff25;
 }
-:root[data-theme='dark'] .table-studio__views button {
+:root:is([data-theme='dark'], [data-theme='garden']) .table-studio__views button {
   color: #ddd9d1;
 }
-:root[data-theme='dark'] .table-studio__views button[aria-pressed='true'] {
+:root:is([data-theme='dark'], [data-theme='garden'])
+  .table-studio__views
+  button[aria-pressed='true'] {
   background: #e1c895;
   color: #211d16;
 }
@@ -977,5 +979,48 @@
 @media (min-width: 761px) {
   .table-studio__composition .table-studio__flowers:not(.table-studio__outfits) {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr));
+  }
+}
+
+.table-studio__idea-menu {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-block: 12px;
+  border-block: 1px solid var(--line);
+}
+.table-studio__idea-menu img {
+  width: clamp(60px, 7vw, 92px);
+  height: auto;
+}
+.table-studio__idea-menu .table-studio__idea-photo {
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.table-studio__idea-menu > div {
+  display: grid;
+  gap: 3px;
+}
+.table-studio__idea-menu small,
+.table-studio__idea-menu span {
+  color: var(--muted);
+  font: var(--type-caption);
+}
+.table-studio__idea-menu strong {
+  font: var(--type-card);
+}
+.table-studio__idea-menu .button--gold {
+  margin-inline-start: auto;
+}
+@media (max-width: 680px) {
+  .table-studio__idea-menu {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px;
+  }
+  .table-studio__idea-menu .button--gold {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 }

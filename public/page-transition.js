@@ -1,15 +1,15 @@
 /* Runs before paint so a cross-page transition retains the selected theme. */
 ;(() => {
   const root = document.documentElement
+  let saved
   try {
-    const saved = localStorage.getItem('legado-theme')
-    root.dataset.theme =
-      saved === 'dark' || saved === 'light'
-        ? saved
-        : matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'light'
+    saved = localStorage.getItem('legado-theme')
   } catch {
-    /* Storage may be unavailable in private browsing. */
+    /* Use the device setting when storage is unavailable. */
   }
+  root.dataset.theme = ['light', 'dark', 'garden', 'pool'].includes(saved)
+    ? saved
+    : matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light'
 })()

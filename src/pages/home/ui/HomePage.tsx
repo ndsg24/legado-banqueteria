@@ -11,7 +11,7 @@ import { useScrollReveal } from '../model/useScrollReveal'
 import { useTheme } from '../../../shared/theme'
 
 export function HomePage() {
-  const { theme, toggleTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const { activeSection, headerSection } = useActiveSection()
   useScrollReveal()
 
@@ -21,7 +21,7 @@ export function HomePage() {
         activeSection={activeSection}
         headerSection={headerSection}
         theme={theme}
-        onThemeToggle={toggleTheme}
+        onThemeChange={setTheme}
       />
       <SectionRail activeSection={activeSection} />
       <main>

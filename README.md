@@ -43,7 +43,7 @@ React Router gestiona Inicio, Carta, Diseña tu mesa y Cotizar desde `src/app/ma
 `index.html` fuente. Las rutas públicas conservan sus nombres. Al compilar, Vite genera
 `carta.html`, `ambientacion.html` y `cotizar.html` con la misma entrada React y los metadatos
 de cada página definidos en `src/app/routing/metadata.ts`. Así GitHub Pages admite enlaces
-directos, recargas y vistas previas al compartir.
+directos, recargas y vistas previas al compartir. El enlace anterior `ideas-de-la-casa.html` abre el diseñador con la mesa de domingo.
 
 El frontend sigue Feature-Sliced Design. Cada página compone widgets y funcionalidades
 a partir de los modelos de carta, mesa y cotización. La guía de contribución describe
@@ -69,7 +69,7 @@ npm run preview # previsualizar el build
 
 Para probar la compilación, ejecuta `npx playwright install chromium` una vez y luego
 `npm run test:e2e`. Las pruebas levantan su propio servidor en el puerto 4189 y recorren las
-cuatro páginas en escritorio y móvil. El workflow de Pages ejecuta estos controles antes
+páginas del sitio en escritorio y móvil. El workflow de Pages ejecuta estos controles antes
 de desplegar. Para publicar, sube la revisión a `main` y comprueba el resultado en GitHub Actions.
 
 <details>

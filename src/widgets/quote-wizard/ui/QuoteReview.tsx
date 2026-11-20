@@ -1,3 +1,6 @@
+import { ReviewActionIcon } from './ReviewActionIcon'
+import { ActionButton } from '../../../shared/ui/ActionButton'
+import { steps, type StepId } from '../model/steps'
 import { SettingSample } from './SettingSample'
 import { EventIcon } from './EventIcon'
 import { QuoteDetailIcon } from './QuoteDetailIcon'
@@ -103,9 +106,11 @@ function OverviewFact({
 export function QuoteReview({
   quote,
   picture,
+  onEdit,
 }: {
   quote: QuoteRequest
   picture: Ref<TablePicture>
+  onEdit?: (step: StepId) => void
 }) {
   const { t, locale } = useI18n()
 
@@ -113,13 +118,32 @@ export function QuoteReview({
   const dietary = dietaryMenuGroups(quote, t)
   const hasDietary = dietary.length > 0 || !!quote.dietaryNeeds
   const menu = menuGroups(quote, t)
+  function edit(id: StepId) {
+    const step = steps.find((part) => part.id === id)
+    if (!onEdit || !step) return null
+    return (
+      <ActionButton
+        type="button"
+        variant="secondary"
+        className="quote-review__edit"
+        aria-label={t('quote.review.editSection', { name: t(step.label) })}
+        onPress={() => onEdit(id)}
+      >
+        <ReviewActionIcon action="edit" />
+        {t('quote.review.edit')}
+      </ActionButton>
+    )
+  }
   return (
     <div className="quote-review">
       <div className="quote-review__overview">
         <section>
           <EventIcon event={quote.event} />
           <div>
-            <h3>{t('quote.review.event')}</h3>
+            <header className="quote-review__section-heading">
+              <h3>{t('quote.review.event')}</h3>
+              {edit('event')}
+            </header>
             <strong className="quote-review__identity">{t(eventLabels[quote.event])}</strong>
             <dl className="quote-review__meta">
               <OverviewFact kind="guests" label={t('quote.review.guests')} value={quote.guests} />
@@ -139,7 +163,10 @@ export function QuoteReview({
         <section>
           <QuoteDetailIcon kind="name" />
           <div>
-            <h3>{t('quote.review.contact')}</h3>
+            <header className="quote-review__section-heading">
+              <h3>{t('quote.review.contact')}</h3>
+              {edit('contact')}
+            </header>
             <strong className="quote-review__identity">{quote.name}</strong>
             <dl className="quote-review__meta">
               <OverviewFact kind="email" label={t('quote.review.email')} value={quote.email} />
@@ -153,17 +180,23 @@ export function QuoteReview({
       <div className="quote-review__service">
         {menu.length === 0 && (
           <section className="quote-review__panel">
-            <h3>{t('quote.review.dishes')}</h3>
+            <header className="quote-review__section-heading">
+              <h3>{t('quote.review.dishes')}</h3>
+              {edit('menu')}
+            </header>
             <p>{t('quote.review.menuPending')}</p>
           </section>
         )}
-        {menu.length > 0 && <MenuTasting menu={menu} design={quote.table} />}
+        {menu.length > 0 && (
+          <MenuTasting menu={menu} design={quote.table} editAction={edit('menu')} />
+        )}
         <section className="quote-review__panel quote-review__setting">
-          <header>
+          <header className="quote-review__section-heading">
             <h3>
               <QuoteStepIcon step="table" />
               {t('quote.review.setting')}
             </h3>
+            {edit('table')}
           </header>
           {design ? (
             <div className="quote-review__table">
@@ -196,12 +229,16 @@ export function QuoteReview({
             <p>{t('quote.review.tablePending')}</p>
           )}
         </section>
-        {hasDietary && (
+        {(hasDietary || onEdit) && (
           <section className="quote-review__panel quote-review__dietary">
-            <h3>
-              <QuoteStepIcon step="dietary" />
-              {t('quote.review.dietaryNeeds')}
-            </h3>
+            <header className="quote-review__section-heading">
+              <h3>
+                <QuoteStepIcon step="dietary" />
+                {t('quote.review.dietaryNeeds')}
+              </h3>
+              {edit('dietary')}
+            </header>
+            {!hasDietary && <p>{t('quote.review.noDietary')}</p>}
             <div className="quote-review__dietary-groups">
               {dietary.map((group) => (
                 <div className="quote-review__group" key={group.name}>

@@ -1,0 +1,55 @@
+.quote-dish__tag {
+  position: absolute;
+  inset-block-start: 0.55rem;
+  inset-inline-start: 0.65rem;
+  z-index: 1;
+  max-inline-size: calc(100% - 3.25rem);
+  padding: 0.18em 0.75em;
+  border-radius: 1rem;
+  background: var(--dish-ribbon, var(--ribbon-savory));
+  color: var(--dish-ribbon-ink, var(--on-gold));
+  font: var(--type-caption);
+  font-weight: 600;
+  text-align: center;
+  pointer-events: none;
+}
+:is(.quote-dish, .ingredients-dialog, .catalog-card):is(
+  [data-category='dulces'],
+  [data-category='postres']
+) {
+  --dish-ribbon: var(--ribbon-sweet);
+  --dish-ribbon-ink: var(--on-ribbon-color);
+}
+:is(.quote-dish, .ingredients-dialog, .catalog-card):is(
+  [data-category='extras'],
+  [data-category='bar'],
+  [data-category='aperitivos'],
+  [data-category='bajativos']
+) {
+  --dish-ribbon: var(--ribbon-extra);
+  --dish-ribbon-ink: var(--on-ribbon-color);
+}
+.quote-dish__details-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  width: fit-content;
+  margin-top: 0.45rem;
+  padding-bottom: 0.18em;
+  background: linear-gradient(var(--gold), var(--gold)) left bottom / var(--details-rule, 38%) 1px
+    no-repeat;
+  color: var(--ink);
+  font: var(--type-option);
+}
+.quote-dish__details-label .editorial-arrow {
+  color: var(--gold);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .quote-dish__details-label {
+    transition: background-size 220ms ease-out;
+  }
+  .quote-dish__details-label .editorial-arrow {
+    transform: var(--details-arrow, none);
+    transition: transform 220ms ease-out;
+  }
+}
