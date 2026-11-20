@@ -701,12 +701,16 @@ test('la portada usa la foto activa a pantalla completa en tablet y prioriza la 
       )
       .toBeGreaterThan(0)
     const photo = scene.locator('img[data-active="true"]')
-    const fitsVertically = await photo.evaluate(async (element: HTMLImageElement) => {
-      await element.decode()
-      const { width, height } = element.getBoundingClientRect()
-      return width <= (height * element.naturalWidth) / element.naturalHeight + 1
-    })
-    expect(fitsVertically).toBe(true)
+    await photo.evaluate((element: HTMLImageElement) => element.decode())
+    // Responsive image decoding and viewport layout can settle on different frames.
+    await expect
+      .poll(() =>
+        photo.evaluate((element: HTMLImageElement) => {
+          const { width, height } = element.getBoundingClientRect()
+          return width - (height * element.naturalWidth) / element.naturalHeight
+        }),
+      )
+      .toBeLessThanOrEqual(1)
   }
 })
 
