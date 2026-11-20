@@ -1,3 +1,4 @@
+import { FloralSample } from '../../../entities/table/ui'
 import { useI18n } from '../../../shared/i18n'
 import { useId } from 'react'
 import {
@@ -61,13 +62,7 @@ export function CenterpieceControls({
                   })
                 }
               >
-                {style.preview ? (
-                  <Sample id={style.preview} />
-                ) : (
-                  <i className={`floral-sample floral-sample--${style.id}`} aria-hidden="true">
-                    {style.id === 'none' ? '—' : '✿'}
-                  </i>
-                )}
+                {style.preview ? <Sample id={style.preview} /> : <FloralSample floral={style.id} />}
                 {t(style.label)}
               </button>
             ))}

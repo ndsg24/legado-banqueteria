@@ -1,10 +1,25 @@
+export { localMobileDigits, mobilePrefix } from './model/phone'
 export { eventDateRange, eventTimeZone } from './model/dates'
 export {
+  dietaryGroups,
+  dietaryOptions,
+  type DietaryOption,
   eventTypes,
   eventLabels,
   guestRange,
-  quoteMessage,
+  designSchema,
   quoteSchema,
   type QuoteRequest,
 } from './model/request'
-export { contactDetails, displayDate, eventDetails, menuGroups, tableDetails } from './model/review'
+export {
+  dietaryDetails,
+  dietaryMenuGroups,
+  quoteMessage,
+  contactDetails,
+  displayDate,
+  eventDetails,
+  menuGroups,
+  settingDetails,
+  settingEntries,
+  tableDetails,
+} from './model/review'

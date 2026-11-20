@@ -44,7 +44,11 @@ export const boundaries = {
 
       if (toLayer === 'shared') {
         if (rest.length === 1 && ['ui', 'config'].includes(toSlice)) return
-      } else if (toLayer === 'entities' && toSlice === 'menu' && rest.join('/') === 'ui') {
+      } else if (
+        toLayer === 'entities' &&
+        ['menu', 'table'].includes(toSlice) &&
+        rest.join('/') === 'ui'
+      ) {
         return
       }
       if (rest.length && rest.join('/') !== 'index') report('api')

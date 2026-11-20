@@ -5,7 +5,6 @@ import {
   tableDesignUrl,
   tableStorageKey,
   type TableDesign,
-  type TablePart,
 } from '../../../entities/table'
 
 export function useTableDesign() {
@@ -13,7 +12,6 @@ export function useTableDesign() {
   const [design, setDesign] = useState<TableDesign>(() =>
     readTableDesign(new URLSearchParams(window.location.search)),
   )
-  const [activePart, setActivePart] = useState<TablePart>('tablecloth')
   useEffect(() => {
     try {
       localStorage.setItem(tableStorageKey, JSON.stringify(design))
@@ -28,11 +26,5 @@ export function useTableDesign() {
       )
     }
   }, [design, navigate])
-  const setColor = (color: string) => setDesign((current) => ({ ...current, [activePart]: color }))
-  const setTexture = (texture: TableDesign['textures'][TablePart]) =>
-    setDesign((current) => ({
-      ...current,
-      textures: { ...current.textures, [activePart]: texture },
-    }))
-  return { setTexture, design, setDesign, activePart, setActivePart, setColor }
+  return { design, setDesign }
 }

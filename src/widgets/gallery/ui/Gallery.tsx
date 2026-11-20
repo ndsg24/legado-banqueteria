@@ -1,7 +1,5 @@
 import { useI18n } from '../../../shared/i18n'
-import { useLayoutEffect, useRef, useState, type UIEvent } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useEffect, useRef, useState, type UIEvent } from 'react'
 import { galleryItems } from '../model/photos'
 import { EditorialArrow } from '../../../shared/ui/EditorialArrow'
 import { RingLines } from '../../../shared/ui/BackgroundMotifs'
@@ -9,34 +7,28 @@ import { RingLines } from '../../../shared/ui/BackgroundMotifs'
 import { PhotoSketch } from './PhotoSketch'
 import { PhotoAlbum } from './PhotoAlbum'
 
-gsap.registerPlugin(ScrollTrigger)
-
 export function Gallery() {
   const { t } = useI18n()
 
-  const root = useRef<HTMLElement>(null)
+  const [photosNear, setPhotosNear] = useState(false)
   const stage = useRef<HTMLDivElement>(null)
   const opener = useRef<HTMLButtonElement | null>(null)
   const [active, setActive] = useState(0)
   const [opened, setOpened] = useState<number | null>(null)
 
-  useLayoutEffect(() => {
-    const media = gsap.matchMedia()
-    media.add('(prefers-reduced-motion: no-preference)', () => {
-      const context = gsap.context(() => {
-        gsap.utils.toArray<HTMLElement>('.memory').forEach((card) => {
-          gsap.from(card, {
-            y: 45,
-            opacity: 0,
-            duration: 1.1,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: card, start: 'top 95%', once: true },
-          })
-        })
-      }, root)
-      return () => context.revert()
-    })
-    return () => media.revert()
+  useEffect(() => {
+    const grid = stage.current
+    if (!grid) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setPhotosNear(true)
+        observer.disconnect()
+      },
+      { rootMargin: '400px 0px' },
+    )
+    observer.observe(grid)
+    return () => observer.disconnect()
   }, [])
 
   const scrollTo = (index: number) => {
@@ -66,12 +58,7 @@ export function Gallery() {
   }
 
   return (
-    <section
-      className="gallery gallery--editorial"
-      id="galeria"
-      ref={root}
-      aria-labelledby="gallery-title"
-    >
+    <section className="gallery gallery--editorial" id="galeria" aria-labelledby="gallery-title">
       <div className="gallery__motifs" aria-hidden="true">
         <svg className="gallery__garland" viewBox="0 0 320 112" focusable="false">
           <path d="M-8 5Q132 128 328 14" />
@@ -127,27 +114,31 @@ export function Gallery() {
               aria-label={t('home.gallery.enlargeNamed', { name: t(photo.title) })}
               onClick={(event) => open(index, event.currentTarget)}
             >
-              <img
-                src={`${import.meta.env.BASE_URL}images/gallery/${photo.src}`}
-                srcSet={
-                  'srcSet' in photo
-                    ? photo.srcSet
-                        .split(', ')
-                        .map((source) => `${import.meta.env.BASE_URL}images/gallery/${source}`)
-                        .join(', ')
-                    : undefined
-                }
-                alt={t(photo.alt)}
-                width={photo.width}
-                height={photo.height}
-                loading="lazy"
-                decoding="async"
-                sizes={
-                  index === 0
-                    ? '(max-width: 760px) 82vw, (min-width: 1980px) 1250px, 65vw'
-                    : '(max-width: 760px) 82vw, (min-width: 1980px) 1130px, 60vw'
-                }
-              />
+              {photosNear ? (
+                <img
+                  src={`${import.meta.env.BASE_URL}images/gallery/${photo.src}`}
+                  srcSet={
+                    'srcSet' in photo
+                      ? photo.srcSet
+                          .split(', ')
+                          .map((source) => `${import.meta.env.BASE_URL}images/gallery/${source}`)
+                          .join(', ')
+                      : undefined
+                  }
+                  alt={t(photo.alt)}
+                  width={photo.width}
+                  height={photo.height}
+                  loading="lazy"
+                  decoding="async"
+                  sizes={
+                    index === 0
+                      ? '(max-width: 760px) 82vw, (min-width: 1980px) 1250px, 65vw'
+                      : '(max-width: 760px) 82vw, (min-width: 1980px) 1130px, 60vw'
+                  }
+                />
+              ) : (
+                <span className="memory__placeholder" aria-hidden="true" />
+              )}
               <PhotoSketch motif={photo.sketch} />
               <span className="memory__discover" aria-hidden="true">
                 {t('home.gallery.enlarge')} <EditorialArrow direction="up-right" />

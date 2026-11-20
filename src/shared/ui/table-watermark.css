@@ -1,0 +1,19 @@
+.table-watermark {
+  position: relative;
+  isolation: isolate;
+}
+.table-watermark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--table-mark-ink, color-mix(in srgb, var(--ink) 4%, transparent));
+  mask: url('./table-watermark.svg') var(--table-mark-position, left -3.5rem bottom -5rem) /
+    var(--table-mark-size, clamp(16rem, 32vw, 26rem)) no-repeat;
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .table-watermark::after {
+    display: none;
+  }
+}

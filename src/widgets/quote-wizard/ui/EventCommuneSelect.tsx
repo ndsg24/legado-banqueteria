@@ -1,3 +1,4 @@
+import { QuoteDetailIcon } from './QuoteDetailIcon'
 import { validationMessage } from '../model/validationMessage'
 import { useI18n } from '../../../shared/i18n'
 import { useId, type Ref } from 'react'
@@ -45,12 +46,11 @@ export function EventCommuneSelect({ value, onChange, onBlur, triggerRef, error 
       placeholder={t('quote.commune.choose')}
       aria-describedby={error ? errorId : undefined}
     >
-      <Label>{t('quote.commune.label')}</Label>
+      <Label className="quote-event-detail-label">
+        <QuoteDetailIcon kind="location" />
+        {t('quote.commune.label')}
+      </Label>
       <Button ref={triggerRef} className="quote-commune-trigger">
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
-          <circle cx="12" cy="10" r="2.4" />
-        </svg>
         <SelectValue>
           {({ selectedText, isPlaceholder }) =>
             isPlaceholder ? t('quote.commune.choose') : selectedText

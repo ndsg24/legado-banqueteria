@@ -16,7 +16,7 @@ export function HomePage() {
   useScrollReveal()
 
   return (
-    <div className="site-shell site-texture">
+    <div className="site-shell home-shell">
       <Header
         activeSection={activeSection}
         headerSection={headerSection}

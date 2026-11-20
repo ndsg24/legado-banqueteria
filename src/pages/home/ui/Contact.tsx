@@ -1,5 +1,5 @@
+import { ActionLink } from '../../../shared/ui/ActionLink'
 import { useI18n } from '../../../shared/i18n'
-import { Link } from 'react-router'
 import { quoteHref } from '../../../shared/routing'
 import { siteConfig } from '../../../shared/config/site'
 import { EditorialArrow } from '../../../shared/ui/EditorialArrow'
@@ -21,10 +21,10 @@ export function Contact() {
       </h2>
       <p>{t('home.contact.description')}</p>
       <div className="contact__actions">
-        <Link className="button button--gold" to={quoteHref()}>
+        <ActionLink to={quoteHref()}>
           <span>{t('home.contact.quote')}</span>
           <EditorialArrow direction="up-right" />
-        </Link>
+        </ActionLink>
         {siteConfig.whatsappUrl && (
           <a
             href={

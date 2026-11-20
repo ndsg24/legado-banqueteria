@@ -4,9 +4,9 @@
   "purpose": "Reference hero photograph for Legado's immersive shared-table scene",
   "prompt": "Use case: photorealistic-natural. Asset type: immersive website hero photograph for Legado, a family catering business in Concepcion Chile. Primary request: an emotionally warm, premium editorial photograph of a real family-style meal being shared, convivial and intimate rather than a commercial banquet. Landscape 3:2 composition, high resolution. Camera slightly elevated at a three-quarter angle close to a long dark wood dining table: a hand from the upper right passes a ceramic serving bowl of golden roasted potatoes toward another hand, a beautiful steaming roast and simple fresh Chilean tomato salad at center, handmade bread, pale linen napkins, a few simple wine glasses, small warm candles in background. Natural correct anatomy, only 2 to 3 hands visible, bodies and faces outside frame. Food and gesture are the focal point in the center and right half, left third falls naturally into very dark blurred shadows for white typography. Chiaroscuro soft golden evening window light, cinematic dark olive and warm amber shadows, subtle analog film grain, tactile ceramic and linen, appetizing genuine homemade food, editorial realism, beautifully imperfect and personal. No text, no logos, no watermark, no restaurant signage, no luxurious hotel decor, no excessive props, no synthetic glossy food. Full photographic scene, NOT an interface mockup, NOT a collage.",
   "source": "/Users/nelsondaniel/.codex/generated_images/01a1eafb-949f-7e60-a217-4da21d7a5b1a/exec-b5668d9e-0e0d-45f0-ae3d-81d421134d70.png",
-  "outputs": [
-    "public/images/hero-shared-table-v2.webp",
-    "public/images/hero-shared-table-v2-960.webp"
+  "retired_outputs": [
+    "hero-shared-table-v2.webp",
+    "hero-shared-table-v2-960.webp"
   ],
   "original_retained": "public/images/hero-table.jpg"
 }

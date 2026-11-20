@@ -20,10 +20,19 @@ export function useMobileMenu() {
       triggerRef.current?.focus()
     }
 
+    const compact = matchMedia(
+      '(max-width: 900px), (orientation: portrait) and (max-width: 1100px), ' +
+        '(any-pointer: coarse) and (max-width: 1440px)',
+    )
+    const closeOnResize = () => {
+      if (!compact.matches) closeMenu()
+    }
+    compact.addEventListener('change', closeOnResize)
     window.addEventListener('keydown', handleKeyDown)
 
     return () => {
       document.body.style.overflow = previousOverflow
+      compact.removeEventListener('change', closeOnResize)
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [closeMenu, isOpen])

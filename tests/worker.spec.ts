@@ -53,7 +53,24 @@ test('el correo usa un destino fijo y trata las fallas del proveedor', async () 
     date: eventDateRange().first.toString(),
     guests: 42,
     location: 'Concepción',
-    items: {},
+    items: {
+      'postres-1': 1,
+      'nocturnos-1': 1,
+      'principales-1': 1,
+      'principales-2': 1,
+      'guarniciones-1': 1,
+      'guarniciones-2': 1,
+      'aperitivos-1': 1,
+      'aperitivos-3': 1,
+      'aperitivos-6': 1,
+      'aperitivos-7': 1,
+      'aperitivos-8': 1,
+      'aperitivos-10': 1,
+    },
+    omittedIngredients: { 'guarniciones-2': ['menu.ingredients.parsley'] },
+    allergens: ['wheat', 'nuts'],
+    dietaryCounts: { lactose: 3, vegan: 1 },
+    dietaryNeeds: 'Una invitada con alergia a las nueces',
     notes: '',
     table: null,
   }
@@ -65,12 +82,41 @@ test('el correo usa un destino fijo y trata las fallas del proveedor', async () 
       calls.push(new Request(url, options))
       return new Response(null, { status: calls.length === 1 ? 200 : 503 })
     }
+    for (const phone of ['+569', '+5691234567', '+569123456789', '+12345678901']) {
+      const invalid = JSON.stringify({ id, quote: { ...quote, phone } })
+      expect((await worker.fetch(request(invalid), env)).status).toBe(422)
+    }
+    for (const dietaryCounts of [{ milk: 43 }, { milk: 0 }, { light: 1.5 }]) {
+      const invalid = JSON.stringify({ id, quote: { ...quote, dietaryCounts } })
+      expect((await worker.fetch(request(invalid), env)).status).toBe(422)
+    }
+    for (const extra of [
+      'principales-3',
+      'guarniciones-3',
+      'aperitivos-4',
+      'postres-2',
+      'nocturnos-2',
+    ]) {
+      const items = { ...quote.items, [extra]: 1 }
+      const invalid = JSON.stringify({ id, quote: { ...quote, items } })
+      expect((await worker.fetch(request(invalid), env)).status).toBe(422)
+    }
+    for (const dish of ['guarniciones-1', 'guarniciones-3']) {
+      const omittedIngredients = { [dish]: ['menu.ingredients.parsley'] }
+      const invalid = JSON.stringify({ id, quote: { ...quote, omittedIngredients } })
+      expect((await worker.fetch(request(invalid), env)).status).toBe(422)
+    }
     const accepted = await worker.fetch(request(body), env)
     expect(accepted.status).toBe(202)
     expect(accepted.headers.get('Cache-Control')).toBe('no-store')
     expect(calls[0].url).toBe('https://api.resend.com/emails')
     expect(calls[0].headers.get('Idempotency-Key')).toBe('quote/' + id)
-    expect((await calls[0].json()).to).toEqual([env.MAIL_TO])
+    const email = await calls[0].json()
+    expect(email.text).toContain('Sin Perejil')
+    expect(email.to).toEqual([env.MAIL_TO])
+    expect(email.text).toContain(
+      'Trigo, Frutos secos\nSin lactosa · 3 personas\nVegano · 1 persona\n' + quote.dietaryNeeds,
+    )
     expect((await worker.fetch(request(body), env)).status).toBe(502)
     globalThis.fetch = async () => {
       throw new Error('simulated')

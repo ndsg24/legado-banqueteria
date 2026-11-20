@@ -1,9 +1,15 @@
+import { FabricSample } from '../../../entities/table/ui'
+import { ActionLink } from '../../../shared/ui/ActionLink'
 import { type MessageKey, useI18n } from '../../../shared/i18n'
-import { Link } from 'react-router'
 import { Tab, TabList, TabPanel, Tabs } from 'react-aria-components'
 import { TableSettingControls } from './TableSettingControls'
 import { EditableSeatingPlan } from './EditableSeatingPlan'
-import { capturePlan, useTableScene, type TableView } from '../../../features/preview-table'
+import {
+  capturePlan,
+  SeatingPlan,
+  useTableScene,
+  type TableView,
+} from '../../../features/preview-table'
 import { SeatingControls } from './SeatingControls'
 import { EditorialArrow } from '../../../shared/ui/EditorialArrow'
 import { useCallback, useRef, useState, type CSSProperties } from 'react'
@@ -20,9 +26,12 @@ import {
   napkinFolds,
   tableParts,
   type TablePart,
+  type TableDesign,
 } from '../../../entities/table'
 import { quoteHref } from '../../../shared/routing'
 import { useTableDesign } from '../model/useTableDesign'
+
+import './table.css'
 
 const views: readonly { id: TableView; label: MessageKey }[] = [
   { id: 'table', label: 'table.view.table' },
@@ -32,10 +41,22 @@ const views: readonly { id: TableView; label: MessageKey }[] = [
   { id: 'setting', label: 'table.view.setting' },
 ]
 export function TableConfigurator() {
-  const { t } = useI18n()
+  const { design, setDesign } = useTableDesign()
+  return <TableEditor design={design} onChange={setDesign} standalone />
+}
 
-  const { design, setDesign, activePart, setActivePart, setColor, setTexture } = useTableDesign()
+type TableEditorProps = {
+  design: TableDesign
+  onChange: (design: TableDesign) => void
+  standalone?: boolean
+}
+
+export function TableEditor({ design, onChange, standalone = false }: TableEditorProps) {
+  const { t } = useI18n()
+  const [activePart, setActivePart] = useState<TablePart>('tablecloth')
+  const patchDesign = (patch: Partial<TableDesign>) => onChange({ ...design, ...patch })
   const [showPlan, setShowPlan] = useState(() => design.roundTables !== 1 || design.headSeats > 0)
+  const [sceneRequested, setSceneRequested] = useState(!showPlan)
   const planRef = useRef<SVGSVGElement>(null)
   const [panel, setPanel] = useState<'fabrics' | 'composition'>('fabrics')
   const selectPart = useCallback(
@@ -45,7 +66,11 @@ export function TableConfigurator() {
     },
     [setActivePart],
   )
-  const { canvasRef, status, setView, saveImage } = useTableScene(design, selectPart)
+  const { canvasRef, status, setView, saveImage } = useTableScene(
+    design,
+    selectPart,
+    sceneRequested,
+  )
   const [view, setActiveView] = useState<TableView>('table')
   function changeView(next: TableView) {
     setActiveView(next)
@@ -63,7 +88,10 @@ export function TableConfigurator() {
       ) && item.design.floral === design.floral,
   )
   const previewChairs = design.roundSeats?.[0] ?? design.chairs
-  const designUrl = tableDesignUrl(design)
+  const designUrl = tableDesignUrl(
+    design,
+    standalone ? undefined : import.meta.env.BASE_URL + 'ambientacion.html',
+  )
   const quoteParams = new URL(designUrl).searchParams
   quoteParams.set('mesa', '1')
   const napkinPicker = (
@@ -76,7 +104,7 @@ export function TableConfigurator() {
             key={fold}
             aria-pressed={design.napkinFold === fold}
             onClick={() => {
-              setDesign((current) => ({ ...current, napkinFold: fold }))
+              patchDesign({ napkinFold: fold })
               changeView('setting')
             }}
           >
@@ -119,20 +147,33 @@ export function TableConfigurator() {
     }
   }
   return (
-    <section className="table-studio" id="disena" aria-labelledby="table-title">
-      <header className="table-studio__header">
-        <div>
-          <p className="table-studio__eyebrow">
-            {t('table.intro.eyebrow')} <span>{t('table.intro.chapter')}</span>
-          </p>
-          <h1 id="table-title">
-            {t('table.intro.title')} <em>{t('table.intro.accent')}</em>
-          </h1>
-        </div>
-        <p>{t('table.intro.description')}</p>
-      </header>
+    <section
+      className="table-studio"
+      id={standalone ? 'disena' : undefined}
+      aria-label={t('common.nav.yourTable')}
+    >
+      {standalone && (
+        <header className="table-studio__header">
+          <div>
+            <p className="table-studio__eyebrow">
+              {t('table.intro.eyebrow')} <span>{t('table.intro.chapter')}</span>
+            </p>
+            <h1 id="table-title">
+              {t('table.intro.title')} <em>{t('table.intro.accent')}</em>
+            </h1>
+          </div>
+          <p>{t('table.intro.description')}</p>
+        </header>
+      )}
       <div className="table-studio__modes" role="group" aria-label={t('table.view.label')}>
-        <button type="button" aria-pressed={!showPlan} onClick={() => setShowPlan(false)}>
+        <button
+          type="button"
+          aria-pressed={!showPlan}
+          onClick={() => {
+            setSceneRequested(true)
+            setShowPlan(false)
+          }}
+        >
           {t('table.view.detail')}
         </button>
         <button type="button" aria-pressed={showPlan} onClick={() => setShowPlan(true)}>
@@ -142,11 +183,7 @@ export function TableConfigurator() {
       <div className="table-studio__layout">
         <div className="table-studio__preview">
           {showPlan && (
-            <EditableSeatingPlan
-              design={design}
-              planRef={planRef}
-              onChange={(patch) => setDesign((current) => ({ ...current, ...patch }))}
-            />
+            <EditableSeatingPlan design={design} planRef={planRef} onChange={patchDesign} />
           )}
           <div className="table-studio__scene" data-status={status} hidden={showPlan}>
             <div className="table-studio__scene-label">
@@ -166,19 +203,25 @@ export function TableConfigurator() {
               ref={canvasRef}
               aria-label={t('table.view.description') + ' ' + t('table.view.controls')}
             />
-            {status !== 'ready' && (
-              <p className="table-studio__loading" role="status">
-                {status === 'loading'
-                  ? t('table.view.loading')
-                  : t('table.view.unavailable') + ' ' + t('table.view.fallback')}
-              </p>
+            {!showPlan && status !== 'ready' && (
+              <>
+                <div className="table-studio__fallback-plan">
+                  <SeatingPlan design={design} />
+                </div>
+                <p className="table-studio__loading" role="status">
+                  {status === 'loading'
+                    ? t('table.view.loading')
+                    : t('table.view.unavailable') + ' ' + t('table.view.fallback')}
+                </p>
+              </>
             )}
-            <p className="table-studio__gesture">
+            <p className="table-studio__gesture" hidden={status !== 'ready'}>
               <EditorialArrow direction="both" /> {t('table.view.rotate')} <span>·</span>{' '}
               {t('table.view.editFabric')}
             </p>
             <div
               className="table-studio__views"
+              hidden={status !== 'ready'}
               role="group"
               aria-label={t('table.view.viewpoint')}
             >
@@ -206,7 +249,7 @@ export function TableConfigurator() {
                   key={item.id}
                   aria-pressed={preset?.id === item.id}
                   onClick={() =>
-                    setDesign({
+                    onChange({
                       ...item.design,
                       roundTables: design.roundTables,
                       roundSeats: design.roundSeats,
@@ -251,10 +294,7 @@ export function TableConfigurator() {
             )}
           </h2>
           {showPlan ? (
-            <SeatingControls
-              design={design}
-              onChange={(patch) => setDesign((current) => ({ ...current, ...patch }))}
-            />
+            <SeatingControls design={design} onChange={patchDesign} />
           ) : (
             <Tabs
               selectedKey={panel}
@@ -279,11 +319,7 @@ export function TableConfigurator() {
                 </Tab>
               </TabList>
               <TabPanel id="composition" className="table-studio__composition">
-                <TableSettingControls
-                  design={design}
-                  onChange={(patch) => setDesign((current) => ({ ...current, ...patch }))}
-                  onView={changeView}
-                />
+                <TableSettingControls design={design} onChange={patchDesign} onView={changeView} />
               </TabPanel>
               <TabPanel id="fabrics">
                 <div
@@ -313,9 +349,7 @@ export function TableConfigurator() {
                           type="button"
                           key={style}
                           aria-pressed={design.overlayStyle === style}
-                          onClick={() =>
-                            setDesign((current) => ({ ...current, overlayStyle: style }))
-                          }
+                          onClick={() => patchDesign({ overlayStyle: style })}
                         >
                           <i data-shape={style} aria-hidden="true" />
                           {t(overlayStyleLabels[style])}
@@ -336,7 +370,7 @@ export function TableConfigurator() {
                         aria-label={t(color.label)}
                         aria-pressed={design[activePart] === color.id}
                         style={{ '--swatch': color.hex } as CSSProperties}
-                        onClick={() => setColor(color.id)}
+                        onClick={() => patchDesign({ [activePart]: color.id })}
                       >
                         <span aria-hidden="true" /> <small>{t(color.label)}</small>
                       </button>
@@ -354,13 +388,13 @@ export function TableConfigurator() {
                         key={texture.id}
                         type="button"
                         aria-pressed={design.textures[activePart] === texture.id}
-                        onClick={() => setTexture(texture.id)}
+                        onClick={() =>
+                          patchDesign({
+                            textures: { ...design.textures, [activePart]: texture.id },
+                          })
+                        }
                       >
-                        <i
-                          className={`fabric-sample fabric-sample--${texture.id}`}
-                          style={{ '--swatch': current.hex } as CSSProperties}
-                          aria-hidden="true"
-                        />
+                        <FabricSample texture={texture.id} color={current.hex} />
                         <span>
                           {t(texture.label)}
                           <small>{t(texture.caption)}</small>
@@ -373,12 +407,14 @@ export function TableConfigurator() {
             </Tabs>
           )}
           <div className="table-studio__actions">
-            <Link className="button--gold" to={quoteHref(quoteParams)}>
-              {t('table.designer.quote')}{' '}
-              <span aria-hidden="true">
-                <EditorialArrow direction="up-right" />
-              </span>
-            </Link>
+            {standalone && (
+              <ActionLink to={quoteHref(quoteParams)}>
+                {t('table.designer.quote')}{' '}
+                <span aria-hidden="true">
+                  <EditorialArrow direction="up-right" />
+                </span>
+              </ActionLink>
+            )}
             <div>
               <button type="button" onClick={share}>
                 {t('table.designer.copy')} <EditorialArrow direction="up-right" />

@@ -7,6 +7,8 @@ import {
   eventLabels,
   type QuoteRequest,
   contactDetails,
+  dietaryMenuGroups,
+  type DietaryOption,
   eventDetails,
   menuGroups,
   tableDetails,
@@ -18,17 +20,24 @@ pdfMake.addVirtualFileSystem(fonts)
 
 const gold = '#8a6525'
 
-async function dishPhoto(item: CatalogItem) {
+async function menuPhoto(item: CatalogItem | DietaryOption) {
   try {
     const image = new Image()
-    image.src = import.meta.env.BASE_URL + (item.imageSmall ?? item.image)
+    const path =
+      typeof item === 'string'
+        ? `images/dietary/still/${item}.webp`
+        : (item.imageThumbnail ?? item.imageSmall ?? item.image)
+    image.src = import.meta.env.BASE_URL + path
     await image.decode()
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = 128
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    const { x, y, width, height } = item.imageBounds
-    const scale = image.naturalWidth / item.imageWidth
+    const { x, y, width, height } =
+      typeof item === 'string'
+        ? { x: 0, y: 0, width: image.naturalWidth, height: image.naturalHeight }
+        : item.imageBounds
+    const scale = typeof item === 'string' ? 1 : image.naturalWidth / item.imageWidth
     const fit = 120 / Math.max(width, height)
     ctx.fillStyle = '#ffffff'
     ctx.fillRect(0, 0, 128, 128)
@@ -46,6 +55,63 @@ async function dishPhoto(item: CatalogItem) {
     return canvas.toDataURL('image/jpeg', 0.87)
   } catch {
     return undefined
+  }
+}
+
+async function menuTable(
+  heading: string | null,
+  entries: {
+    item: CatalogItem | DietaryOption
+    name: string
+    quantity: string
+    omissions?: string
+    sauce?: { item: CatalogItem; name: string }
+  }[],
+): Promise<Content> {
+  const body: TableCell[][] = heading
+    ? [[{ text: heading, style: 'eyebrow', colSpan: 3 }, '', '']]
+    : []
+  for (const { item, name, quantity, sauce, omissions } of entries) {
+    const photo = await menuPhoto(item)
+    let description: TableCell = { text: name, margin: [0, 8, 0, 0] }
+    if (sauce) {
+      const thumbnail = await menuPhoto(sauce.item)
+      description = {
+        stack: [
+          name,
+          {
+            columns: [
+              ...(thumbnail ? [{ image: thumbnail, width: 17 }] : []),
+              { text: sauce.name, fontSize: 9, color: '#645f55', margin: [0, 2, 0, 0] },
+            ],
+            columnGap: 4,
+            margin: [0, 2, 0, 0],
+          },
+        ],
+      }
+    }
+    if (omissions) description = { stack: [description, { text: omissions, fontSize: 9 }] }
+    body.push([
+      photo ? { image: photo, width: 28 } : '',
+      description,
+      { text: quantity, alignment: 'right', margin: [0, 8, 0, 0] },
+    ])
+  }
+  return {
+    margin: [0, 6, 0, 6],
+    table: {
+      headerRows: heading ? 1 : 0,
+      keepWithHeaderRows: heading ? 1 : 0,
+      dontBreakRows: true,
+      widths: [32, '*', 100],
+      body,
+    },
+    layout: {
+      fillColor: (row) => (heading && row === 0 ? '#f4f0e8' : null),
+      hLineWidth: (index) => (index > 0 ? 0.4 : 0),
+      vLineWidth: () => 0,
+      hLineColor: () => '#ddd6c9',
+    },
   }
 }
 
@@ -72,7 +138,7 @@ export async function downloadQuotePdf(
   locale: string,
   tablePhoto?: string,
 ) {
-  const issuedAt = new Intl.DateTimeFormat('es-CL', {
+  const issuedAt = new Intl.DateTimeFormat(locale, {
     timeZone: eventTimeZone,
     day: '2-digit',
     month: '2-digit',
@@ -81,7 +147,7 @@ export async function downloadQuotePdf(
     minute: '2-digit',
     hourCycle: 'h23',
   }).format(new Date())
-  const groups = menuGroups(quote.items, quote.sauces, t)
+  const menu = menuGroups(quote, t)
   const content: Content[] = [
     {
       columnGap: 10,
@@ -128,36 +194,20 @@ export async function downloadQuotePdf(
         { stack: [section(t('quote.review.contact')), facts(contactDetails(quote, t), 72)] },
       ],
     },
-    section(t('quote.review.dishes')),
   ]
-  if (!groups.length) content.push(t('quote.review.menuPending'))
-  for (const group of groups) {
-    const body: TableCell[][] = [[{ text: group.name, style: 'eyebrow', colSpan: 3 }, '', '']]
-    for (const { item, name, quantity } of group.entries) {
-      const photo = await dishPhoto(item)
-      body.push([
-        photo ? { image: photo, width: 28 } : '',
-        { text: name, margin: [0, 8, 0, 0] },
-        { text: quantity, alignment: 'right', margin: [0, 8, 0, 0] },
-      ])
-    }
-    content.push({
-      margin: [0, 6, 0, 6],
-      table: {
-        headerRows: 1,
-        keepWithHeaderRows: 1,
-        dontBreakRows: true,
-        widths: [32, '*', 100],
-        body,
-      },
-      layout: {
-        fillColor: (row) => (row === 0 ? '#f4f0e8' : null),
-        hLineWidth: (index) => (index > 0 ? 0.4 : 0),
-        vLineWidth: () => 0,
-        hLineColor: () => '#ddd6c9',
-      },
-    })
+  if (!menu.length) content.push(section(t('quote.review.dishes')), t('quote.review.menuPending'))
+  for (const part of menu) {
+    content.push(section(part.name))
+    for (const group of part.groups) content.push(await menuTable(group.name, group.entries))
   }
+  const dietary = dietaryMenuGroups(quote, t)
+  if (dietary.length || quote.dietaryNeeds) content.push(section(t('quote.review.dietaryNeeds')))
+  for (const group of dietary) {
+    const entries = group.entries.map(({ id, name, quantity }) => ({ item: id, name, quantity }))
+    content.push(await menuTable(group.name, entries))
+  }
+  if (quote.dietaryNeeds)
+    content.push({ text: quote.dietaryNeeds.replace(/(\S{55})(?=\S)/gu, '$1\u200b') })
   const setting: Content = quote.table
     ? facts(tableDetails(quote.table, t))
     : t('quote.review.tablePending')

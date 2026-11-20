@@ -10,7 +10,7 @@ export function Footer({ homeHref = '#inicio', topHref = '#inicio' }: FooterProp
 
   const { search } = useLocation()
   return (
-    <footer>
+    <footer className="table-watermark" data-tone="dark">
       <Brand href={homeHref} />
       <p>
         {t('common.footer.taglineLead')}

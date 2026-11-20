@@ -84,7 +84,7 @@ de desplegar. Para publicar, sube la revisión a `main` y comprueba el resultado
 
 ## Cotizaciones por correo
 
-El formulario está en `cotizar.html`. Los enlaces antiguos a `#cotizar` conservan su selección y redirigen a esa página. El calendario de React Aria permite elegir desde hoy hasta la misma fecha del año siguiente en la zona de Santiago. React Hook Form y la función de recepción usan el mismo esquema Zod en `src/entities/quote/model/request.ts`. La selección de la carta se conserva durante la sesión. El diseño incluye puestos, telas, texturas, flores y vajilla. Las consultas llegan como texto, con el correo del cliente en Reply-To.
+El formulario está en `cotizar.html`. Los enlaces antiguos a `#cotizar` conservan su selección y redirigen a esa página. El calendario de React Aria permite elegir desde hoy hasta la misma fecha del año siguiente en la zona de Santiago. React Hook Form y la función de recepción usan el mismo esquema Zod en `src/entities/quote/model/request.ts`. El borrador se guarda en la pestaña y recupera el paso, el evento, el contacto, la carta y la mesa al recargar. El envío confirmado elimina el borrador. El diseño incluye puestos, telas, texturas, flores y vajilla. Las consultas llegan como texto, con el correo del cliente en Reply-To.
 
 Para activar el envío automático:
 
@@ -102,7 +102,7 @@ Mientras falte el endpoint, el botón «Preparar correo» abre un borrador en la
 - Galería: material provisional de Unsplash.
 - Galería 01: [Fotógrafo Samuel Cruz / celebración nocturna](https://unsplash.com/photos/outdoor-event-with-illuminated-tables-and-guests-at-night-D-qRkpXR-KE), servida en WebP de 800, 1600 y 3200 px; el visor abre la versión de 3200 px.
 
-Las imágenes se reemplazan desde `public/images` sin modificar los componentes.
+Las imágenes se reemplazan desde `public/images` sin modificar los componentes. Después de compilar, `npm run test:e2e -- --project=fotos` verifica los archivos y las dimensiones de la portada, las miniaturas y el álbum ampliado. GitHub Actions ejecuta esta prueba antes de publicar.
 
 ---
 
@@ -164,7 +164,8 @@ definen en `src/entities/table/model/options.ts`; no representan un inventario c
 `useTableDesign` valida los colores, conserva el diseño localmente y lo incluye
 en la URL para compartirlo. La consulta por correo contiene la combinación actual.
 
-`TableScene` se importa de forma diferida y construye los muebles, telas con
+Al abrir la distribución del salón, Three.js se carga la primera vez que se elige «Detalle de la mesa».
+`TableScene` construye los muebles, telas con
 pliegues, lazos y servicio de mesa mediante geometría procedural. OrbitControls
 permite girar y acercarse; las vistas predefinidas también funcionan con teclado.
 GSAP interpola colores y cámara respetando movimiento reducido. La escena se
@@ -185,26 +186,15 @@ landing para que no oculte las rutas de navegación de las páginas independient
 
 ## Hero editorial
 
-El hero conserva el mensaje «Hay mesas que se quedan contigo», las llamadas a la
-acción y la firma Legado, sobre fondo negro con la textura de puntos compartida
-por las páginas del sitio.
-GSAP coordina la entrada del texto y de la primera mesa al cargar la portada.
-La invitación a deslizar incorpora una flecha y un punto de luz animados y enlaza
-con la historia. El movimiento ambiental se pausa fuera de pantalla y al ocultar
-la pestaña, y se respeta movimiento reducido. La mitad derecha presenta tres montajes fotorrealistas generados con ImageGen:
-lino marfil con ceviche y vino blanco; satén azul con medallones y vino tinto;
-lino rosa con tiramisú, café y espumante. Cada montaje cambia textiles, vajilla,
-cubiertos, flores y bebestibles manteniendo el encuadre. Las imágenes WebP con
-alfa se sirven en dos resoluciones (720 y 1254 px). No representan eventos reales.
-Las tres imágenes se alternan con un fundido de opacidad de 1,5 segundos. Las mesas permanecen completas, sin deformaciones ni desenfoque.
-La secuencia cambia cada siete segundos, permite elegir y pausar, y se detiene
-fuera de pantalla, al ocultar la pestaña o con movimiento reducido.
-La grilla adapta la composición de dos columnas a una en móvil.
+La portada presenta tres mesas preparadas en dorado, azul y burdeos. Las fotos
+de `public/images/hero-place-settings/` se sirven en WebP a 800, 1122, 2244 y
+4488 px. El navegador elige la resolución según el espacio disponible y la
+densidad de pantalla. El carrusel se desplaza horizontalmente y permite elegir
+la mesa o pausar la secuencia. La reproducción automática se detiene fuera de
+pantalla y al ocultar la pestaña, y respeta la preferencia de movimiento reducido.
 
-Los videos descartados del hero se retiraron de `public/videos/`. Su documentación
-se conserva en `docs/video/`; solo se despliega el video activo de «Nuestra manera».
-La firma SVG pinta el contorno bajo el relleno para evitar las intersecciones
-internas de la tipografía. No se carga una foto de fondo.
+Los materiales de producción de los videos anteriores están documentados en
+`docs/video/`. En `public/videos/` se distribuye el video de «Nuestra manera».
 
 La cinta de «Nuestra manera» usa dos grupos idénticos para un desplazamiento
 continuo con GSAP, con altura y margen para no recortar las letras al inclinarse.
@@ -221,11 +211,6 @@ permite pausar y detiene la reproducción fuera de pantalla o con la pestaña
 oculta; usa un póster cuando se solicita movimiento reducido o falla el video.
 La procedencia y el montaje reproducible están en
 `docs/video/manifesto-production.json` y `docs/video/render_manifesto_film.py`.
-
-La escena del hero ocupa una columna algo mayor y alinea su borde superior con
-el titular. `HeroReactions` añade hojas y destellos al montaje fresco, corazones
-al cálido y un brindis al de sobremesa. Sus seis trazos flotan con GSAP sin tapar
-la comida; comparten los controles de pausa, visibilidad y movimiento reducido.
 
 ## Seguridad
 

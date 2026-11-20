@@ -20,7 +20,9 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 900px),
+  (orientation: portrait) and (max-width: 1100px),
+  (any-pointer: coarse) and (max-width: 1440px) {
   #inicio,
   #historia,
   #servicios,
@@ -834,5 +836,18 @@
 @media (max-width: 900px) {
   .header-actions .language-picker {
     margin-inline-end: 10px;
+  }
+}
+
+@media (max-width: 900px),
+  (orientation: portrait) and (max-width: 1100px),
+  (any-pointer: coarse) and (max-width: 1440px) {
+  .home-shell .header-actions > .language-picker {
+    display: none;
+  }
+  .mobile-menu__footer .language-picker__options {
+    top: auto;
+    bottom: calc(100% + 8px);
+    right: 0;
   }
 }

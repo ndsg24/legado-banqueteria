@@ -1187,34 +1187,6 @@
   align-items: center;
   gap: 35px;
 }
-.button--gold {
-  min-width: 270px;
-  min-height: 48px;
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--gold);
-  color: #080808;
-  font-size: 0.61rem;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  gap: 24px;
-  border: 1px solid var(--gold);
-  transition: background 0.25s ease;
-}
-.button--gold:hover {
-  background: var(--gold-hot);
-}
-.button--gold:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 5px;
-}
-.button--gold i {
-  font-style: normal;
-  font-size: 1rem;
-}
 .contact__actions > a:last-child {
   color: var(--muted);
   font-size: 0.66rem;
@@ -1223,24 +1195,13 @@
 }
 
 footer {
-  --ink: #f8f4e9;
-  --muted: #b5b1a6;
-  --gold: #d4b477;
-  --line: #39352d;
   width: 100%;
   min-height: 140px;
   padding-inline: calc((100% - var(--page)) / 2);
   color: var(--ink);
-  background-color: #000;
-  /* Two fine arcs echo the rim of a plate in the lower corner. */
-  background-image: radial-gradient(
-    circle at right bottom,
-    transparent 43px,
-    #d4b47766 44px,
-    transparent 45px 51px,
-    #d4b47799 52px,
-    transparent 53px
-  );
+  background-color: var(--canvas);
+  --table-mark-size: 12rem;
+  --table-mark-position: right -3.5rem bottom -5rem;
   display: grid;
   grid-template-columns: 1fr auto auto 1fr;
   column-gap: clamp(1rem, 3vw, 3rem);
@@ -1288,18 +1249,10 @@ footer > p {
   color: var(--gold);
 }
 
-/* Shared dotted canvas used by the home hero and the independent menu. */
 .site-texture {
-  background:
-    radial-gradient(
-      circle,
-      color-mix(in srgb, var(--ink) 8%, transparent) 0 0.7px,
-      transparent 0.9px
-    ),
-    var(--canvas);
-  background-size:
-    9px 9px,
-    auto;
+  position: relative;
+  isolation: isolate;
+  background-color: var(--texture-base, var(--canvas));
 }
 
 /* Navigation separates exploration, the two tools, and the contact action. */

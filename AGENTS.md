@@ -36,13 +36,36 @@ y las entradas públicas, incluidas las cargas dinámicas.
 
 Las dependencias entre entidades se declaran en la entidad de destino. Por ejemplo,
 `entities/menu/@x/quote.ts` expone al modelo de cotización las reglas de carta que necesita.
-La API visual de carta está en `entities/menu/ui.ts`; la entrada de datos se puede importar
+Las APIs visuales de carta y mesa están en `entities/menu/ui.ts` y `entities/table/ui.ts`; la entrada de datos se puede importar
 desde el Worker. En Shared, `routing` y `theme` tienen un índice público. Cada control de
 `shared/ui` y cada módulo en `shared/config` se consume por separado.
 
 El Worker permanece en `worker/` y los recorridos de navegador en `tests/`. Conserva la carga
 diferida del PDF y las escenas 3D, el orden de los estilos, las anclas, las claves de
 almacenamiento, los identificadores de platos y los parámetros de los diseños compartidos.
+
+## Identidad visual en todo el sitio
+
+- La paleta y la escala tipográfica compartidas viven en `src/app/styles/tokens.css`.
+  Usa `--canvas` y `--surface` para fondos, `--ink` y `--muted` para texto y `--line`
+  para separadores. Usa `--gold` y `--gold-hot` para acentos, `--on-gold` para texto
+  sobre dorado y `--error` para validación. Deriva velos y sombras con `color-mix`
+  sobre estos colores. Si falta un rol de interfaz, defínelo aquí para día y noche.
+  Los colores elegidos para manteles, vajilla y flores pertenecen al diseño de la mesa.
+- Compara cada elemento nuevo con su equivalente en la carta o el diseñador. Usa
+  Syne para títulos y opciones, Manrope para texto y controles e Instrument Serif
+  para acentos editoriales. Reutiliza la escala `--type-*`, incluidos pesos,
+  interlineados y tamaños móviles.
+- Usa `ActionButton` para acciones y `ActionLink` para los enlaces de acción principal.
+  La variante secundaria de `ActionButton` sirve para descargas y acciones auxiliares.
+  Las acciones principales doradas comparten la clase `button--gold`, con esquinas rectas,
+  texto en mayúsculas y fondo `--gold` de cada tema. Al pasar el cursor usan `--gold-hot`.
+- Reutiliza `DottedTexture` de `src/shared/ui/` para los fondos de puntos. La clase
+  compartida `table-watermark` aplica el sello de la mesa en tinta tenue del tema.
+  El pie común lo presenta en todas las páginas y el cotizador lo incorpora al formulario.
+  Ajusta su posición o tamaño con `--table-mark-position` y `--table-mark-size`.
+  Comprueba que el motivo quede detrás del contenido y que las etiquetas, el foco y
+  los mensajes de error se lean en ambos temas, también en celular.
 
 ## Flujos que conviene preservar
 

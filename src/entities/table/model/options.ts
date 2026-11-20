@@ -99,29 +99,43 @@ const customizedArrangementLabels: Partial<Record<FloralStyle, MessageKey>> = {
   white: 'table.flowers.classicArrangement',
   rose: 'table.flowers.classicArrangement',
 }
-export function floralDetails(design: TableDesign, t: Translate = spanish): string[][] {
+export function floralEntries(design: TableDesign, t: Translate = spanish) {
   const style = floralStyles.find((style) => style.id === design.floral)!
   const customized = design.flowerKind !== 'original' || design.flowerColor !== 'original'
-  const rows = [
-    [
-      t('table.flowers.arrangement'),
-      t((customized && customizedArrangementLabels[style.id]) || style.label),
-    ],
+  type FloralKey = 'floral' | 'flowerKind' | 'flowerColor' | 'bottleOutfit'
+  const rows: { key: FloralKey; label: string; value: string }[] = [
+    {
+      key: 'floral',
+      label: t('table.flowers.arrangement'),
+      value: t((customized && customizedArrangementLabels[style.id]) || style.label),
+    },
   ]
   if (hasBlooms(design.floral)) {
     if (design.flowerKind !== 'original')
-      rows.push([t('table.flowers.kind'), t(flowerKindLabels[design.flowerKind])])
+      rows.push({
+        key: 'flowerKind',
+        label: t('table.flowers.kind'),
+        value: t(flowerKindLabels[design.flowerKind]),
+      })
     if (design.flowerColor !== 'original')
-      rows.push([t('table.flowers.color'), t(flowerPalette[design.flowerColor].label)])
+      rows.push({
+        key: 'flowerColor',
+        label: t('table.flowers.color'),
+        value: t(flowerPalette[design.flowerColor].label),
+      })
   }
   if (design.bottleOutfit === 'pair') {
     const tables = design.roundTables + Number(design.headSeats > 0)
-    rows.push([
-      t('table.flowers.wine'),
-      t('table.flowers.bottleDescription', { count: tables * 2 }),
-    ])
+    rows.push({
+      key: 'bottleOutfit',
+      label: t('table.flowers.wine'),
+      value: t('table.flowers.bottleDescription', { count: tables * 2 }),
+    })
   }
   return rows
+}
+export function floralDetails(design: TableDesign, t: Translate = spanish) {
+  return floralEntries(design, t).map(({ label, value }) => [label, value])
 }
 export const napkinFoldLabels: Record<NapkinFold, MessageKey> = {
   flat: 'table.napkins.flat',

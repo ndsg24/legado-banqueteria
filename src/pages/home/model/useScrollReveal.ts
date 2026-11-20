@@ -5,7 +5,7 @@ const revealSelector = [
   '.story__body',
   '.service',
   '.gallery__header',
-  '.gallery-card',
+  '.memory',
   '.manifesto__image',
   '.manifesto__copy',
   '.contact__pretitle',

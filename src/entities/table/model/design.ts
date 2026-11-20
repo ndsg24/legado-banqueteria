@@ -29,6 +29,13 @@ export function readTableDesign(query = new URLSearchParams()): TableDesign {
   } catch {
     /* A fresh design remains available when storage is blocked. */
   }
+  return parseTableDesign(query, saved)
+}
+
+export function parseTableDesign(
+  query = new URLSearchParams(),
+  saved: Partial<TableDesign> = {},
+): TableDesign {
   const colors = Object.fromEntries(
     tableParts.map((part) => {
       const candidate = query.get(part) ?? saved[part]

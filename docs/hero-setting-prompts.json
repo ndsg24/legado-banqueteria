@@ -1,0 +1,29 @@
+{
+  "tool": "built-in image_gen",
+  "sharedPrompt": "Create one ultra-detailed vertical 4:5 professional photograph of the supplied Chilean family banquet TABLE BEFORE SERVICE. Reference photo(s) govern the actual colors, local family event look, textiles, service and flowers. ESSENTIAL: absolutely all plates spotlessly EMPTY. Only clean empty plates, visible correctly arranged individual forks and knives, glassware, folded napkins and one floral centerpiece. Absolutely NO food, fruit, bread, garnish, drinks, bottles, logos, people, floor, menus or text. Photograph from a practical elevated oblique angle: feature a complete setting with its fork and knife in the lower middle, and the visible whole floral arrangement directly behind it in the upper middle, with little gap; both fit a central vertical crop. Focus across both subjects. Other places establish the table beyond. Capture glass, linen and metal with beautifully controlled natural light, neutral defocused indoor background. Natural materials, lifelike, elegant yet true to the supplied setup. Highest native definition available.",
+  "settings": [
+    {
+      "key": "dorada",
+      "references": [
+        "WhatsApp Image 2026-11-19 at 00.22.12.jpeg"
+      ],
+      "prompt": "Use the round ivory table with mustard-gold square overlay, patterned gold/blue plate rims, silverware, empty crystal goblets with white-and-gold crown-fold napkins from the source. Replace the dishes of food, bottles and the central platters with a single small low vase of fresh white flowers and delicate foliage at the visual center clearly visible above the nearest plate. Medium elevated view, oblique rim of circular table visible as a sweeping arc, warm daylight."
+    },
+    {
+      "key": "floral",
+      "references": [
+        "WhatsApp Image 2026-11-19 at 00.22.12 (2).jpeg",
+        "WhatsApp Image 2026-11-19 at 00.22.13 (2).jpeg"
+      ],
+      "prompt": "Combine these TWO references from the same blue banquet: place the recognizable blue rose, white daisy and trailing ivy floral arrangement from photo 1 on a cobalt and ivory table set with the white dinner plates, steel forks and knives, and napkins in goblets from photo 2. A balanced medium-wide oblique view along the head table. The entire central arrangement AND at least two empty guest place settings with all silverware clearly in view, especially one nearest the camera. Compose them tightly within the center, avoid flower-only close-up. A crisp sapphire, ivory and silver palette."
+    },
+    {
+      "key": "burdeos",
+      "references": [
+        "WhatsApp Image 2026-11-19 at 00.22.11 (2).jpeg",
+        "WhatsApp Image 2026-11-19 at 00.22.13 (5).jpeg"
+      ],
+      "prompt": "Use the burgundy textile, white round porcelain, simple silver table forks and knives, tall clear stemmed glasses with folded white napkins, and the original low rounded arrangement of burgundy chrysanthemums and white daisies. The vase sits on the table in clear view, centered behind a complete empty place setting, no bottles blocking it. A more overhead angle so the graphic parallel cutlery, wine-colored cloth, white plate and rounded flower arrangement read as distinct shapes. Warm indoor side light; keep the recognizable original, modest family banquet."
+    }
+  ]
+}

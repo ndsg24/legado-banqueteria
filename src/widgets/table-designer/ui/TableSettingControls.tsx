@@ -1,3 +1,4 @@
+import { PlateSample } from '../../../entities/table/ui'
 import { useI18n } from '../../../shared/i18n'
 import { CenterpieceControls } from './CenterpieceControls'
 import {
@@ -55,12 +56,7 @@ export function TableSettingControls({ design, onChange, onView }: Props) {
                 aria-pressed={design.dinnerware === id}
                 onClick={() => onChange({ dinnerware: id })}
               >
-                <i
-                  className="plate-sample"
-                  data-rim={id === 'goldRim'}
-                  style={{ backgroundColor: dinnerwareStyles[id].color }}
-                  aria-hidden="true"
-                />
+                <PlateSample plate={id} />
                 {t(dinnerwareStyles[id].label)}
               </button>
             ))}

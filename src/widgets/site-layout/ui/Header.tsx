@@ -150,7 +150,7 @@ export function Header({ activeSection, headerSection, theme, onThemeToggle }: H
             </Link>
           </nav>
           <div className="header-actions">
-            <LanguagePicker />
+            {(!isOpen || isStandalonePage) && <LanguagePicker />}
             <ThemeToggle theme={theme} onToggle={onThemeToggle} />
             <button
               className="menu-toggle"
@@ -193,6 +193,7 @@ export function Header({ activeSection, headerSection, theme, onThemeToggle }: H
         </nav>
         <div className="mobile-menu__footer">
           <span>{t('common.nav.mobileSignature')}</span>
+          {isOpen && !isStandalonePage && <LanguagePicker />}
           <ThemeToggle theme={theme} onToggle={onThemeToggle} />
         </div>
       </div>

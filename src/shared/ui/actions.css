@@ -1,0 +1,63 @@
+.button--gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  max-width: 100%;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid var(--gold);
+  border-radius: 0;
+  background: var(--gold);
+  color: var(--on-gold);
+  font: var(--type-action);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .button--gold:hover:not(:disabled) {
+    background: var(--gold-hot);
+  }
+}
+.button--gold:is(:focus-visible, [data-focus-visible]) {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.button--gold:disabled,
+.button--secondary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.button--secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: transparent;
+  color: var(--ink);
+  font: var(--type-body);
+  min-height: 48px;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0;
+  border: 1px solid var(--line);
+  padding: 0.7rem 1rem;
+}
+.button--secondary:hover:not(:disabled) {
+  border-color: var(--gold);
+}
+.dialog-close {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  font-size: 1.35rem;
+  cursor: pointer;
+}
+
+.dialog-close:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -3px;
+}

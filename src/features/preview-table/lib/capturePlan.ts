@@ -1,4 +1,8 @@
-export async function capturePlan(svg: SVGSVGElement, resolution: number) {
+export async function capturePlan(
+  svg: SVGSVGElement,
+  resolution: number,
+  format: 'image/png' | 'image/jpeg' = 'image/png',
+) {
   const { width, height } = svg.viewBox.baseVal
   const scale = resolution / Math.max(width, height)
   const canvas = document.createElement('canvas')
@@ -21,7 +25,7 @@ export async function capturePlan(svg: SVGSVGElement, resolution: number) {
     image.src = url
     await image.decode()
     context.drawImage(image, 0, 0)
-    return canvas.toDataURL('image/png')
+    return canvas.toDataURL(format, 0.92)
   } finally {
     URL.revokeObjectURL(url)
   }

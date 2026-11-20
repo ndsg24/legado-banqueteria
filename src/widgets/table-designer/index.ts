@@ -1,1 +1,1 @@
-export { TableConfigurator } from './ui/TableConfigurator'
+export { TableConfigurator, TableEditor } from './ui/TableConfigurator'

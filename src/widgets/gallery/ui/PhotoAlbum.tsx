@@ -1,7 +1,7 @@
 import { useI18n } from '../../../shared/i18n'
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { galleryItems } from '../model/photos'
-import { EditorialArrow } from '../../../shared/ui/EditorialArrow'
+import { AlbumArrows } from '../../../shared/ui/AlbumArrows'
 import { PhotoSketch } from './PhotoSketch'
 
 export function PhotoAlbum({ startIndex, onClose }: { startIndex: number; onClose: () => void }) {
@@ -146,18 +146,13 @@ export function PhotoAlbum({ startIndex, onClose }: { startIndex: number; onClos
           </svg>
         </button>
       </div>
-      <div
+      <AlbumArrows
         className="memory-viewer__navigation"
-        role="group"
-        aria-label={t('home.gallery.navigation')}
-      >
-        <button type="button" aria-label={t('home.gallery.previous')} onClick={() => turnPhoto(-1)}>
-          <EditorialArrow direction="left" />
-        </button>
-        <button type="button" aria-label={t('home.gallery.next')} onClick={() => turnPhoto(1)}>
-          <EditorialArrow direction="right" />
-        </button>
-      </div>
+        label={t('home.gallery.navigation')}
+        previous={t('home.gallery.previous')}
+        next={t('home.gallery.next')}
+        onTurn={turnPhoto}
+      />
     </dialog>
   )
 }

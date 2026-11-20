@@ -1,4 +1,4 @@
-export { readTableDesign, tableDesignUrl, tableStorageKey } from './model/design'
+export { parseTableDesign, readTableDesign, tableDesignUrl, tableStorageKey } from './model/design'
 export {
   changeRoundSeat,
   defaultLayout,
@@ -14,6 +14,7 @@ export {
   flowerPalette,
   hasBlooms,
   isDinnerware,
+  layoutDetails,
   maxHeadSeats,
   maxRoundTables,
   migrateBottleOutfit,

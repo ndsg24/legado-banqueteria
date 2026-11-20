@@ -1,6 +1,9 @@
-type CategoryMotifProps = { categoryId: string }
+type CategoryMotifProps = { categoryId: string; itemId?: string }
 
 const motifs: Record<string, string> = {
+  ice: `M10 27l15-9 16 7-15 10zM10 27l2 19 15 8-1-19m1 19 15-10-1-19
+    M43 47l13-9 15 6-13 10zM43 47l2 16 14 7-1-16m1 16 13-10-1-16`,
+  steam: 'M22 61c9-12-11-16 1-32m15 31c15-17-15-23 3-46m13 45c12-13-10-18 3-34',
   salados: 'M16 36h48M19 36c0-14 10-24 21-24s21 10 21 24M40 8v4M12 42h56M22 50h36M28 58h24',
   dulces:
     'M20 34h40l-7 28H27zM21 34c-9-9 1-18 10-15 0-13 18-13 18 0 10-3 19 6 10 15M33 41v13M47 41v13',
@@ -22,10 +25,25 @@ const motifs: Record<string, string> = {
   bar: 'M20 12h40l-5 45c-1 11-29 11-30 0zM23 36h34M42 36l9-32M32 44l9 3-3 10-9-3zM50 22c17 0 19-21 4-21',
 }
 
-export function CategoryMotif({ categoryId }: CategoryMotifProps) {
+const dishMotifs: Record<string, string> = {
+  'aperitivos-6': 'ice',
+  'aperitivos-7': 'ice',
+  'aperitivos-8': 'ice',
+  'aperitivos-10': 'ice',
+  'bar-4': 'ice',
+}
+
+const courseMotifs: Record<string, string> = {
+  nocturnos: 'steam',
+  principales: 'steam',
+  entradas: 'guarniciones',
+}
+
+export function CategoryMotif({ categoryId, itemId }: CategoryMotifProps) {
+  const motif = itemId ? (dishMotifs[itemId] ?? courseMotifs[categoryId] ?? categoryId) : categoryId
   return (
     <svg viewBox="0 0 80 80" fill="none" aria-hidden="true" focusable="false">
-      <path d={motifs[categoryId] ?? motifs.principales} />
+      <path d={motifs[motif] ?? motifs.principales} />
     </svg>
   )
 }

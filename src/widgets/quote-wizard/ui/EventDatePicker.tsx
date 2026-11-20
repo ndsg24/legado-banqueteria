@@ -1,3 +1,4 @@
+import { QuoteDetailIcon } from './QuoteDetailIcon'
 import { validationMessage } from '../model/validationMessage'
 import { useI18n } from '../../../shared/i18n'
 import { useId, useState, type Ref } from 'react'
@@ -48,7 +49,10 @@ export function EventDatePicker({ value, onChange, onBlur, triggerRef, error, di
 
   return (
     <div className="quote-field">
-      <span id={labelId}>{t('quote.calendar.label')}</span>
+      <span className="quote-event-detail-label" id={labelId}>
+        <QuoteDetailIcon kind="date" />
+        {t('quote.calendar.label')}
+      </span>
       <DialogTrigger isOpen={open} onOpenChange={setOpen}>
         <Button
           className="quote-date-trigger"
@@ -64,15 +68,14 @@ export function EventDatePicker({ value, onChange, onBlur, triggerRef, error, di
           </span>
           <svg
             aria-hidden="true"
-            width="19"
-            height="19"
+            width="15"
+            height="15"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="1.5"
           >
-            <rect x="3" y="5" width="18" height="16" rx="2" />
-            <path d="M7 3v4m10-4v4M3 10h18" />
+            <path d="m6 9 6 6 6-6" />
           </svg>
         </Button>
         <Popover

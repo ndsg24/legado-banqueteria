@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round">
+  <defs>
+    <g id="setting">
+      <path d="M137 30q23-9 46 0l-1 6q-22-7-44 0z"/>
+      <circle cx="160" cy="72" r="20"/>
+      <circle cx="160" cy="72" r="16.5" stroke-width=".8"/>
+      <path d="m151 77 7-15 10 14-17 1 7-15 3 14" stroke-width="1"/>
+      <path d="M133 53v9q0 5 4 5t4-5v-9m-4 0v32m49-31q-4 6-4 17h4m0-17v31"/>
+      <circle cx="189" cy="88" r="4.5"/>
+    </g>
+    <g id="sprig">
+      <path d="M160 160q-2-15 4-29m-4 20q-10-1-11-10 10 1 11 10zm2-9q9-2 10-10-9 1-10 10z"/>
+    </g>
+  </defs>
+  <g transform="rotate(-14 160 160)" stroke-width="1.5">
+    <circle cx="160" cy="160" r="119"/>
+    <circle cx="160" cy="160" r="116" stroke-width=".7"/>
+    <use href="#setting"/>
+    <use href="#setting" transform="rotate(60 160 160)"/>
+    <use href="#setting" transform="rotate(120 160 160)"/>
+    <use href="#setting" transform="rotate(180 160 160)"/>
+    <use href="#setting" transform="rotate(240 160 160)"/>
+    <use href="#setting" transform="rotate(300 160 160)"/>
+    <circle cx="160" cy="160" r="16" stroke-width=".8"/>
+    <use href="#sprig"/>
+    <use href="#sprig" transform="rotate(119 160 160)"/>
+    <use href="#sprig" transform="rotate(235 160 160)"/>
+  </g>
+</svg>

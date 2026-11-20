@@ -1,23 +1,11 @@
+import { DialogCloseButton } from '../../../shared/ui/DialogCloseButton'
+import { DishDialogPhoto } from './DishDialogPhoto'
 import { useI18n } from '../../../shared/i18n'
 import { Button, Dialog, DialogTrigger, Heading, Modal, ModalOverlay } from 'react-aria-components'
-import {
-  type CatalogItem,
-  menuSauces,
-  selectedSauce,
-  type SauceChoices,
-} from '../../../entities/menu'
+import { type CatalogItem, type SauceChoices } from '../../../entities/menu'
 import { CatalogItemPhoto, CategoryMotif } from '../../../entities/menu/ui'
-
-const emptySauceBowl: CatalogItem = {
-  id: '',
-  name: 'quote.sauce.none',
-  description: 'quote.sauce.noneDescription',
-  image: 'images/catalog/banquet/sin-salsa.webp',
-  imageWidth: 320,
-  imageHeight: 320,
-  imageBounds: { x: 26, y: 38, width: 265, height: 252 },
-}
-const sauceOptions = [emptySauceBowl, ...menuSauces]
+import { SauceOptionsGrid } from './SauceOptionsGrid'
+import { emptySauceBowl } from './sauceOptions'
 
 export type SaucePickerProps = {
   sauces: SauceChoices
@@ -26,13 +14,16 @@ export type SaucePickerProps = {
 
 export function MainSaucePicker({
   main,
-  sauces,
+  current,
   onSauceChange,
   showThumbnail = false,
-}: SaucePickerProps & { main: CatalogItem; showThumbnail?: boolean }) {
+}: Pick<SaucePickerProps, 'onSauceChange'> & {
+  main: CatalogItem
+  current?: CatalogItem
+  showThumbnail?: boolean
+}) {
   const { t } = useI18n()
 
-  const current = selectedSauce(main.id, sauces)
   const selectedId = current?.id ?? ''
   return (
     <DialogTrigger>
@@ -54,72 +45,27 @@ export function MainSaucePicker({
         <span>{t(current?.name ?? 'quote.sauce.add')}</span>
         <span aria-hidden="true">›</span>
       </Button>
-      <ModalOverlay className="sauce-overlay" isDismissable>
+      <ModalOverlay className="sauce-overlay ingredients-overlay" isDismissable>
         <Modal className="sauce-panel">
-          <Dialog className="sauce-dialog">
+          <Dialog className="ingredients-dialog sauce-dialog">
             {({ close }) => (
-              <>
-                <figure className="sauce-dialog__dish">
-                  <span className="sauce-dialog__dish-photo">
-                    <CatalogItemPhoto item={main} sizes="(max-width: 650px) 88px, 360px" alt="" />
-                  </span>
-                  <figcaption>{t(main.name)}</figcaption>
-                </figure>
-                <div className="sauce-dialog__menu">
-                  <header className="sauce-dialog__header">
-                    <Heading slot="title">
-                      {t('quote.sauce.title')} <em>{t('quote.sauce.accent')}</em>
-                    </Heading>
-                    <Button
-                      slot="close"
-                      aria-label={t('quote.sauce.close')}
-                      className="sauce-dialog__close"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      >
-                        <path d="m6 6 12 12M18 6 6 18" />
-                      </svg>
-                    </Button>
-                  </header>
-                  <div className="sauce-dialog__list">
-                    {sauceOptions.map((sauce) => (
-                      <button
-                        key={sauce.id}
-                        type="button"
-                        className="sauce-option"
-                        aria-label={t(sauce.name)}
-                        aria-pressed={sauce.id === selectedId}
-                        onClick={() => {
-                          onSauceChange(main.id, sauce.id)
-                          close()
-                        }}
-                      >
-                        <span className="sauce-option__photo">
-                          <CatalogItemPhoto
-                            item={sauce}
-                            sizes="(max-width: 650px) 54px, 76px"
-                            alt=""
-                          />
-                        </span>
-                        <span className="sauce-option__text">
-                          {t(sauce.name)}
-                          <small>{t(sauce.description)}</small>
-                        </span>
-                        {sauce.id === selectedId && (
-                          <span className="sauce-option__mark" aria-hidden="true" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
+              <div className="ingredients-dialog__card">
+                <DishDialogPhoto item={main} />
+                <DialogCloseButton label={t('quote.sauce.close')} />
+                <div className="ingredients-dialog__body">
+                  <p className="sauce-dialog__dish-name">{t(main.name)}</p>
+                  <Heading slot="title">
+                    {t('quote.sauce.title')} <em>{t('quote.sauce.accent')}</em>
+                  </Heading>
+                  <SauceOptionsGrid
+                    selected={selectedId}
+                    onChoose={(id) => {
+                      onSauceChange(main.id, id)
+                      close()
+                    }}
+                  />
                 </div>
-              </>
+              </div>
             )}
           </Dialog>
         </Modal>

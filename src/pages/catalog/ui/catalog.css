@@ -211,7 +211,7 @@
 }
 .catalog__category-heading h2 {
   margin: 0;
-  font: 500 2.5rem var(--display);
+  font: var(--type-section);
   letter-spacing: -0.06em;
 }
 .catalog__grid {
@@ -303,7 +303,7 @@
 }
 .catalog-card h3 {
   margin: 0;
-  font: 600 1.05rem/1.25 var(--display);
+  font: var(--type-card);
   letter-spacing: -0.03em;
 }
 .catalog-card > p {
@@ -411,15 +411,9 @@
   .catalog__category-heading {
     padding: 25px 0 20px;
   }
-  .catalog__category-heading h2 {
-    font-size: 2.1rem;
-  }
   .catalog__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 28px 18px;
-  }
-  .catalog-card h3 {
-    font-size: 0.95rem;
   }
   .catalog-card__heading {
     flex-wrap: wrap;
@@ -597,7 +591,7 @@
 }
 .catalog__introduction h1 {
   margin: 0 0 28px;
-  font-size: clamp(3.6rem, 6vw, 7rem);
+  font-size: var(--type-page-size);
 }
 .catalog__introduction p {
   max-width: 490px;
@@ -676,7 +670,6 @@
     padding-top: 30px;
   }
   .catalog__introduction h1 {
-    font-size: clamp(3rem, 13.5vw, 5rem);
     margin-bottom: 20px;
   }
   .catalog__introduction p {

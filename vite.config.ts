@@ -22,8 +22,8 @@ function renderRoute(html: string, page: PageMeta) {
   ).replaceAll('<', '\\u003c')
   const head = [
     page === metadata['/']
-      ? '<link rel="preload" as="image" fetchpriority="high" ' +
-        `imagesrcset="${tablePhotoSources('./images/' + firstTablePhoto)}" imagesizes="${tablePhotoSizes}" />`
+      ? '<link rel="preload" as="image" type="image/avif" fetchpriority="high" ' +
+        `imagesrcset="${tablePhotoSources('./images/' + firstTablePhoto, 'avif')}" imagesizes="${tablePhotoSizes}" />`
       : '',
     `<title>${title}</title>`,
     `<link rel="canonical" href="${url}" />`,
@@ -80,6 +80,18 @@ function routeDocuments(): Plugin {
         const preloads = files
           .filter((file) => !chunks.some((chunk) => chunk.isEntry && chunk.fileName === file))
           .map((file) => `<link rel="modulepreload" crossorigin href="./${file}" />`)
+        const styles = new Set<string>()
+        for (const file of files) {
+          const chunk = bundle[file]
+          if (chunk?.type === 'chunk') {
+            for (const css of chunk.viteMetadata?.importedCss ?? []) styles.add(css)
+          }
+        }
+        for (const css of styles) {
+          if (!template.includes(`/${css}"`)) {
+            preloads.push(`<link rel="preload" as="style" crossorigin href="./${css}" />`)
+          }
+        }
         const source = renderRoute(template, page).replace(
           '</head>',
           preloads.join('\n') + '\n</head>',
@@ -124,8 +136,8 @@ function browserPolicy(endpoint: string): Plugin {
         const content = [
           "default-src 'none'",
           "script-src 'self'",
-          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-          "font-src 'self' https://fonts.gstatic.com",
+          "style-src 'self' 'unsafe-inline'",
+          "font-src 'self'",
           "img-src 'self' data: blob:",
           "media-src 'self'",
           'connect-src ' + connections.join(' '),

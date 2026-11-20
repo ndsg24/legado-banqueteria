@@ -1,7 +1,12 @@
 import type { CSSProperties } from 'react'
 import type { CatalogItem } from '../model/types'
 
-type Props = { item: CatalogItem; alt: string; sizes: string; onSettled?: () => void }
+type Props = {
+  item: CatalogItem
+  alt: string
+  sizes: string
+  onSettled?: (loaded: boolean) => void
+}
 
 export function CatalogItemPhoto({ item, alt, sizes, onSettled }: Props) {
   const base = import.meta.env.BASE_URL
@@ -14,24 +19,25 @@ export function CatalogItemPhoto({ item, alt, sizes, onSettled }: Props) {
     top: `${50 - ((bounds.y + bounds.height / 2) / longest) * 100}%`,
   } satisfies CSSProperties
 
+  const sources = [
+    item.imageThumbnail && `${base}${item.imageThumbnail} 320w`,
+    item.imageSmall && item.imageSmallWidth && `${base}${item.imageSmall} ${item.imageSmallWidth}w`,
+    `${base}${item.image} ${item.imageWidth}w`,
+  ].filter(Boolean)
   return (
     <img
       style={imageStyle}
       src={`${base}${item.imageSmall ?? item.image}`}
-      srcSet={
-        item.imageSmall && item.imageSmallWidth
-          ? `${base}${item.imageSmall} ${item.imageSmallWidth}w, ${base}${item.image} ${item.imageWidth}w`
-          : undefined
-      }
-      sizes={sizes}
+      srcSet={sources.length > 1 ? sources.join(', ') : undefined}
+      sizes={'auto, ' + sizes}
       loading="lazy"
       decoding="async"
       width={item.imageWidth}
       height={item.imageHeight}
       alt={alt}
       draggable={false}
-      onLoad={onSettled}
-      onError={onSettled}
+      onLoad={onSettled && (() => onSettled(true))}
+      onError={onSettled && (() => onSettled(false))}
     />
   )
 }

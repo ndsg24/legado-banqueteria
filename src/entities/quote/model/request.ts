@@ -1,21 +1,22 @@
-import { spanish, type Translate, type MessageKey } from '../../../shared/i18n'
+import { type MessageKey } from '../../../shared/i18n'
 import { z } from 'zod'
 import { isEventDateInRange } from './dates'
 import { biobioCommunes } from '../../../shared/config/biobio'
-import { isSingleChoice, menuItems, isAllowedSauce, selectedDishName } from '../../menu/@x/quote'
 import {
-  floralDetails,
-  napkinFoldLabels,
-  layoutDetails,
+  isSingleChoice,
+  menuItems,
+  isAllowedSauce,
+  validOmissions,
+  courseChoiceCounts,
+} from '../../menu/@x/quote'
+import {
   maxRoundTables,
   maxHeadSeats,
   isDinnerware,
   dinnerwareStyles,
-  fabricColor,
   fabricColors,
   fabricTextures,
   floralStyles,
-  fabricPartLabel,
   flowerKinds,
   flowerColors,
   bottleOutfits,
@@ -39,6 +40,17 @@ export const eventLabels = {
   'Evento de empresa': 'quote.events.corporate',
   'Otra celebración': 'quote.events.other',
 } as const satisfies Record<(typeof eventTypes)[number], MessageKey>
+
+export const allergens = ['wheat', 'milk', 'egg', 'nuts', 'peanut', 'crustaceans'] as const
+
+export const dietaryGroups = [
+  { id: 'allergies', options: [...allergens, 'molluscs', 'fish', 'soy', 'sesame'] },
+  { id: 'exclusions', options: ['gluten', 'lactose'] },
+  { id: 'menus', options: ['vegan', 'vegetarian', 'light'] },
+] as const
+
+export const dietaryOptions = dietaryGroups.flatMap<DietaryOption>((group) => group.options)
+export type DietaryOption = (typeof dietaryGroups)[number]['options'][number]
 
 export const guestRange = { min: 30, max: 150 } as const
 const color = z.enum(fabricColors.map((item) => item.id))
@@ -90,14 +102,7 @@ export const quoteSchema = z
       .trim()
       .max(254, 'quote.validation.emailLength')
       .pipe(z.email('quote.validation.emailInvalid')),
-    phone: z
-      .string()
-      .trim()
-      .max(24, 'quote.validation.phoneLength')
-      .refine(
-        (v) => !v || (/^\+?[\d ()-]+$/.test(v) && /^\d{8,15}$/.test(v.replace(/\D/g, ''))),
-        'quote.validation.phoneInvalid',
-      ),
+    phone: z.string().regex(/^(?:\+569[0-9]{8})?$/, 'quote.validation.phoneInvalid'),
     event: z.enum(eventTypes, 'quote.validation.eventRequired'),
     date: z
       .string('quote.validation.dateRequired')
@@ -123,8 +128,31 @@ export const quoteSchema = z
       ),
     table: designSchema.nullable(),
     sauces: z.record(z.string(), z.string()).optional(),
+    omittedIngredients: z.record(z.string(), z.array(z.string())).optional(),
+    allergens: z.array(z.enum(allergens)).max(allergens.length).optional(),
+    dietaryCounts: z
+      .partialRecord(z.enum(dietaryOptions), z.number().int().nonnegative())
+      .optional(),
+    dietaryNeeds: z
+      .string()
+      .trim()
+      .max(1500, 'quote.validation.notesLength')
+      .transform((value) => value || undefined)
+      .optional(),
     notes: z.string().trim().max(1500, 'quote.validation.notesLength'),
   })
+  .refine((quote) => validOmissions(quote.items, quote.omittedIngredients ?? {}), {
+    path: ['omittedIngredients'],
+    message: 'quote.validation.invalidIngredients',
+  })
+  .refine((quote) => courseChoiceCounts(quote.items).every(({ count, max }) => count <= max), {
+    path: ['items'],
+    message: 'quote.validation.courseLimit',
+  })
+  .refine(
+    (quote) => Object.values(quote.dietaryCounts ?? {}).every((n) => n >= 1 && n <= quote.guests),
+    { path: ['dietaryCounts'], message: 'quote.validation.dietaryCount' },
+  )
   .refine(
     (quote) =>
       Object.entries(quote.sauces ?? {}).every(
@@ -133,49 +161,3 @@ export const quoteSchema = z
     { path: ['sauces'], message: 'quote.validation.invalidSauce' },
   )
 export type QuoteRequest = z.infer<typeof quoteSchema>
-
-export function quoteMessage(data: QuoteRequest, t: Translate = spanish) {
-  const lines = [
-    t('quote.review.documentTitle'),
-    '',
-    t('quote.review.name') + ': ' + data.name,
-    t('quote.review.emailShort') + ': ' + data.email,
-    t('quote.review.phone') + ': ' + (data.phone || t('quote.review.unspecified')),
-    t('quote.steps.event') + ': ' + t(eventLabels[data.event]),
-    t('quote.review.date') + ': ' + data.date,
-    t('quote.review.guests') + ': ' + data.guests,
-    t('quote.review.venue') + ': ' + data.location,
-    '',
-    t('quote.steps.menu') +
-      ': ' +
-      (Object.entries(data.items)
-        .map(([id, quantity]) =>
-          isSingleChoice(id)
-            ? selectedDishName(id, menuItems.get(id)!, data.sauces, t)
-            : quantity + ' × ' + t(menuItems.get(id)!),
-        )
-        .join(', ') || t('quote.review.consultTeam')),
-  ]
-  const table = data.table
-  if (table) {
-    lines.push(
-      '',
-      t('quote.review.setting'),
-      ...layoutDetails(table, t).map(([label, value]) => label + ': ' + value),
-      t('quote.review.dinnerware') + ': ' + t(dinnerwareStyles[table.dinnerware].label),
-      t('quote.review.napkinFold') + ': ' + t(napkinFoldLabels[table.napkinFold]),
-      ...floralDetails(table, t).map(([label, value]) => label + ': ' + value),
-    )
-    for (const part of tableParts) {
-      lines.push(
-        t(fabricPartLabel(part, table)) +
-          ': ' +
-          t(fabricColor(table[part]).label) +
-          ' · ' +
-          t(fabricTextures.find((texture) => texture.id === table.textures[part])!.label),
-      )
-    }
-  }
-  if (data.notes) lines.push('', t('quote.review.comments') + ': ' + data.notes)
-  return lines.join('\n')
-}

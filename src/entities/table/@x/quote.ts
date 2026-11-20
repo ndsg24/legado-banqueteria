@@ -4,7 +4,7 @@ export {
   fabricColors,
   fabricPartLabel,
   fabricTextures,
-  floralDetails,
+  floralEntries,
   floralStyles,
   isDinnerware,
   layoutDetails,

@@ -52,7 +52,10 @@ export function LanguagePicker() {
         if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.open = false
       }}
       onKeyDown={(e) => {
-        if (e.key === 'Escape') close()
+        if (e.key === 'Escape' && panel.current?.open) {
+          e.stopPropagation()
+          close()
+        }
       }}
     >
       <summary ref={trigger} aria-label={t('common.language.label') + ': ' + languages[language]}>
@@ -82,6 +85,7 @@ export function LanguagePicker() {
             type="button"
             lang={code}
             aria-pressed={code === language}
+            onMouseDown={(event) => event.preventDefault()}
             onClick={() => void choose(code)}
           >
             <Flag language={code} />

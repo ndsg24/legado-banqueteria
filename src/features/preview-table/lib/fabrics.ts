@@ -1,5 +1,7 @@
 import { BufferGeometry, Float32BufferAttribute, MeshPhysicalMaterial } from 'three'
 
+import { tabletopHeight, tabletopRadius } from './servingView'
+
 /** Radial cloth: flat at the tabletop, falling in folds below its rim. */
 export function tableclothGeometry() {
   const vertices: number[] = [],
@@ -9,12 +11,13 @@ export function tableclothGeometry() {
     slices = 160
   for (let j = 0; j <= rings; j++) {
     const distance = (j / rings) * 1.92
-    const fall = Math.max(0, distance - 1.18)
+    const fall = Math.max(0, distance - tabletopRadius)
     for (let i = 0; i <= slices; i++) {
       const angle = (i / slices) * Math.PI * 2
       const fold = Math.sin(angle * 22 + Math.sin(angle * 5) * 0.7)
-      const radius = Math.min(distance, 1.18) + fall * 0.15 + fold * Math.min(fall * 0.1, 0.055)
-      const y = 1.04 - fall + Math.sin(angle * 11) * fall * 0.018
+      const radius =
+        Math.min(distance, tabletopRadius) + fall * 0.15 + fold * Math.min(fall * 0.1, 0.055)
+      const y = tabletopHeight - fall + Math.sin(angle * 11) * fall * 0.018
       vertices.push(Math.cos(angle) * radius, y, Math.sin(angle) * radius)
       uvs.push(i / slices, j / rings)
       if (j < rings && i < slices) {

@@ -1,15 +1,21 @@
+import { SettingSample } from './SettingSample'
+import { EventIcon } from './EventIcon'
+import { QuoteDetailIcon } from './QuoteDetailIcon'
+import { MenuTasting } from './MenuTasting'
+import { QuoteStepIcon } from './QuoteStepIcon'
+import { DietaryModel } from './DietaryModel'
 import { useI18n } from '../../../shared/i18n'
 import { useImperativeHandle, useRef, type Ref } from 'react'
 import {
   type QuoteRequest,
-  contactDetails,
-  eventDetails,
+  displayDate,
+  dietaryMenuGroups,
+  eventLabels,
   menuGroups,
-  tableDetails,
+  settingEntries,
 } from '../../../entities/quote'
-import type { TableDesign } from '../../../entities/table'
+import { layoutDetails, type TableDesign } from '../../../entities/table'
 import { useTableScene, SeatingPlan, capturePlan } from '../../../features/preview-table'
-import { CatalogItemPhoto } from '../../../entities/menu/ui'
 
 export type TablePicture = { capture: () => string | undefined | Promise<string> }
 
@@ -17,11 +23,21 @@ function ReviewTable({ design, picture }: { design: TableDesign; picture: Ref<Ta
   const { t } = useI18n()
 
   const { canvasRef, status, capturePreview } = useTableScene(design)
-  useImperativeHandle(picture, () => ({ capture: capturePreview }), [capturePreview])
+  const plan = useRef<SVGSVGElement>(null)
+  useImperativeHandle(
+    picture,
+    () => ({
+      capture: () =>
+        capturePreview() ??
+        (plan.current ? capturePlan(plan.current, 1200, 'image/jpeg') : undefined),
+    }),
+    [capturePreview],
+  )
   return (
     <div className="quote-mount__scene">
       <canvas
         ref={canvasRef}
+        aria-hidden={status !== 'ready'}
         aria-label={
           t('quote.setting.view') +
           ' ' +
@@ -31,9 +47,9 @@ function ReviewTable({ design, picture }: { design: TableDesign; picture: Ref<Ta
         }
       />
       {status !== 'ready' && (
-        <span role="status">
-          {status === 'error' ? t('quote.setting.fallback') : t('table.view.loading')}
-        </span>
+        <div className="quote-review__fallback">
+          <SeatingPlan design={design} planRef={plan} />
+        </div>
       )}
     </div>
   )
@@ -43,7 +59,9 @@ function ReviewPlan({ design, picture }: { design: TableDesign; picture: Ref<Tab
   const plan = useRef<SVGSVGElement>(null)
   useImperativeHandle(
     picture,
-    () => ({ capture: () => (plan.current ? capturePlan(plan.current, 1200) : undefined) }),
+    () => ({
+      capture: () => (plan.current ? capturePlan(plan.current, 1200, 'image/jpeg') : undefined),
+    }),
     [],
   )
   return <SeatingPlan design={design} planRef={plan} />
@@ -62,6 +80,26 @@ function Details({ rows }: { rows: string[][] }) {
   )
 }
 
+function OverviewFact({
+  kind,
+  label,
+  value,
+}: {
+  kind: 'guests' | 'location' | 'date' | 'email' | 'phone'
+  label: string
+  value: string | number
+}) {
+  return (
+    <div title={label}>
+      <dt>
+        <QuoteDetailIcon kind={kind} />
+        <span>{label}</span>
+      </dt>
+      <dd>{value}</dd>
+    </div>
+  )
+}
+
 export function QuoteReview({
   quote,
   picture,
@@ -71,58 +109,127 @@ export function QuoteReview({
 }) {
   const { t, locale } = useI18n()
 
-  const groups = menuGroups(quote.items, quote.sauces, t)
+  const design = quote.table
+  const dietary = dietaryMenuGroups(quote, t)
+  const hasDietary = dietary.length > 0 || !!quote.dietaryNeeds
+  const menu = menuGroups(quote, t)
   return (
     <div className="quote-review">
-      <section>
-        <h3>{t('quote.review.event')}</h3>
-        <Details rows={eventDetails(quote, locale, t)} />
-      </section>
-      <section>
-        <h3>{t('quote.review.contact')}</h3>
-        <Details rows={contactDetails(quote, t)} />
-      </section>
-      <section>
-        <h3>{t('quote.review.dishes')}</h3>
-        {groups.length === 0 && <p>{t('quote.review.menuPending')}</p>}
-        {groups.map((group) => (
-          <div key={group.name} className="quote-review__group">
-            <h4>{group.name}</h4>
-            <ul>
-              {group.entries.map(({ item, name, quantity }) => (
-                <li key={item.id}>
-                  <span className="quote-summary__photo">
-                    <CatalogItemPhoto item={item} alt="" sizes="44px" />
-                  </span>
-                  <span>{name}</span>
-                  <strong>{quantity}</strong>
-                </li>
-              ))}
-            </ul>
+      <div className="quote-review__overview">
+        <section>
+          <EventIcon event={quote.event} />
+          <div>
+            <h3>{t('quote.review.event')}</h3>
+            <strong className="quote-review__identity">{t(eventLabels[quote.event])}</strong>
+            <dl className="quote-review__meta">
+              <OverviewFact kind="guests" label={t('quote.review.guests')} value={quote.guests} />
+              <OverviewFact
+                kind="location"
+                label={t('quote.review.venue')}
+                value={quote.location}
+              />
+              <OverviewFact
+                kind="date"
+                label={t('quote.review.date')}
+                value={displayDate(quote.date, locale, t)}
+              />
+            </dl>
           </div>
-        ))}
-      </section>
-      <section>
-        <h3>{t('quote.review.setting')}</h3>
-        {quote.table ? (
-          <>
-            {quote.table.roundTables !== 1 || quote.table.headSeats > 0 ? (
-              <ReviewPlan design={quote.table} picture={picture} />
-            ) : (
-              <ReviewTable design={quote.table} picture={picture} />
-            )}
-            <Details rows={tableDetails(quote.table, t)} />
-          </>
-        ) : (
-          <p>{t('quote.review.tablePending')}</p>
-        )}
-      </section>
-      {quote.notes && (
-        <section className="quote-review__notes">
-          <h3>{t('quote.review.details')}</h3>
-          <p>{quote.notes}</p>
         </section>
-      )}
+        <section>
+          <QuoteDetailIcon kind="name" />
+          <div>
+            <h3>{t('quote.review.contact')}</h3>
+            <strong className="quote-review__identity">{quote.name}</strong>
+            <dl className="quote-review__meta">
+              <OverviewFact kind="email" label={t('quote.review.email')} value={quote.email} />
+              {quote.phone && (
+                <OverviewFact kind="phone" label={t('quote.review.phone')} value={quote.phone} />
+              )}
+            </dl>
+          </div>
+        </section>
+      </div>
+      <div className="quote-review__service">
+        {menu.length === 0 && (
+          <section className="quote-review__panel">
+            <h3>{t('quote.review.dishes')}</h3>
+            <p>{t('quote.review.menuPending')}</p>
+          </section>
+        )}
+        {menu.length > 0 && <MenuTasting menu={menu} design={quote.table} />}
+        <section className="quote-review__panel quote-review__setting">
+          <header>
+            <h3>
+              <QuoteStepIcon step="table" />
+              {t('quote.review.setting')}
+            </h3>
+          </header>
+          {design ? (
+            <div className="quote-review__table">
+              {design.roundTables !== 1 || design.headSeats > 0 ? (
+                <ReviewPlan design={design} picture={picture} />
+              ) : (
+                <ReviewTable design={design} picture={picture} />
+              )}
+              <div>
+                <Details rows={layoutDetails(design, t)} />
+                <section className="quote-review__finishes">
+                  <h4>{t('table.view.detail')}</h4>
+                  <dl className="quote-review__samples">
+                    {settingEntries(design, t).map(({ key, label, value }) => (
+                      <div key={key}>
+                        <dt>
+                          <span aria-hidden="true">
+                            <SettingSample part={key} design={design} />
+                          </span>
+                          {label}
+                        </dt>
+                        <dd>{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              </div>
+            </div>
+          ) : (
+            <p>{t('quote.review.tablePending')}</p>
+          )}
+        </section>
+        {hasDietary && (
+          <section className="quote-review__panel quote-review__dietary">
+            <h3>
+              <QuoteStepIcon step="dietary" />
+              {t('quote.review.dietaryNeeds')}
+            </h3>
+            <div className="quote-review__dietary-groups">
+              {dietary.map((group) => (
+                <div className="quote-review__group" key={group.name}>
+                  <h4>{group.name}</h4>
+                  <ul>
+                    {group.entries.map(({ id, name, quantity }) => (
+                      <li key={id}>
+                        <DietaryModel id={id} />
+                        <span>{name}</span>
+                        {quantity && <strong>{quantity}</strong>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              {quote.dietaryNeeds && (
+                <p className="quote-review__dietary-note">{quote.dietaryNeeds}</p>
+              )}
+            </div>
+          </section>
+        )}
+        {quote.notes && (
+          <section className="quote-review__panel quote-review__notes">
+            <h3>{t('quote.review.details')}</h3>
+            <p>{quote.notes}</p>
+          </section>
+        )}
+      </div>
     </div>
   )
 }
