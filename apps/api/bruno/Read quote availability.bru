@@ -1,0 +1,26 @@
+meta {
+  name: Read quote availability
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{baseUrl}}/quotes/availability
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.unavailableDates: isArray
+}
+
+tests {
+  test("Only booked dates are public", function() {
+    const body = res.getBody();
+    expect(Object.keys(body)).to.deep.equal(["unavailableDates"]);
+    for (const day of body.unavailableDates) {
+      expect(day).to.match(/^\d{4}-\d{2}-\d{2}$/);
+    }
+  });
+}

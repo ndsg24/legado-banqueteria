@@ -1,0 +1,21 @@
+meta {
+  name: Read admin profile
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/admin/profile
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.displayName: isString
+  res.body.email: isString
+}

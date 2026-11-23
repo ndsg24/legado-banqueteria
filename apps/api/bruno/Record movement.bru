@@ -1,0 +1,29 @@
+meta {
+  name: Record movement
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/admin/ledger
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "id": "{{$guid}}",
+    "date": "2026-11-20",
+    "amount": 10000,
+    "category": "supplies",
+    "quoteNumber": null
+  }
+}
+
+assert {
+  res.status: eq 204
+}

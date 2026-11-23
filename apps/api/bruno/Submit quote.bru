@@ -1,0 +1,42 @@
+meta {
+  name: Submit quote
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/quotes
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: http://127.0.0.1:5185
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "id": "{{$guid}}",
+    "quote": {
+      "name": "Sample Guest",
+      "email": "guest@example.test",
+      "phone": "",
+      "event": "wedding",
+      "date": "{{eventDate}}",
+      "guests": 40,
+      "location": "Concepción",
+      "items": {},
+      "table": null,
+      "notes": ""
+    }
+  }
+}
+
+script:pre-request {
+  bru.setVar("eventDate", new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10));
+}
+
+assert {
+  res.status: eq 202
+}

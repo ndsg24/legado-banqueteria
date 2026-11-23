@@ -1,0 +1,32 @@
+meta {
+  name: Change quote status
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/admin/quotes/{{quoteNumber}}/status
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "expectedStatus": "{{quoteStatus}}",
+    "status": "confirmed"
+  }
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  A confirmation reserves the Santiago calendar date for this event. Repeating it succeeds.
+  Cancelling or reopening a confirmed quote releases its day. A stale status returns 409.
+  Confirming another quote for the reserved day returns 409 with code EVENT_DATE_UNAVAILABLE.
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Read quote
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/admin/quotes/{{quoteNumber}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+script:post-response {
+  bru.setVar("quoteStatus", res.getBody().status);
+}
+
+assert {
+  res.status: eq 200
+}

@@ -1,0 +1,35 @@
+meta {
+  name: Read purchasing plan
+  type: http
+  seq: 18
+}
+
+get {
+  url: {{baseUrl}}/admin/purchasing?from={{purchaseFrom}}&to={{purchaseTo}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  from: {{purchaseFrom}}
+  to: {{purchaseTo}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+script:pre-request {
+  const to = new Date();
+  const from = to.toISOString().slice(0, 10);
+  to.setUTCDate(to.getUTCDate() + 6);
+  bru.setVar("purchaseFrom", from);
+  bru.setVar("purchaseTo", to.toISOString().slice(0, 10));
+}
+
+assert {
+  res.status: eq 200
+  res.body.events: isArray
+  res.body.lines: isArray
+  res.body.guests: isNumber
+}

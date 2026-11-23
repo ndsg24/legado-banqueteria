@@ -1,0 +1,19 @@
+meta {
+  name: List ledger
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/admin/ledger?page=1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+assert {
+  res.status: eq 200
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Quote calendar
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/admin/quotes/calendar?month={{calendarMonth}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~status: active
+  month: {{calendarMonth}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+script:pre-request {
+  bru.setVar("calendarMonth", new Date().toISOString().slice(0, 7));
+}
+
+assert {
+  res.status: eq 200
+}

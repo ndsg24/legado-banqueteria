@@ -1,0 +1,28 @@
+meta {
+  name: Save recipe
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{baseUrl}}/admin/recipes
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "dishId": "principales-1",
+    "revision": 0,
+    "lines": [{"ingredient":"beef","amount":200,"unit":"g"}]
+
+  }
+}
+
+assert {
+  res.status: eq 204
+}
