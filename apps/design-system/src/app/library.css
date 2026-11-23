@@ -1,0 +1,156 @@
+.sb-show-main {
+  background: var(--canvas);
+  color: var(--ink);
+}
+.ds-preview .quote-error {
+  color: var(--error);
+}
+.ds-preview .quote-event-detail-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+.ds-header {
+  background: var(--canvas);
+  color: var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 4vw, 4rem);
+  border-bottom: 1px solid var(--line);
+}
+.ds-specimen {
+  margin-block: 1.25rem;
+  padding: clamp(0.85rem, 2.4vw, 2rem);
+  background: var(--dish-surface);
+  border: 1px solid var(--line);
+  min-width: 0;
+}
+.ds-row,
+.ds-palettes,
+.ds-field-grid,
+.ds-icons,
+.ds-setting-samples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+.ds-palettes,
+.ds-field-grid,
+.ds-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  align-items: stretch;
+  gap: 1rem;
+}
+.ds-palette {
+  padding: 1rem;
+  background: var(--canvas);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.ds-palette ul,
+.ds-icons,
+.ds-setting-samples {
+  padding: 0;
+  list-style: none;
+}
+.ds-palette li,
+.ds-setting-samples li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-block: 0.35rem;
+}
+.ds-palette li span {
+  flex: 0 0 2rem;
+  height: 1.45rem;
+  border: 1px solid var(--line);
+}
+.ds-type-display {
+  font: 400 clamp(2.1rem, 5vw, 4.5rem)/1 var(--serif);
+  padding-block: 0.5rem 1rem;
+}
+.ds-type-row {
+  display: grid;
+  grid-template-columns: minmax(min(100%, 9rem), 1fr) 2fr;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  border-top: 1px solid var(--line);
+  padding-block: 0.55rem;
+}
+.ds-type-row code {
+  overflow-wrap: anywhere;
+}
+.ds-motifs {
+  position: relative;
+  isolation: isolate;
+  min-height: 12rem;
+  --table-mark-position: right center;
+  --table-mark-size: 18rem;
+}
+.ds-motifs > :is(h2, p) {
+  position: relative;
+}
+.ds-token-reference summary {
+  padding-block: 0.8rem;
+  cursor: pointer;
+}
+.ds-token-reference table,
+.ds-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: 0.75rem;
+}
+.ds-token-reference :is(th, td),
+.ds-admin-table :is(th, td) {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--line);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+.ds-icons li {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: center;
+  text-align: center;
+  min-width: 5rem;
+}
+.ds-icons svg {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+.ds-select {
+  display: grid;
+  width: fit-content;
+  gap: 0.3rem;
+  margin-block: 0.7rem;
+}
+
+.ds-field-grid + .quantity-control {
+  margin-top: 1rem;
+}
+.ds-row .ds-album-controls {
+  position: static;
+  display: flex;
+  gap: 0.5rem;
+  transform: none;
+}
+.ds-setting-samples strong {
+  display: block;
+}
+.ds-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .ds-type-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
