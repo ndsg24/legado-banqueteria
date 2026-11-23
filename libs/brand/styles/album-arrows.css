@@ -1,0 +1,67 @@
+@import './editorial-arrow.css';
+
+.album-arrows button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  --arrow-nudge: 3px;
+  position: relative;
+  pointer-events: auto;
+  width: 54px;
+  height: 54px;
+  border: 1px solid color-mix(in srgb, var(--gold) 48%, var(--print-paper));
+  background: var(--print-paper);
+  color: var(--ink);
+  box-shadow: 0 3px 12px #0002;
+}
+.album-arrows button:first-child {
+  --arrow-nudge: -3px;
+}
+.album-arrows button::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid transparent;
+  border-inline-end-color: var(--gold);
+  border-radius: 50%;
+}
+.album-arrows button:first-child::before {
+  rotate: 180deg;
+}
+.album-arrows .editorial-arrow {
+  width: 29px;
+  height: 29px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .album-arrows button:not(:hover, :focus, :active, :disabled)::before {
+    animation: album-arrow-pulse 4.8s ease-in-out 1s infinite;
+  }
+  @keyframes album-arrow-pulse {
+    0%,
+    28%,
+    100% {
+      opacity: 1;
+      scale: 1;
+    }
+    14% {
+      opacity: 0.55;
+      scale: 1.09;
+    }
+  }
+}
+@media (hover: hover) {
+  .album-arrows button:hover {
+    background: color-mix(in srgb, var(--gold) 14%, var(--print-paper));
+    border-color: var(--gold);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .album-arrows .editorial-arrow {
+    transition: translate 0.18s ease-out;
+  }
+  .album-arrows button:hover .editorial-arrow {
+    translate: var(--arrow-nudge) 0;
+  }
+}

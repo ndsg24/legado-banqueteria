@@ -1,0 +1,98 @@
+.brand-select-menu svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--gold);
+}
+.brand-select-menu {
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  width: min(max(var(--trigger-width), 16rem), calc(100vw - 24px));
+  padding: 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  border-radius: 12px;
+  background: var(--canvas);
+  color: var(--ink);
+  box-shadow: 0 12px 36px color-mix(in srgb, var(--shade) 20%, transparent);
+}
+.brand-select-menu__search {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 0.65rem;
+  background: var(--surface);
+  border-radius: 7px;
+  border: 1px solid transparent;
+}
+.brand-select-menu__search:focus-within {
+  border-color: color-mix(in srgb, var(--gold) 55%, transparent);
+}
+.brand-select-menu__search input {
+  min-width: 0;
+  width: 100%;
+  height: 44px;
+  padding: 0;
+  outline: none;
+  border: 0;
+  color: var(--ink);
+  background: transparent;
+  font: 400 1rem var(--sans);
+}
+.brand-select-menu__search input::placeholder {
+  opacity: 1;
+  color: var(--muted);
+}
+.brand-select-menu [role='listbox'] {
+  min-height: 0;
+  margin-top: 0.3rem;
+  max-height: min(15rem, 32dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.brand-select-menu__empty {
+  display: block;
+  padding: 0.85rem 0.65rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.brand-select-menu [role='option'] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.brand-select-menu [role='option']:is([data-focused], [data-hovered]) {
+  outline: none;
+  background: var(--surface);
+}
+.brand-select-menu [role='option'][aria-selected='true'] {
+  font-weight: 700;
+  background: color-mix(in srgb, var(--gold) 13%, var(--canvas));
+}
+
+.brand-select-menu__search[data-disabled] {
+  opacity: 0.62;
+}
+.brand-select-menu__search input:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+@media (forced-colors: active) {
+  .brand-select-menu [role='option'][data-focused] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}

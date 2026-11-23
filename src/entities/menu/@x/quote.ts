@@ -1,5 +1,0 @@
-export { quoteCategories } from '../model/catalog'
-export { isSingleChoice, courseChoiceCounts, menuItems, type Quantities } from '../model/quantities'
-export { isAllowedSauce, selectedSauce, selectedDishName, type SauceChoices } from '../model/sauces'
-export { quoteMenuServices } from '../model/quoteServices'
-export { validOmissions, omissionLabel } from '../model/ingredients'

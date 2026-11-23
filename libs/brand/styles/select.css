@@ -1,0 +1,123 @@
+.brand-select {
+  --select-accent: color-mix(in srgb, var(--gold) 58%, var(--ink));
+  --select-rail: color-mix(in srgb, var(--gold) 10%, var(--dish-surface));
+  --select-divider: color-mix(in srgb, var(--gold) 20%, var(--line));
+  --select-left-angle: 45deg;
+  --select-right-angle: 135deg;
+  --select-rail-width: 2.65rem;
+  appearance: none;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  min-block-size: 48px;
+  padding: 0.55rem calc(var(--select-rail-width) + 0.65rem) 0.55rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background-color: var(--dish-surface);
+  background-image:
+    linear-gradient(
+      var(--select-left-angle),
+      transparent 38%,
+      var(--select-accent) 38% 62%,
+      transparent 62%
+    ),
+    linear-gradient(
+      var(--select-right-angle),
+      transparent 38%,
+      var(--select-accent) 38% 62%,
+      transparent 62%
+    ),
+    linear-gradient(var(--select-divider), var(--select-divider)),
+    linear-gradient(var(--select-rail), var(--select-rail));
+  background-position:
+    right 1.3rem center,
+    right 0.9rem center,
+    right var(--select-rail-width) center,
+    right center;
+  background-size:
+    0.42rem 0.42rem,
+    0.42rem 0.42rem,
+    1px calc(100% - 0.9rem),
+    var(--select-rail-width) 100%;
+  background-repeat: no-repeat;
+  color: var(--ink);
+  font: var(--type-body);
+  font-weight: 650;
+  text-align: start;
+  cursor: pointer;
+}
+button.brand-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.brand-select:is(:focus-visible, [data-focus-visible], [aria-expanded='true']) {
+  --select-rail: color-mix(in srgb, var(--gold) 21%, var(--dish-surface));
+  border-color: var(--gold);
+}
+.brand-select:is(:focus-visible, [data-focus-visible]) {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.brand-select[aria-expanded='true'] {
+  --select-left-angle: 135deg;
+  --select-right-angle: 45deg;
+}
+.brand-select:is([aria-invalid='true'], [data-invalid]) {
+  --select-accent: var(--error);
+  --select-rail: color-mix(in srgb, var(--error) 10%, var(--dish-surface));
+  border-color: var(--error);
+}
+.brand-select:is(:disabled, [data-disabled]) {
+  opacity: 0.55;
+  cursor: default;
+}
+select.brand-select:is([multiple], [size]:not([size='1'])) {
+  appearance: auto;
+  padding-inline-end: 0.9rem;
+  background-image: none;
+}
+@media (hover: hover) {
+  .brand-select:hover:not(:disabled, [data-disabled], [aria-invalid='true'], [data-invalid]) {
+    --select-rail: color-mix(in srgb, var(--gold) 18%, var(--dish-surface));
+    border-color: color-mix(in srgb, var(--gold) 65%, var(--line));
+  }
+}
+@media (max-width: 600px) {
+  .brand-select {
+    --select-rail-width: 2.4rem;
+    background-position:
+      right 1.15rem center,
+      right 0.75rem center,
+      right var(--select-rail-width) center,
+      right center;
+    font-size: 1rem;
+  }
+}
+@media (forced-colors: active) {
+  select.brand-select {
+    appearance: auto;
+    padding-inline-end: 0.9rem;
+    background-image: none;
+  }
+  button.brand-select {
+    position: relative;
+    background-image: none;
+  }
+  button.brand-select::after {
+    content: '';
+    position: absolute;
+    inset-inline-end: 0.95rem;
+    inset-block-start: 40%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border: solid ButtonText;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  button.brand-select[aria-expanded='true']::after {
+    transform: rotate(225deg);
+  }
+  .brand-select:is(:focus-visible, [data-focus-visible]) {
+    outline-color: Highlight;
+  }
+}

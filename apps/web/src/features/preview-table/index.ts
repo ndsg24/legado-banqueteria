@@ -1,0 +1,5 @@
+export type { TableView } from '@legado/brand/table-scene'
+export { capturePlan } from './lib/capturePlan'
+export { useTableScene } from './model/useTableScene'
+export { SeatingPlan, type PlanTable } from '@legado/brand/table'
+export { ServingSurface } from './ui/ServingSurface'

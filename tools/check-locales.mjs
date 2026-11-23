@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { readdir, readFile } from 'node:fs/promises'
 
-const root = new URL('../src/shared/i18n/locales/', import.meta.url)
+const root = new URL('../libs/domain/i18n/locales/', import.meta.url)
 async function catalog(locale) {
   const directory = new URL(locale + '/', root)
   const sections = (await readdir(directory)).filter((name) => name.endsWith('.json')).sort()

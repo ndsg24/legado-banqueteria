@@ -1,9 +1,14 @@
-import { migrateBottleOutfit, floralDefaults, defaultLayout } from '../src/entities/table'
+import { migrateBottleOutfit, floralDefaults, defaultLayout } from '@legado/domain/table/options'
+import { eventDateUnavailableCode, quoteAvailabilityPath } from '@legado/domain/quote/availability'
+import { readAvailability } from './availability'
+import { decodeQuoteInput } from '@legado/domain/quote/wire'
 import { z } from 'zod'
-import { quoteMessage, quoteSchema } from '../src/entities/quote'
+import { quoteMessage } from '@legado/domain/quote/review'
+import { quoteSchema } from '@legado/domain/quote/request'
 
 interface Environment {
   SITE_ORIGIN: string
+  BOOKING_API_ORIGIN?: string
   RESEND_API_KEY: string
   MAIL_FROM: string
   MAIL_TO: string
@@ -37,7 +42,10 @@ const incomingQuote = z.preprocess((quote) => {
         : table,
   }
 }, quoteSchema)
-const envelope = z.strictObject({ id: z.uuid(), quote: incomingQuote })
+const envelope = z.strictObject({
+  id: z.uuid(),
+  quote: z.preprocess(decodeQuoteInput, incomingQuote),
+})
 const maxBytes = 16_384
 const securityHeaders = {
   'Cache-Control': 'no-store',
@@ -66,13 +74,17 @@ async function readBody(request: Request) {
 
 export default {
   async fetch(request: Request, env: Environment): Promise<Response> {
-    if (new URL(request.url).pathname !== '/cotizaciones')
+    const path = new URL(request.url).pathname
+    const availability = path === quoteAvailabilityPath
+    if (path !== '/api/v1/quotes' && !availability)
       return new Response(null, { status: 404, headers: securityHeaders })
-    if (request.headers.get('Origin') !== env.SITE_ORIGIN)
+    const origin = request.headers.get('Origin')
+    const publicRead = availability && request.method === 'GET' && origin === null
+    if (!publicRead && origin !== env.SITE_ORIGIN)
       return new Response(null, { status: 403, headers: securityHeaders })
     const headers = {
       'Access-Control-Allow-Origin': env.SITE_ORIGIN,
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Methods': availability ? 'GET, OPTIONS' : 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
       ...securityHeaders,
       Vary: 'Origin',
@@ -80,6 +92,14 @@ export default {
     const reply = (status: number) =>
       Response.json({ accepted: status === 202 }, { status, headers })
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers })
+    if (availability) {
+      if (request.method !== 'GET') return reply(405)
+      try {
+        return Response.json(await readAvailability(env.BOOKING_API_ORIGIN), { headers })
+      } catch {
+        return reply(503)
+      }
+    }
     if (request.method !== 'POST') return reply(405)
     if (request.headers.get('Content-Type')?.split(';')[0].trim() !== 'application/json')
       return reply(415)
@@ -111,6 +131,18 @@ export default {
     const result = envelope.safeParse(body)
     if (!result.success) return reply(422)
     const { id, quote } = result.data
+    try {
+      const { unavailableDates } = await readAvailability(env.BOOKING_API_ORIGIN)
+      if (unavailableDates.includes(quote.date)) {
+        return Response.json(
+          { accepted: false, code: eventDateUnavailableCode },
+          { status: 409, headers },
+        )
+      }
+    } catch {
+      console.error({ event: 'quote_availability_unavailable' })
+      return reply(503)
+    }
     try {
       const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',

@@ -1,0 +1,180 @@
+@import './dish-labels.css';
+
+.catalog {
+  padding-inline: max(32px, calc((100vw - 1600px) / 2));
+}
+@media (max-width: 680px) {
+  .catalog {
+    padding-inline: 16px;
+  }
+}
+.catalog__grid {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19.5rem), 1fr));
+  gap: clamp(0.8rem, 1.5vw, 1.5rem);
+}
+.catalog-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 49%;
+  align-items: center;
+  min-width: 0;
+  overflow: clip;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--dish-surface);
+}
+.catalog-card__image {
+  position: relative;
+  grid-area: 1 / 2;
+  aspect-ratio: 1;
+  margin-inline-end: 0.35rem;
+}
+.catalog-card > .quote-dish__motif {
+  position: absolute;
+  left: -1.2rem;
+  bottom: -1.45rem;
+  width: min(46%, 10rem);
+  transform: rotate(-9deg);
+  color: var(--gold);
+  opacity: 0.12;
+  pointer-events: none;
+}
+:root:is([data-theme='dark'], [data-theme='garden']) .catalog-card > .quote-dish__motif {
+  color: var(--muted);
+  opacity: 0.075;
+}
+.catalog-card__copy {
+  grid-area: 1 / 1;
+  padding: 1.1rem 0 0.85rem 1.1rem;
+  min-width: 0;
+}
+.catalog-card:has(.quote-dish__tag) .catalog-card__copy {
+  padding-top: 3.15rem;
+}
+.catalog-card h3,
+.catalog-card__copy p {
+  position: relative;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.catalog-card h3 {
+  font: var(--type-card);
+  letter-spacing: -0.03em;
+}
+.catalog-card__copy p {
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font: var(--type-caption);
+}
+.catalog-card__details {
+  min-height: 44px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.catalog-card__details::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.catalog-card:has(:focus-visible) {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  --details-rule: 100%;
+}
+.catalog-card__details:focus-visible {
+  outline: none;
+}
+@media (hover: hover) {
+  .catalog-card:hover {
+    border-color: var(--gold);
+    --details-rule: 100%;
+    --details-arrow: translate(0.18em, -0.14em);
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .catalog-card__fallback {
+    transition: transform 250ms ease-out;
+  }
+  .catalog-card:hover .catalog-card__fallback {
+    transform: scale(1.055);
+  }
+}
+@media (forced-colors: active), (prefers-reduced-transparency: reduce) {
+  .catalog-card > .quote-dish__motif {
+    display: none;
+  }
+}
+.catalog-card__fallback {
+  position: absolute;
+  width: 82%;
+  height: 82%;
+  left: 9%;
+  top: 7%;
+  pointer-events: none;
+}
+.catalog-card__fallback img {
+  position: absolute;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.catalog-card__image[data-rendered='true'] .catalog-card__fallback {
+  opacity: 0;
+}
+.catalog__visual-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.catalog__grid[data-visuals='fallback'] .catalog-card__fallback {
+  opacity: 1;
+}
+.catalog__grid[data-visuals='fallback'] [data-catalog-copy] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .catalog__grid[data-visuals='fallback'] .catalog-card__image[data-image-settled='true'] img {
+    animation: catalog-photo-in 0.4s ease-out both;
+  }
+  @keyframes catalog-photo-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+.catalog-card__skeleton {
+  position: absolute;
+  inset: 18% 8%;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  pointer-events: none;
+}
+.catalog-card__image[data-rendered='true'] .catalog-card__skeleton {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .catalog-card__skeleton {
+    animation: catalog-photo-in 1s ease-in-out 180ms 3 alternate backwards;
+  }
+}
+
+.catalog--desktop .catalog-card {
+  grid-template-columns: 1fr 46%;
+}

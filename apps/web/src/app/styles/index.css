@@ -1,0 +1,11 @@
+@import '../../../../../libs/brand/styles/fonts.css';
+@import '../../../../../libs/brand/styles/tokens.css';
+@import '../../shared/ui/table-watermark.css';
+@import '@legado/brand/styles/controls.css';
+@import './layout.css';
+@import '../../shared/ui/actions.css';
+@import './responsive.css';
+
+@import './editorial.css';
+
+@import '@legado/brand/styles/fields.css';

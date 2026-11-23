@@ -1,0 +1,280 @@
+.brand {
+  width: max-content;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.brand strong {
+  font: 700 1.05rem/1 var(--display);
+  letter-spacing: -0.04em;
+}
+.brand strong span {
+  color: var(--gold);
+}
+.brand small {
+  color: var(--muted);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.theme-toggle {
+  position: relative;
+  color: var(--ink);
+}
+.theme-toggle summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  position: relative;
+  isolation: isolate;
+  min-height: 44px;
+  padding-inline: 10px;
+  list-style: none;
+  font: 600 0.75rem var(--display);
+  letter-spacing: normal;
+  text-transform: none;
+  cursor: pointer;
+}
+.theme-toggle summary::-webkit-details-marker {
+  display: none;
+}
+.theme-toggle summary::before {
+  content: '';
+  position: absolute;
+  inset: 5px 0;
+  z-index: -1;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.theme-toggle[open] summary::before,
+.theme-toggle summary:hover::before {
+  border-color: var(--gold);
+}
+.theme-toggle summary::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border: solid currentColor;
+  border-width: 0 1px 1px 0;
+  transform: translateY(-1px) rotate(45deg);
+}
+.theme-toggle[open] summary::after {
+  transform: translateY(1px) rotate(225deg);
+}
+.theme-toggle__chip {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ink) 40%, transparent);
+  background: linear-gradient(125deg, var(--canvas) 38%, var(--gold) 39% 58%, var(--ink) 59%);
+}
+.theme-toggle__options {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-end: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: min(17rem, calc(100vw - 32px));
+  padding: 14px;
+  background: var(--canvas);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 18%);
+  text-transform: none;
+  letter-spacing: normal;
+}
+.theme-toggle__title {
+  grid-column: 1 / -1;
+  margin-bottom: 2px;
+  font: var(--type-option);
+}
+.theme-toggle__options button {
+  display: grid;
+  gap: 5px;
+  padding: 3px 3px 5px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+  text-align: start;
+  cursor: pointer;
+}
+.theme-toggle__options button:hover,
+.theme-toggle__options button[aria-pressed='true'] {
+  border-color: var(--gold);
+}
+.theme-toggle__sample {
+  position: relative;
+  height: 42px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: linear-gradient(115deg, var(--surface) 33%, var(--canvas) 33%);
+}
+.theme-toggle__sample::before,
+.theme-toggle__sample::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 62%;
+}
+.theme-toggle__sample::before {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  background: var(--dish-surface);
+  box-shadow:
+    inset 0 0 0 3px var(--dish-surface),
+    inset 0 0 0 4px var(--line),
+    0 2px 3px rgb(0 0 0 / 14%);
+  transform: translate(-50%, -50%);
+}
+.theme-toggle__sample::after {
+  width: 10px;
+  height: 21px;
+  background: var(--gold);
+  transform: translate(-50%, -50%) rotate(28deg);
+}
+.theme-toggle__name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 5px;
+  font: var(--type-option);
+}
+.theme-toggle__options [aria-pressed='true'] .theme-toggle__name::after {
+  content: '';
+  width: 9px;
+  height: 5px;
+  border: solid currentColor;
+  border-width: 0 0 2px 2px;
+  transform: rotate(-45deg);
+}
+.language-picker {
+  position: relative;
+  color: var(--ink);
+}
+.language-picker summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding-inline: 10px;
+  position: relative;
+  isolation: isolate;
+  list-style: none;
+  cursor: pointer;
+  font: 600 0.65rem/1 var(--display);
+  letter-spacing: 0.06em;
+}
+.language-picker summary::before {
+  content: '';
+  position: absolute;
+  inset: 5px 0;
+  z-index: -1;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.language-picker[open] summary::before,
+.language-picker summary:hover::before {
+  border-color: color-mix(in srgb, var(--gold) 58%, var(--line));
+  background: color-mix(in srgb, var(--gold) 7%, transparent);
+}
+.language-picker summary::-webkit-details-marker {
+  display: none;
+}
+.language-picker__flag {
+  width: 21px;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: 2px;
+  outline: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  outline-offset: -1px;
+}
+.language-picker svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.language-picker__chevron {
+  color: var(--muted);
+}
+.language-picker[open] .language-picker__chevron {
+  transform: rotate(180deg);
+}
+.language-picker__options {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 4px);
+  z-index: 2;
+  width: min(12.25rem, 72vw);
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--canvas);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 18%);
+}
+.language-picker__heading {
+  margin: 3px 9px 4px;
+  padding: 6px 0 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.language-picker__options button {
+  display: grid;
+  grid-template-columns: 24px 1fr 16px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  text-align: start;
+  font: 500 0.86rem var(--display);
+  cursor: pointer;
+}
+.language-picker__options button:hover {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+.language-picker__options [aria-pressed='true'] {
+  background: color-mix(in srgb, var(--gold) 13%, transparent);
+}
+.language-picker__options button svg {
+  color: var(--gold);
+}
+.language-picker__options small {
+  display: block;
+  padding: 8px;
+}
+.language-picker :is(summary, button):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .language-picker__chevron {
+    transition: transform 160ms ease-out;
+  }
+  .language-picker[open] .language-picker__options {
+    animation: language-picker-in 160ms ease-out;
+  }
+  @keyframes language-picker-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+}

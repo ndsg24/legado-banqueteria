@@ -1,5 +1,0 @@
-export { Footer } from './ui/Footer'
-export { Header } from './ui/Header'
-export { PagePath } from './ui/PagePath'
-export { SectionRail } from './ui/SectionRail'
-export { InteriorPage } from './ui/InteriorPage'

@@ -1,10 +1,12 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const sourceRoot = fileURLToPath(new URL('../../src/', import.meta.url))
+const webRoot = fileURLToPath(new URL('../../apps/web/src/', import.meta.url))
+const adminRoot = fileURLToPath(new URL('../../apps/admin/src/', import.meta.url))
+const publicImages = fileURLToPath(new URL('../../apps/web/public/images/', import.meta.url))
 const layers = ['shared', 'entities', 'features', 'widgets', 'pages', 'app']
 
-function parts(file) {
+function parts(sourceRoot, file) {
   return path.relative(sourceRoot, file).split(path.sep)
 }
 
@@ -20,7 +22,8 @@ export const boundaries = {
   },
   create(context) {
     const file = context.filename
-    const [layer, slice] = parts(file)
+    const sourceRoot = file.startsWith(adminRoot) ? adminRoot : webRoot
+    const [layer, slice] = parts(sourceRoot, file)
     const from = layers.indexOf(layer)
 
     function check(node) {
@@ -30,7 +33,10 @@ export const boundaries = {
         path.dirname(file),
         specifier.split('?')[0].replace(/\.tsx?$/, ''),
       )
-      const [toLayer, toSlice, ...rest] = parts(target)
+      // The login bundles the site's public photos so its deployment stays independent.
+      if (sourceRoot === adminRoot && target.startsWith(publicImages) && specifier.endsWith('?url'))
+        return
+      const [toLayer, toSlice, ...rest] = parts(sourceRoot, target)
       const to = layers.indexOf(toLayer)
       const report = (messageId) => context.report({ node: node.source, messageId })
 

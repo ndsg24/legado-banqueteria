@@ -1,17 +1,19 @@
 import { test, expect } from '@playwright/test'
 import worker from '../worker/quote'
-import { eventDateRange } from '../src/entities/quote'
+import { eventDateRange } from '@legado/domain/quote/dates'
+import { eventDateUnavailableCode, quoteAvailabilityPath } from '@legado/domain/quote/availability'
 
 const origin = 'https://legado.example'
 const env = {
   SITE_ORIGIN: origin,
+  BOOKING_API_ORIGIN: 'https://bookings.example',
   MAIL_TO: 'cocina@example.org',
   MAIL_FROM: 'web@example.org',
   RESEND_API_KEY: 'test-only',
   QUOTE_LIMIT: { limit: async () => ({ success: true }) },
 }
 function request(body: string, source = origin) {
-  return new Request('https://worker.example/cotizaciones', {
+  return new Request('https://worker.example/api/v1/quotes', {
     method: 'POST',
     headers: { Origin: source, 'Content-Type': 'application/json' },
     body,
@@ -49,7 +51,7 @@ test('el correo usa un destino fijo y trata las fallas del proveedor', async () 
     name: 'Prueba local',
     email: 'cliente@example.org',
     phone: '',
-    event: 'Matrimonio',
+    event: 'wedding',
     date: eventDateRange().first.toString(),
     guests: 42,
     location: 'Concepción',
@@ -77,9 +79,17 @@ test('el correo usa un destino fijo y trata las fallas del proveedor', async () 
   const body = JSON.stringify({ id, quote })
   const original = globalThis.fetch
   const calls: Request[] = []
+  let dates: string[] = []
   try {
     globalThis.fetch = async (url, options) => {
-      calls.push(new Request(url, options))
+      const outgoing = new Request(url, options)
+      if (outgoing.url === env.BOOKING_API_ORIGIN + quoteAvailabilityPath) {
+        expect(outgoing.method).toBe('GET')
+        expect(outgoing.body).toBeNull()
+        expect(outgoing.headers.get('Authorization')).toBeNull()
+        return Response.json({ unavailableDates: dates })
+      }
+      calls.push(outgoing)
       return new Response(null, { status: calls.length === 1 ? 200 : 503 })
     }
     for (const phone of ['+569', '+5691234567', '+569123456789', '+12345678901']) {
@@ -106,6 +116,12 @@ test('el correo usa un destino fijo y trata las fallas del proveedor', async () 
       const invalid = JSON.stringify({ id, quote: { ...quote, omittedIngredients } })
       expect((await worker.fetch(request(invalid), env)).status).toBe(422)
     }
+    dates = [quote.date]
+    const occupied = await worker.fetch(request(body), env)
+    expect(occupied.status).toBe(409)
+    expect(await occupied.json()).toEqual({ accepted: false, code: eventDateUnavailableCode })
+    expect(calls).toEqual([])
+    dates = []
     const accepted = await worker.fetch(request(body), env)
     expect(accepted.status).toBe(202)
     expect(accepted.headers.get('Cache-Control')).toBe('no-store')
@@ -118,11 +134,51 @@ test('el correo usa un destino fijo y trata las fallas del proveedor', async () 
       'Trigo, Frutos secos\nSin lactosa · 3 personas\nVegano · 1 persona\n' + quote.dietaryNeeds,
     )
     expect((await worker.fetch(request(body), env)).status).toBe(502)
-    globalThis.fetch = async () => {
-      throw new Error('simulated')
+    globalThis.fetch = async (url) => {
+      if (String(url) === env.BOOKING_API_ORIGIN + quoteAvailabilityPath) {
+        return Response.json({ unavailableDates: [] })
+      }
+      throw new Error('simulated email provider outage')
     }
     expect((await worker.fetch(request(body), env)).status).toBe(503)
+    const attempted: string[] = []
+    globalThis.fetch = async (url) => {
+      attempted.push(String(url))
+      return new Response(null, { status: 503 })
+    }
+    expect((await worker.fetch(request(body), env)).status).toBe(503)
+    expect(attempted).toEqual([env.BOOKING_API_ORIGIN + quoteAvailabilityPath])
   } finally {
     globalThis.fetch = original
+  }
+})
+
+test('el Worker publica las fechas ocupadas y reporta si falla la agenda', async () => {
+  const get = (source = origin, method = 'GET') =>
+    new Request('https://worker.example' + quoteAvailabilityPath, {
+      method,
+      headers: { Origin: source },
+    })
+  const day = eventDateRange().last.toString()
+  const upstream = globalThis.fetch
+  try {
+    globalThis.fetch = async () => Response.json({ unavailableDates: [day] })
+    expect((await worker.fetch(get('https://other.example'), env)).status).toBe(403)
+    const preflight = await worker.fetch(get(origin, 'OPTIONS'), env)
+    expect(preflight.headers.get('Access-Control-Allow-Methods')).toContain('GET')
+    const sameOrigin = new Request('https://worker.example' + quoteAvailabilityPath)
+    expect((await worker.fetch(sameOrigin, env)).status).toBe(200)
+    const calendar = await worker.fetch(get(), env)
+    expect(calendar.status).toBe(200)
+    expect(calendar.headers.get('Access-Control-Allow-Origin')).toBe(origin)
+    expect(calendar.headers.get('Cache-Control')).toBe('no-store')
+    expect(await calendar.json()).toEqual({ unavailableDates: [day] })
+    expect((await worker.fetch(get(), { ...env, BOOKING_API_ORIGIN: undefined })).status).toBe(503)
+    globalThis.fetch = async () => Response.json({ unavailableDates: [day], name: 'Private' })
+    expect((await worker.fetch(get(), env)).status).toBe(503)
+    globalThis.fetch = async () => new Response(null, { status: 503 })
+    expect((await worker.fetch(get(), env)).status).toBe(503)
+  } finally {
+    globalThis.fetch = upstream
   }
 })

@@ -33,6 +33,9 @@ const test = base.extend<{ policy: void }>({
 })
 
 test.beforeEach(async ({ page }) => {
+  await page.route('**/api/v1/quotes/availability', (route) =>
+    route.fulfill({ json: { unavailableDates: [] } }),
+  )
   await page.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, (route) => route.abort())
 })
 
@@ -722,7 +725,7 @@ test('el cotizador valida el evento y conserva los campos al retroceder', async 
   const send = page.getByRole('button', { name: 'Enviar solicitud', exact: true })
   if (await send.count()) {
     const attempts: string[] = []
-    await page.route('**/cotizaciones', (route) => {
+    await page.route('**/api/v1/quotes', (route) => {
       attempts.push(route.request().postDataJSON().id)
       return route.fulfill({
         status: attempts.length === 1 ? 503 : 202,
@@ -788,6 +791,85 @@ test('revisión permite corregir un bloque y elegir o quitar la mesa inicial', a
   await save.click()
   await expect(review).toBeVisible()
   await expect(review.getByRole('heading', { name: 'Detalle de la mesa' })).toHaveCount(0)
+})
+
+async function openDatedDraft(page: Page, step: 'event' | 'review') {
+  await page.goto('cotizar.html')
+  await page.getByRole('heading', { name: '¿Qué celebramos?' }).waitFor()
+  const date = await page.evaluate((step) => {
+    const key = 'legado-quote-draft-v1'
+    const draft = JSON.parse(sessionStorage.getItem(key)!)
+    const date = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10)
+    Object.assign(draft.values, {
+      date,
+      event: 'Matrimonio',
+      guests: 40,
+      location: 'Concepción',
+      name: 'Prueba de calendario',
+      email: 'calendario@example.test',
+    })
+    Object.assign(draft, { step, furthestStep: step })
+    sessionStorage.setItem(key, JSON.stringify(draft))
+    return date
+  }, step)
+  await page.reload()
+  return date
+}
+
+test('una fecha confirmada queda bloqueada y se libera cuando vuelve a estar disponible', async ({
+  page,
+}) => {
+  const date = await openDatedDraft(page, 'event')
+  let unavailableDates = [date]
+  await page.route('**/api/v1/quotes/availability', (route) =>
+    route.fulfill({ json: { unavailableDates } }),
+  )
+  const trigger = page.getByRole('button', { name: /Fecha del evento/ })
+  await trigger.click()
+  const booked = page.getByRole('dialog').locator('.react-aria-CalendarCell[data-unavailable]')
+  await expect(booked).toHaveCount(1)
+  await expect(booked).toHaveAttribute('aria-disabled', 'true')
+  await page.keyboard.press('Escape')
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click()
+  await expect(page.getByText(/Esa fecha ya tiene un evento/)).toBeVisible()
+  await expect(page.getByRole('heading', { name: '¿Qué celebramos?' })).toBeVisible()
+  unavailableDates = []
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click()
+  await expect(page.getByRole('heading', { name: '¿Qué servimos?' })).toBeVisible()
+})
+
+test('una fecha que se ocupa en revisión vuelve al campo sin perder el borrador', async ({
+  page,
+}) => {
+  const date = await openDatedDraft(page, 'review')
+  const send = page.getByRole('button', { name: 'Enviar solicitud', exact: true })
+  const compose = page.getByRole('button', { name: 'Preparar correo', exact: true })
+  await expect(page.locator('.quote-review')).toBeVisible()
+  if (await compose.isVisible()) {
+    let ready = false
+    await page.route('**/api/v1/quotes/availability', (route) =>
+      route.fulfill({ status: ready ? 200 : 503, json: { unavailableDates: [date] } }),
+    )
+    await compose.click()
+    await expect(page.getByText(/Vuelve a pulsar «Preparar correo»/)).toBeVisible()
+    ready = true
+    await compose.click()
+  } else {
+    await page.route('**/api/v1/quotes', (route) =>
+      route.fulfill({ status: 409, json: { code: 'EVENT_DATE_UNAVAILABLE' } }),
+    )
+    await send.click()
+  }
+  await expect(page.getByText(/Esa fecha ya tiene un evento/)).toBeVisible()
+  await expect(page.getByLabel('Invitados aproximados')).toHaveValue('40')
+  await expect(page.getByRole('button', { name: /Fecha del evento/ })).toHaveAccessibleDescription(
+    /Esa fecha ya tiene un evento/,
+  )
+  const stored = await page.evaluate(() =>
+    JSON.parse(sessionStorage.getItem('legado-quote-draft-v1')!),
+  )
+  expect(stored.values.date).toBe(date)
+  expect(stored.values.name).toBe('Prueba de calendario')
 })
 
 test('el índice recuerda las etapas alcanzadas al retroceder y valida los saltos', async ({

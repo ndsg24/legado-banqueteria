@@ -1,0 +1,98 @@
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  visibility: hidden;
+  opacity: 0;
+  background: var(--canvas, #f2f2ef);
+  color: var(--ink, #10110f);
+  pointer-events: none;
+}
+[data-page-transition] .page-transition {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+[data-page-transition] #root {
+  opacity: 0;
+}
+.page-transition__content {
+  text-align: center;
+  width: min(320px, 80vw);
+}
+.page-transition__mark {
+  display: block;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 28px;
+  overflow: visible;
+  color: var(--gold, #a97920);
+}
+.page-transition__mark path,
+.page-transition__mark circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+.page-transition__ring {
+  opacity: 0.22;
+}
+
+.page-transition__brand {
+  display: block;
+  font:
+    600 24px 'Syne',
+    sans-serif;
+  letter-spacing: 0.12em;
+}
+.page-transition__caption {
+  display: block;
+  margin-top: 14px;
+  font:
+    italic 20px 'Instrument Serif',
+    serif;
+  opacity: 0.65;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-transition__orbit {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-page-transition] .page-transition__orbit {
+    animation: transition-orbit 2.6s linear infinite;
+  }
+  [data-page-transition] .page-transition__steam {
+    animation: transition-steam 1.1s ease-in-out infinite alternate;
+  }
+  [data-page-transition] .page-transition__draw {
+    stroke-dasharray: 1;
+    animation: transition-draw 360ms ease-out both;
+  }
+  @keyframes transition-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes transition-orbit {
+    to {
+      stroke-dashoffset: -452.4;
+    }
+  }
+  @keyframes transition-steam {
+    from {
+      opacity: 0.2;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 0.8;
+      transform: translateY(-3px);
+    }
+  }
+}

@@ -1,0 +1,14 @@
+.privacy-notice {
+  max-inline-size: 68ch;
+  margin: 2rem auto 5rem;
+  padding-inline: 1.25rem;
+  font: var(--type-body);
+  color: var(--ink);
+}
+.privacy-notice h1,
+.privacy-notice h2 {
+  font-family: var(--display);
+}
+.privacy-notice h2 {
+  margin-block: 2rem 0.5rem;
+}

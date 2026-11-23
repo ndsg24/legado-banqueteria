@@ -4,50 +4,69 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "dev:ideas": "vite --mode ideas --port 5184 --strictPort",
-    "typecheck": "tsc -b --pretty false",
-    "build": "tsc -b && vite build",
-    "check": "npm run check:i18n && npm run format:check && npm run lint && npm run build",
+    "dev": "nx run web:serve",
+    "dev:ideas": "cd apps/web && vite --mode ideas --port 5184 --strictPort",
+    "typecheck": "tsc -b --pretty false && tsc -p apps/api/tsconfig.json && tsc -p apps/admin/tsconfig.json",
+    "build": "nx run web:build",
+    "check": "npm run check:i18n && npm run format:check && npm run lint && npm run build && npm run build:api && npm run build:admin && npm run build:design-system",
     "audit:security": "npm audit --include=dev --audit-level=moderate",
     "lint": "eslint . --max-warnings=0",
-    "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"worker/**/*.ts\" \"public/*.{js,css}\" vite.config.ts eslint.config.js tools/eslint/*.js \"tests/**/*.ts\" playwright.config.ts",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"worker/**/*.ts\" \"public/*.{js,css}\" vite.config.ts eslint.config.js tools/eslint/*.js \"tests/**/*.ts\" playwright.config.ts",
+    "preview": "cd apps/web && vite preview",
+    "format": "prettier --write \"apps/web/src/**/*.{ts,tsx,css}\" \"worker/**/*.ts\" \"apps/web/public/*.{js,css}\" \"apps/api/src/**/*.ts\" apps/web/vite.config.ts eslint.config.js tools/eslint/*.js \"tests/**/*.ts\" playwright.config.ts \"libs/**/*.ts\" \"apps/admin/src/**/*.{ts,tsx,css}\" \"apps/admin/*.mjs\" \"libs/brand/**/*.{tsx,css}\" \"apps/design-system/src/**/*.{ts,tsx,css}\" \"apps/design-system/.storybook/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"apps/web/src/**/*.{ts,tsx,css}\" \"worker/**/*.ts\" \"apps/web/public/*.{js,css}\" \"apps/api/src/**/*.ts\" apps/web/vite.config.ts eslint.config.js tools/eslint/*.js \"tests/**/*.ts\" playwright.config.ts \"libs/**/*.ts\" \"apps/admin/src/**/*.{ts,tsx,css}\" \"apps/admin/*.mjs\" \"libs/brand/**/*.{tsx,css}\" \"apps/design-system/src/**/*.{ts,tsx,css}\" \"apps/design-system/.storybook/*.{ts,tsx}\"",
     "test:e2e": "playwright test",
-    "check:i18n": "node tools/check-locales.mjs"
-  },
-  "dependencies": {
-    "@hookform/resolvers": "^7.0.7",
-    "@internationalized/date": "^3.12.4",
-    "flag-icons": "^7.6.0",
-    "framer-motion": "12.42.2",
-    "gsap": "^3.15.1",
-    "pdfmake": "^0.3.14",
-    "react": "^19.0.0",
-    "react-aria-components": "^1.22.1",
-    "react-dom": "^19.0.0",
-    "react-hook-form": "^7.92.0",
-    "react-router": "^7.18.6",
-    "three": "^0.187.0",
-    "zod": "^4.6.7"
+    "check:i18n": "node tools/check-locales.mjs",
+    "build:api": "nx run api:build",
+    "dev:api": "nx run api:serve",
+    "dev:pilot": "cd apps/web && vite --mode pilot --port 5185 --strictPort",
+    "pilot:init": "node tools/init-pilot.mjs",
+    "test:api": "node --env-file-if-exists=.env --test apps/api/test/*.mjs apps/api/tests/unit/architecture/*.spec.mjs",
+    "build:admin": "nx run admin:build",
+    "dev:admin": "nx run admin:serve",
+    "demo:admin": "nx run-many -t build -p api admin && node --env-file-if-exists=.env tools/demo/start.mjs",
+    "test:admin": "node --env-file-if-exists=.env --test apps/admin/test/private-panel.mjs",
+    "test:admin:ui": "node --env-file-if-exists=.env --test apps/admin/test/preferences.mjs",
+    "dev:design-system": "nx run design-system:serve",
+    "build:design-system": "nx run design-system:build",
+    "preview:design-system": "nx run design-system:preview",
+    "storybook": "npm run dev:design-system",
+    "build-storybook": "npm run build:design-system"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@playwright/test": "^1.65.1",
+    "@storybook/addon-docs": "^10.6.8",
+    "@storybook/react-vite": "^10.6.8",
     "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/express": "^5.0.6",
     "@types/pdfmake": "^0.3.3",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@types/three": "^0.187.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.28.2",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
+    "nx": "^24.0.6",
     "prettier": "^3.10.1",
+    "storybook": "^10.6.8",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5"
+  },
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "overrides": {
+    "nx": {
+      "minimatch": "^11.0.1"
+    },
+    "@joshwooding/vite-plugin-react-docgen-typescript": {
+      "glob": "^14.0.2"
+    }
   }
 }

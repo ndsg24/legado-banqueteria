@@ -118,10 +118,10 @@ try {
     },
     { source, subjects },
   )
-  await mkdir(new URL('../public/images/dietary/still/', import.meta.url), { recursive: true })
+  await mkdir(new URL('../apps/web/public/images/dietary/still/', import.meta.url), { recursive: true })
   for (const [id, encoded] of Object.entries(images)) {
     await writeFile(
-      new URL('../public/images/dietary/' + id + '.webp', import.meta.url),
+      new URL('../apps/web/public/images/dietary/' + id + '.webp', import.meta.url),
       Buffer.from(encoded, 'base64'),
     )
   }
