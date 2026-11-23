@@ -1,0 +1,29 @@
+[data-quote-status='requested'] {
+  --status-ink: var(--service-citrus);
+}
+[data-quote-status='confirmed'] {
+  --status-ink: var(--service-herb);
+}
+[data-quote-status='cancelled'] {
+  --status-ink: var(--service-wine);
+}
+.quote-status {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.3em 0.65em;
+  border-radius: 2rem;
+  color: color-mix(in srgb, var(--status-ink) 65%, var(--ink));
+  background: color-mix(in srgb, var(--status-ink) 13%, var(--dish-surface));
+  font: var(--type-caption);
+  font-weight: 650;
+}
+.quote-status::before {
+  content: '';
+  width: 0.55em;
+  height: 0.55em;
+  flex: none;
+  border-radius: 50%;
+  background: currentColor;
+}

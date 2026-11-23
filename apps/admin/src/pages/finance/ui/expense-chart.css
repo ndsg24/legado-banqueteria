@@ -1,0 +1,7 @@
+.expense-swatch {
+  display: inline-block;
+  inline-size: 0.65rem;
+  block-size: 0.65rem;
+  margin-inline-end: 0.5rem;
+  border-radius: 50%;
+}

@@ -1,0 +1,32 @@
+# Datos personales en Legado
+
+Estado al 20 de noviembre de 2026. El responsable del tratamiento y el canal para titulares están pendientes de designación. El piloto se prueba con personas y eventos ficticios. La formalización tributaria y la protección de datos son trabajos distintos.
+
+## Flujos reales y piloto
+
+| Flujo | Datos y destino | Control actual |
+| --- | --- | --- |
+| Sitio público en Pages | GitHub recibe las solicitudes web. El navegador conserva preferencias de tema e idioma. | El artefacto público contiene únicamente la aplicación web. |
+| Borrador de cotización | Contacto, evento, carta, cantidades alimentarias y mesa en el almacenamiento de sesión de la pestaña. | El visitante puede revisar el borrador antes de enviarlo. La recepción confirmada limpia el borrador activo. |
+| Preparar correo y descargar PDF | El visitante decide si envía el mensaje desde su proveedor. El PDF queda en su dispositivo. | Preparar el correo o descargar el PDF no acredita recepción ni crea una entrada en el historial. |
+| Worker opcional | Si se configura, Cloudflare valida el envío y Resend lo entrega al buzón configurado. | Origen limitado, cuota de envíos y secretos del lado servidor. Hay que confirmar proveedores y configuración efectiva de producción. |
+| Disponibilidad pública | La web y el Worker consultan días ocupados para el horizonte del cotizador. La respuesta contiene únicamente fechas. | Tras la purga de la cotización, la reserva conserva únicamente el día, sin vínculo con el cliente ni con la solicitud. La tarea de limpieza retira las fechas pasadas cuando ya no quedan cotizaciones vigentes para ese día. El calendario público omite números de solicitud, clientes, tipo de evento y ubicación. |
+| Panel privado local | El navegador guarda su propio tema e idioma. El historial y los detalles se leen desde la API al abrir la pantalla. | El login y sus recursos son públicos. El HTML del panel, su código privado y los datos requieren sesión. Las cookies HttpOnly permiten renovar el acceso durante siete días. PostgreSQL conserva los identificadores y digests de sesión hasta cierre, revocación o purga por expiración. Las respuestas usan `Cache-Control: no-store`. |
+| Nest local | Número de solicitud, fecha de recepción, estado operativo y contenido validado en PostgreSQL. | Autenticación antes de leer el historial o un detalle. El listado omite datos de contacto. El piloto exige correo ficticio, teléfono vacío y excluye notas libres. Las necesidades alimentarias se registran por cantidad. |
+| Conservación del piloto | El historial oculta registros al cumplirse 30 días desde la recepción, incluso si se confirman o cancelan. | La API los borra al iniciar y cada hora mientras está funcionando. El plazo del piloto solo aplica a su base activa. Las copias, buzones, PDF y respaldos requieren plazos propios. |
+
+## Para habilitar datos reales
+
+La [Ley 19.628](https://www.bcn.cl/leychile/navegar?idNorma=141599) rige hoy. La reforma de la [Ley 21.719](https://www.bcn.cl/leychile/navegar?idNorma=1209272) entra en vigor el 1 de diciembre de 2026. Revisar el flujo de correo actual también, incluso mientras el panel siga en desarrollo.
+
+- **Responsable y aviso.** Identificar a la persona natural o jurídica responsable, a su representante si corresponde y un canal atendido. Completar el aviso público con su versión, finalidades, bases jurídicas por finalidad, categorías y fuentes de datos, destinatarios, transferencias y garantías, conservación y procedimiento de derechos. Confirmar las circunstancias aplicables del art. 14 ter con asesoría chilena. El aviso informativo actual está enlazado desde el pie y el paso de contacto.
+- **Cotización y alimentación.** Documentar la habilitación para responder y dar seguimiento a una solicitud bajo cada régimen. Revisar por separado la base para cualquier acción comercial posterior. Evitar identificar comensales en antecedentes de salud. Si el servicio requiere atención individualizada, definir con el titular la información mínima, la base habilitante y quién puede acceder antes de habilitar esa captura.
+- **Solicitudes de titulares.** Asignar una persona que revise el canal y registre fecha, derecho y vencimiento. Verificar identidad de manera proporcional antes de entregar información. Buscar copias en historial, buzón, exportaciones y encargados. Resolver acceso, rectificación, supresión, oposición, portabilidad o bloqueo según corresponda, documentar excepciones y responder por un canal verificado.
+- **Acceso y proveedores.** Para operar en red, configurar TLS, cuentas individuales y roles, trazabilidad de acceso, gestión de bajas y respaldo cifrado con restauración probada. Revisar condiciones de GitHub, hosting, correo y almacenamiento, países de tratamiento y encargos. La cocina debe recibir cantidades y datos operativos.
+- **Conservación e incidentes.** Aprobar plazos distintos para solicitudes sin contrato, eventos contratados, respaldos y futuros documentos tributarios. Verificar purgas y propagación de rectificaciones. Designar quién contiene un incidente, conserva evidencia mínima, evalúa riesgo y notifica a la autoridad y a los afectados cuando corresponda.
+
+Para abrir la recepción real, revisar estos puntos con el responsable, actualizar el aviso y sustituir deliberadamente las restricciones de prueba de Nest. La facturación y los DTE quedan para una etapa posterior.
+
+## Operación interna del piloto
+
+El libro financiero registra importes en CLP, fecha, categoría y una referencia opcional a la cotización. Utiliza movimientos ficticios en este entorno. Al purgarse la cotización a los 30 días se elimina el enlace a su ficha. El historial financiero conserva el número como referencia interna junto con los importes para consultar el desglose por evento. Las recetas guardan identificadores de catálogo, cantidades y unidades por porción. La hoja de preparación guarda en el almacenamiento de sesión de la pestaña el número de cotización, los identificadores de los insumos y platos, las porciones, los envases y las marcas de despacho. Estos datos se recuperan al volver a la ficha y se eliminan al entrar al login o cerrar la pestaña. El CSV de compras y el extracto de movimientos quedan en el dispositivo cuando el operador los descarga. Las ventas, los anticipos y los cobros se ingresan manualmente. El resultado operativo compara ventas registradas con gastos pagados y el saldo de caja compara cobros con pagos.

@@ -1,0 +1,21 @@
+name: legado-admin-demo
+services:
+  demo-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: legado_admin_demo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Ejecuta npm run pilot:init}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Ejecuta npm run pilot:init}
+    volumes:
+      - ./apps/api/docker/init-db.sh:/docker-entrypoint-initdb.d/01-app.sh:ro
+      - demo-data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:55448:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "postgres", "-d", "legado_admin_demo"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+volumes:
+  demo-data:

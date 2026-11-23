@@ -1,0 +1,110 @@
+.admin-account {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+.admin-toolbar .admin-account {
+  border-inline-start: 1px solid var(--line);
+  padding-inline-start: 1.25rem;
+  margin-inline-start: 0.4rem;
+}
+.account-identity {
+  display: grid;
+  min-width: 0;
+}
+.admin-account strong,
+.admin-account small {
+  max-width: 22ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-account strong {
+  font: var(--type-card);
+}
+.admin-account small {
+  color: var(--muted);
+  font: var(--type-caption);
+}
+.admin-avatar {
+  width: 2.65rem;
+  height: 2.65rem;
+  flex: none;
+  display: grid;
+  place-content: center;
+  border-radius: 50%;
+  color: var(--on-gold);
+  background: var(--gold);
+  font: var(--type-card);
+}
+.profile-dropdown {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+}
+.profile-trigger {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+  min-height: 44px;
+  background: transparent;
+  color: var(--ink);
+  text-align: start;
+}
+.profile-trigger:hover .admin-avatar,
+.profile-trigger:focus-visible .admin-avatar {
+  outline: 1px solid var(--gold);
+  outline-offset: 3px;
+}
+.profile-trigger::-webkit-details-marker {
+  display: none;
+}
+.profile-chevron {
+  flex: none;
+  color: var(--gold);
+}
+.profile-dropdown[open] > summary .profile-chevron,
+.mobile-nav .profile-dropdown:not([open]) > summary .profile-chevron {
+  transform: rotate(180deg);
+}
+.profile-options {
+  position: absolute;
+  z-index: 5;
+  inset-inline-end: 0;
+  top: calc(100% + 0.5rem);
+  width: min(17rem, calc(100vw - 2rem));
+  padding: 0.5rem;
+  background: var(--canvas);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1.5rem color-mix(in srgb, var(--shade) 25%, transparent);
+}
+.profile-email {
+  display: block;
+  padding: 0.55rem 0.65rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font: var(--type-caption);
+  overflow-wrap: anywhere;
+}
+.profile-options .button--secondary {
+  margin-top: 0.25rem;
+  width: 100%;
+  justify-content: start;
+  border-color: transparent;
+}
+.profile-options .button--secondary:hover {
+  background: var(--surface);
+}
+.profile-options .auth-error {
+  margin: 0.5rem;
+}
+.mobile-nav .profile-options {
+  inset: auto auto calc(100% + 0.5rem) 0;
+}

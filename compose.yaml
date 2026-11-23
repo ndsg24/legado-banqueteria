@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: legado
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Configura POSTGRES_PASSWORD en .env}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?}
+    volumes:
+      - ./apps/api/docker/init-db.sh:/docker-entrypoint-initdb.d/01-app.sh:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d legado"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGHOST: db
+      PGUSER: legado_app
+      PGPASSWORD: ${APP_DB_PASSWORD:?}
+      PGDATABASE: legado
+      DATABASE_URL: postgresql://legado_app@db/legado
+      ADMIN_DISPLAY_NAME: ${ADMIN_DISPLAY_NAME:-}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:?}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Configura ADMIN_PASSWORD en .env}
+      BIND_HOST: 0.0.0.0
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/v1/health').then(r => process.exit(r.status === 200 ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "127.0.0.1:3000:3000"
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      API_ORIGIN: http://api:3000
+      ADMIN_ORIGIN: ${ADMIN_ORIGIN:-http://127.0.0.1:5186}
+    ports:
+      - "127.0.0.1:5186:5186"
+volumes:
+  pgdata:

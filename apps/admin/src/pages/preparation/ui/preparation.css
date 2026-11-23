@@ -1,0 +1,451 @@
+.preparation-page {
+  gap: var(--desk-gap);
+  container: preparation / inline-size;
+}
+.preparation-page > .back {
+  margin: 0;
+}
+.preparation-page .event-ticket {
+  margin: 0;
+}
+.prep-product {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.prep-product__photo {
+  display: grid;
+  place-items: center;
+  width: clamp(2.75rem, 4vw, 3.5rem);
+  aspect-ratio: 1;
+  flex: none;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  color: var(--muted);
+  background: var(--surface);
+}
+.prep-product__photo :is(img, svg) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.prep-product__photo svg {
+  width: 55%;
+  height: 55%;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.prep-product__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.prep-product__reference {
+  width: 100%;
+  height: 100%;
+  background-image: url('../../../shared/assets/preparation-ingredients-cutouts.png');
+  background-repeat: no-repeat;
+  background-size: 400% 300%;
+}
+.preparation-bento {
+  display: grid;
+  gap: var(--desk-gap);
+  align-items: start;
+}
+.preparation-setting {
+  display: grid;
+  gap: var(--desk-gap);
+  min-width: 0;
+}
+.preparation-setting .quoted-table {
+  border-top: 3px solid var(--gold);
+  container-name: preparation-setting;
+}
+.preparation-setting .table-brief {
+  grid-template-columns: minmax(0, 1fr);
+  margin-block: 0.8rem 1.35rem;
+}
+.preparation-setting .table-brief .seating-plan {
+  max-height: 38rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--gold) 7%, var(--surface));
+  border-radius: 0.7rem;
+  padding: clamp(0.55rem, 2cqi, 1.1rem);
+}
+.preparation-setting .seating-plan text {
+  font-family: var(--sans);
+}
+.preparation-setting .quoted-table h3 {
+  font: var(--type-subheading);
+}
+.preparation-setting .table-layout-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  gap: 0.25rem 0.75rem;
+}
+.preparation-setting .table-layout-details > div + div {
+  border: 0;
+}
+.preparation-setting .table-layout-details dt {
+  font: var(--type-option);
+}
+.preparation-setting .table-layout-details dd {
+  font: var(--type-card);
+}
+.preparation-setting .equipment-groups {
+  gap: var(--desk-gap);
+}
+.preparation-setting .equipment-group {
+  min-width: 0;
+  padding: clamp(0.8rem, 2cqi, 1.1rem);
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: var(--dish-surface);
+}
+.preparation-setting .equipment-group h4 {
+  font: var(--type-card);
+}
+.preparation-setting .equipment-group li {
+  min-height: 3.9rem;
+  gap: 0.75rem;
+}
+.preparation-setting .equipment-name strong,
+.preparation-setting .equipment-count {
+  font: var(--type-card);
+}
+.preparation-setting .equipment-name small {
+  font: var(--type-body);
+}
+.preparation-setting .equipment-sample {
+  width: 3.1rem;
+  height: 3.1rem;
+}
+.preparation-setting .equipment-sample :is(.quote-review__petal, .equipment-chip, .fabric-sample) {
+  width: 2.15rem;
+  height: 2.15rem;
+}
+@container preparation-setting (min-width: 41rem) {
+  .preparation-setting .table-brief {
+    grid-template-columns: minmax(0, 1.85fr) minmax(13rem, 1fr);
+  }
+}
+.prep-portions {
+  min-width: 0;
+  border-top: 3px solid var(--gold);
+  container: portions / inline-size;
+}
+.prep-courses {
+  --portion-gap: clamp(0.55rem, 1.15vw, 1rem);
+
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, max(18rem, (100% - 3 * var(--portion-gap)) / 4)), 1fr)
+  );
+  gap: var(--portion-gap);
+}
+.prep-course {
+  min-width: 0;
+  padding: clamp(0.75rem, 2cqi, 1rem);
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: color-mix(in srgb, var(--surface) 28%, var(--dish-surface));
+}
+.prep-course h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
+  font: var(--type-card);
+  font-size: 1.12rem;
+}
+.prep-course h3 svg {
+  width: 1.65rem;
+  height: 1.65rem;
+  flex: none;
+  color: var(--gold);
+  stroke: currentColor;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.prep-course-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr));
+  gap: 0.85rem;
+  align-items: start;
+}
+.prep-course-group {
+  min-width: 0;
+}
+.prep-course-group h4 {
+  margin: 0 0 0.45rem;
+  color: var(--muted);
+  font: var(--type-option);
+}
+.prep-course ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.prep-course li {
+  display: flex;
+  container-type: inline-size;
+  min-width: 0;
+  padding: 0.55rem;
+  border-radius: 0.5rem;
+  background: var(--dish-surface);
+}
+.prep-course .prep-product {
+  gap: 0.65rem;
+}
+.prep-course .prep-product__photo {
+  width: 3.75rem;
+  border: 0;
+}
+.prep-course .prep-product__photo img {
+  object-fit: contain;
+}
+.prep-course .prep-product__text {
+  display: grid;
+  gap: 0.15rem;
+}
+.prep-course .prep-product__text small {
+  color: var(--muted);
+  font: var(--type-caption);
+}
+.prep-portion-count {
+  justify-self: start;
+  color: var(--muted);
+  font: var(--type-caption);
+  font-variant-numeric: tabular-nums;
+  text-transform: lowercase;
+}
+.prep-portion-count b {
+  color: var(--ink);
+}
+@container portions (max-width: 23rem) {
+  .prep-course .prep-product__photo {
+    width: 3rem;
+  }
+}
+@container portions (min-width: 38rem) {
+  .prep-course[data-layout='wide'] {
+    grid-column: span 2;
+  }
+}
+@container portions (min-width: 75rem) {
+  .prep-course[data-layout='pair'] {
+    grid-column: span 2;
+  }
+}
+@container preparation (min-width: 61rem) {
+  .preparation-bento:has(> .preparation-setting) {
+    grid-template:
+      'portions setting' min-content
+      'shopping setting' 1fr / minmax(0, 1.72fr) minmax(22rem, 1fr);
+  }
+  .preparation-bento:has(> .preparation-setting) > .prep-portions {
+    grid-area: portions;
+  }
+  .preparation-bento:has(> .preparation-setting) > .preparation-setting {
+    grid-area: setting;
+  }
+  .preparation-bento:has(> .preparation-setting) > .shopping-list {
+    grid-area: shopping;
+  }
+}
+.preparation-page .dispatch-progress {
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, 1fr);
+  gap: 0.55rem 1.2rem;
+}
+.dispatch-meter {
+  display: grid;
+  justify-items: stretch;
+  gap: 0.45rem;
+  min-width: 0;
+}
+.dispatch-meter strong {
+  justify-self: end;
+  font: 650 1.1rem/1.1 var(--sans);
+  font-variant-numeric: tabular-nums;
+}
+.dispatch-meter strong span {
+  font: var(--type-caption);
+}
+.dispatch-meter progress {
+  inline-size: 100%;
+  block-size: 0.4rem;
+  border: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  color: var(--on-service-cloth);
+  background: color-mix(in srgb, var(--on-service-cloth) 24%, transparent);
+}
+.dispatch-meter progress::-webkit-progress-bar {
+  background: transparent;
+}
+.dispatch-meter progress::-webkit-progress-value {
+  background: var(--on-service-cloth);
+}
+.dispatch-meter progress::-moz-progress-bar {
+  background: var(--on-service-cloth);
+}
+.supply-cell-label {
+  display: none;
+}
+.preparation-page .shopping-list {
+  container: shopping-list / inline-size;
+}
+.shopping-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+.shopping-list .purchase-options-cell button {
+  white-space: normal;
+}
+.purchase-options__body {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  background: var(--dish-surface);
+  text-align: start;
+}
+.purchase-options__total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.65rem;
+  margin: 0;
+}
+.purchase-options__total strong {
+  font: var(--type-card);
+  font-variant-numeric: tabular-nums;
+}
+.purchase-options__total span,
+.purchase-options__hint {
+  color: var(--muted);
+  font: var(--type-caption);
+}
+.purchase-options__hint {
+  margin: 0;
+}
+.purchase-options__body ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 0 1.15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-variant-numeric: tabular-nums;
+}
+.purchase-options__body li {
+  padding-block: 0.25rem;
+  border-top: 1px solid var(--line);
+}
+.purchase-options__body button {
+  justify-self: start;
+}
+@container shopping-list (max-width: 44rem) {
+  .preparation-page .dispatch-progress {
+    grid-template-columns: minmax(0, 1fr) clamp(4.25rem, 24cqw, 8rem);
+    column-gap: 0.65rem;
+  }
+  .op-table-wrap {
+    overflow: visible;
+  }
+  .op-table-wrap table,
+  .op-table-wrap tbody {
+    display: block;
+  }
+  .op-table-wrap thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .op-table-wrap tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr) minmax(0, 0.7fr);
+    align-items: start;
+    gap: 0.4rem;
+    padding: 0.8rem 0.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .op-table-wrap tbody th {
+    grid-column: 1 / -1;
+  }
+  .op-table-wrap .purchase-options-cell {
+    grid-column: 1 / -1;
+    text-align: start;
+  }
+  .op-table-wrap .purchase-options-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .op-table-wrap tbody :is(th, td) {
+    padding: 0;
+    border: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .supply-cell-label {
+    display: block;
+    color: var(--muted);
+    font: var(--type-caption);
+  }
+  .op-pack input {
+    width: min(4.5rem, 100%);
+    min-width: 0;
+  }
+  .op-pack {
+    flex-wrap: wrap;
+  }
+}
+@media print {
+  body:has(.preparation-page)
+    :is(
+      .sidebar,
+      .admin-masthead,
+      .op-actions,
+      .back,
+      .skip-navigation,
+      .site-texture,
+      .shopping-actions
+    ) {
+    display: none;
+  }
+  body:has(.preparation-page) :is(.admin-layout, .workspace, .workspace > main) {
+    display: block;
+    padding: 0;
+  }
+  body:has(.preparation-page) .admin-surface {
+    margin: 0.75rem 0;
+    padding: 0.6rem;
+    box-shadow: none;
+  }
+  body:has(.preparation-page) :is(tr, .prep-course li) {
+    break-inside: avoid;
+  }
+  .preparation-page .dispatch-meter progress {
+    display: none;
+  }
+  .preparation-bento,
+  .preparation-setting {
+    display: block;
+  }
+  .preparation-setting .table-brief .seating-plan {
+    max-height: 24rem;
+  }
+}

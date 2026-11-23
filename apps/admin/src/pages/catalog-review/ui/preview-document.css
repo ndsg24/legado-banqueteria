@@ -1,0 +1,16 @@
+@import '@legado/brand/styles/fonts.css';
+@import '@legado/brand/styles/tokens.css';
+@import '@legado/brand/styles/catalog-card.css';
+
+html,
+body {
+  background: transparent;
+  overflow: hidden;
+  scroll-behavior: auto;
+}
+.preview-slot {
+  display: contents;
+}
+.preview-slot[inert] {
+  visibility: hidden;
+}

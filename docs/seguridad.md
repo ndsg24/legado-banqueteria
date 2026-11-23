@@ -5,12 +5,14 @@ La cotización es pública. Si se configura el Worker, este recibe los datos de 
 al buzón de Legado a través de Resend. Con el endpoint vacío, el visitante revisa y envía el
 borrador en su propia aplicación de correo.
 
+El piloto de administración usa Nest y PostgreSQL. El esquema de datos, los controles del piloto y los requisitos pendientes para operar con personas reales se detallan en [Privacidad](privacidad.md).
+
 ## Controles por categoría
 
 | OWASP 2025 | Control en este proyecto | Alcance operativo |
 | --- | --- | --- |
-| A01 · Control de acceso | El Worker admite una ruta pública, POST y preflight, un origen de navegador explícito y un destinatario de correo fijado por el servidor. | El origen se comparte con otros proyectos de la misma cuenta de Pages. CORS limita al navegador. El control de frecuencia también se aplica a clientes directos. |
-| A02 · Configuración | Vite inserta la política de contenido antes de cargar recursos en cada HTML de producción. Los scripts provienen del propio origen. La política compartida permite además el origen HTTPS configurado para enviar cotizaciones desde cualquier ruta de entrada. Las páginas omiten el referente. | La animación y los componentes usan estilos en línea. Para impedir que otros sitios enmarquen las páginas, el alojamiento debe servir `Content-Security-Policy: frame-ancestors 'none'` como cabecera HTTP. Pages no configura esa cabecera desde los archivos del proyecto. |
+| A01 · Control de acceso | El Worker recibe cotizaciones por POST y expone el calendario de fechas ocupadas por GET. El origen de la agenda y el destinatario de correo se fijan en el servidor. | El origen se comparte con otros proyectos de la misma cuenta de Pages. CORS limita al navegador. El control de frecuencia también se aplica a clientes directos. |
+| A02 · Configuración | Vite inserta la política de contenido antes de cargar recursos en cada HTML de producción. Los scripts provienen del propio origen. La política compartida permite además los orígenes HTTPS configurados para consultar la disponibilidad y enviar cotizaciones desde cualquier ruta de entrada. Las páginas omiten el referente. | La animación y los componentes usan estilos en línea. Para impedir que otros sitios enmarquen las páginas, el alojamiento debe servir `Content-Security-Policy: frame-ancestors 'none'` como cabecera HTTP. Pages no configura esa cabecera desde los archivos del proyecto. |
 | A03 · Cadena de suministro | El build instala desde el lockfile sin scripts de ciclo de vida, audita también las herramientas de desarrollo y bloquea avisos moderados o superiores. Dependabot revisa npm y GitHub Actions cada semana. | Revisar avisos y probar las actualizaciones antes de incorporarlas. |
 | A04 · Criptografía | HTTPS para Pages, el endpoint configurado y el proveedor. La clave de envío pertenece al Worker. El diseño de mesa se puede compartir por URL. El borrador, incluidos los datos de contacto, se guarda en `sessionStorage` de esa pestaña y se elimina al confirmar el envío automático. | El modo de borrador entrega los datos a la aplicación de correo. Revisar acceso y conservación en el buzón y el proveedor. |
 | A05 · Inyección | Zod valida también en el servidor, el catálogo limita los identificadores y el correo usa texto plano. Los destinatarios y la URL del proveedor son fijos. | Mantener estas validaciones cuando se amplíe la carta o cambie el proveedor. |
@@ -27,7 +29,7 @@ Ejecutar `npm ci --ignore-scripts`, `npm run audit:security`, `npm run check` y
 la descarga de PDF, las validaciones del Worker, límites, fallos y envío a un proveedor simulado.
 El npm audit es una consulta al registro sobre las dependencias del lockfile.
 
-Al configurar el envío, usar la URL HTTPS final del Worker terminada en `/cotizaciones`.
+Al configurar el envío, usar la URL HTTPS final del Worker terminada en `/api/v1/quotes`.
 Revisar las cuatro páginas compiladas y confirmar que solo la política del cotizador incluya ese origen.
 Probar un envío acordado con un buzón de pruebas antes de habilitar tráfico de clientes.
 

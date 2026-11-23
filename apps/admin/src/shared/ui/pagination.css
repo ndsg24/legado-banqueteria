@@ -1,0 +1,43 @@
+.pager,
+.pager-links,
+.pager-links span,
+.pager label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pager {
+  padding: 1rem clamp(0.7rem, 2vw, 1.4rem);
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: var(--muted);
+  font: var(--type-caption);
+  font-variant-numeric: tabular-nums;
+}
+.pager-links {
+  margin-inline-start: auto;
+  gap: 0.2rem;
+  flex-wrap: wrap;
+}
+.pager-links a,
+.pager-links button {
+  min-width: 2.1rem;
+  min-height: 2.1rem;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+  color: var(--ink);
+  border-radius: 0.35rem;
+  text-decoration: none;
+}
+.pager-links [aria-current],
+.pager-links a:hover {
+  border-color: var(--gold);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--gold) 14%, var(--canvas));
+}
+.pager-links button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

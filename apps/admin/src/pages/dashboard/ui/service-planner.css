@@ -1,0 +1,151 @@
+.service-planner {
+  padding: var(--desk-pad);
+  display: grid;
+  grid-template-rows: auto minmax(min-content, 1fr) auto;
+  container: service-planner / inline-size;
+}
+.service-planner header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.service-planner h2 {
+  margin: 0 0 0.2rem;
+}
+.service-planner header span {
+  color: var(--muted);
+}
+.service-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: auto minmax(2.65rem, 1fr) auto;
+  gap: clamp(0.2rem, 1vw, 0.85rem);
+  padding: 0;
+  list-style: none;
+  margin: 1rem 0;
+}
+.service-days li,
+.service-days a {
+  display: grid;
+  grid-row: 1 / -1;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+.service-days a {
+  --day-accent: var(--muted);
+  --day-header: var(--surface);
+  position: relative;
+  height: 100%;
+  text-decoration: none;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  color: var(--ink);
+  background: var(--dish-surface);
+}
+.service-days [data-load='booked'] {
+  --day-accent: var(--service-herb);
+}
+.service-days [data-load='shared'] {
+  --day-accent: var(--service-wine);
+}
+.service-days :is([data-load='booked'], [data-load='shared']) {
+  --day-header: color-mix(in srgb, var(--day-accent) 18%, var(--dish-surface));
+  border-color: color-mix(in srgb, var(--day-accent) 55%, var(--line));
+}
+.service-days a:hover {
+  border-color: var(--day-accent);
+  box-shadow: 0 4px 10px -7px var(--day-accent);
+}
+.day-weekday {
+  position: relative;
+  border-radius: 0.5rem 0.5rem 0 0;
+  padding: 0.45rem 0.15rem 0.25rem;
+  background: var(--day-header);
+  border-bottom: 1px solid var(--line);
+  font: var(--type-caption);
+  font-weight: 650;
+}
+.day-weekday::before {
+  content: '';
+  position: absolute;
+  inset-block-start: -0.26rem;
+  inset-inline-start: 29%;
+  width: 0.19rem;
+  height: 0.45rem;
+  border-radius: 1rem;
+  background: var(--day-accent);
+  box-shadow: 0.85rem 0 var(--day-accent);
+}
+.service-days time {
+  align-self: center;
+  padding: 0.18em 0;
+  font: 400 clamp(1.7rem, 3.2cqw, 3.1rem)/0.95 var(--serif);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.service-days a[data-load='empty'] time {
+  color: var(--muted);
+}
+.service-days small {
+  min-height: 1.9rem;
+  padding: 0.35rem 0.15rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font: var(--type-caption);
+}
+.day-load,
+.day-load > span {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0 0.25em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.day-load {
+  gap: 0.1rem 0.55rem;
+}
+.day-load svg {
+  display: none;
+}
+.planner-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  margin: 0;
+  color: var(--muted);
+}
+.planner-summary strong {
+  color: var(--ink);
+}
+.planner-summary span {
+  color: var(--service-wine);
+}
+@container service-planner (max-width: 58rem) {
+  .day-load {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+@container service-planner (max-width: 40rem) {
+  .day-load .day-unit {
+    display: none;
+  }
+  .day-load svg {
+    display: block;
+    width: 0.85rem;
+    height: 0.85rem;
+    flex: none;
+  }
+  .day-load > span {
+    align-items: center;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+  }
+  .day-weekday,
+  .service-days small {
+    font-size: 0.69rem;
+  }
+}

@@ -1,0 +1,134 @@
+.event-purchases {
+  padding: var(--desk-pad);
+  container-type: inline-size;
+  scroll-margin-block-start: 5rem;
+}
+.event-purchases h2 {
+  margin: 0;
+  font: var(--type-subheading);
+}
+.event-purchases .purchase-intro {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-block: 0.7rem 1.15rem;
+}
+.purchase-intro > p {
+  flex: 1 1 25rem;
+}
+.event-purchases .purchase-note {
+  max-width: 70ch;
+  margin: 0.65rem 0;
+  color: var(--muted);
+  font: var(--type-body);
+}
+.purchase-intro > .purchase-note {
+  margin: 0;
+}
+.purchase-gaps {
+  border-inline-start: 3px solid var(--gold);
+  background: color-mix(in srgb, var(--gold) 8%, var(--surface));
+  padding: 0.8rem 1rem;
+  margin-block: 0.8rem 1rem;
+}
+.purchase-gaps h3,
+.purchase-portions summary {
+  margin: 0;
+  font: var(--type-option);
+}
+.purchase-gaps ul {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+  gap: 0.65rem 1rem;
+}
+.purchase-gaps li {
+  display: grid;
+  justify-items: start;
+}
+.purchase-gaps li span,
+.purchase-table small {
+  color: var(--muted);
+  font: var(--type-caption);
+}
+.purchase-gaps a,
+.purchase-adjust {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 0.2em;
+}
+.purchase-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--type-body);
+  font-variant-numeric: tabular-nums;
+}
+.purchase-table th,
+.purchase-table td {
+  padding: 0.6rem 0.5rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+  text-align: end;
+}
+.purchase-table th:first-child {
+  text-align: start;
+  padding-inline-start: 0;
+  overflow-wrap: anywhere;
+}
+.purchase-table tr > :last-child {
+  padding-inline-end: 0;
+}
+.purchase-table thead th {
+  color: var(--muted);
+  font: var(--type-caption);
+}
+.purchase-table tbody th {
+  font: var(--type-option);
+}
+.purchase-table tbody td {
+  white-space: nowrap;
+}
+.purchase-table small {
+  display: block;
+  margin-block-start: 0.1rem;
+}
+.purchase-portions {
+  margin-block: 1rem 0.55rem;
+}
+.purchase-portions summary {
+  cursor: pointer;
+}
+.purchase-portions summary::marker {
+  color: var(--gold);
+}
+.purchase-portions dl {
+  max-width: 36rem;
+  margin: 0;
+}
+.purchase-portions dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-block: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.purchase-portions dd {
+  font-variant-numeric: tabular-nums;
+}
+.purchase-adjust {
+  display: inline-block;
+  margin-block-start: 0.4rem;
+}
+@container (max-width: 28rem) {
+  .purchase-table th,
+  .purchase-table td {
+    padding-inline: 0.2rem;
+  }
+  .purchase-table tbody td {
+    white-space: normal;
+  }
+}

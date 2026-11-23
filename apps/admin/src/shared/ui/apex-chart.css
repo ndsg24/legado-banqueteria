@@ -1,0 +1,14 @@
+.admin-apex-chart {
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+.admin-apex-chart .apexcharts-tooltip[class] {
+  --apx-tt-bg: var(--dish-surface);
+  --apx-tt-border: var(--line);
+  --apx-tt-color: var(--ink);
+  --apx-tt-color-muted: var(--muted);
+}
+.apex-placeholder {
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--muted) 7%, transparent);
+}

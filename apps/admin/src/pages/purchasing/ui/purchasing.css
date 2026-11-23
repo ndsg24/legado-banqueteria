@@ -1,0 +1,136 @@
+.purchasing-desk {
+  display: grid;
+  gap: var(--desk-gap);
+  container-type: inline-size;
+}
+.market-cover {
+  border-radius: 1rem;
+  padding: clamp(1rem, 2vw, 1.75rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  color: var(--on-service-cloth);
+  background: var(--service-cloth);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.market-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--linen);
+  opacity: 0.055;
+  z-index: -1;
+}
+.market-cover p {
+  margin: 0;
+}
+.market-cover dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.9rem, 2.4vw, 2rem);
+  margin: 0;
+}
+.market-cover dt {
+  font: var(--type-caption);
+}
+.market-cover dd {
+  font: var(--type-subheading);
+  margin: 0.25rem 0 0;
+}
+.market-range,
+.market-sheet header,
+.market-sheet summary,
+.market-sheet li li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+.market-range {
+  align-items: end;
+  justify-content: start;
+}
+.market-range .brand-field {
+  flex: 0 1 14rem;
+  min-width: 0;
+}
+.market-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: var(--desk-gap);
+  align-items: start;
+}
+.market-sheet,
+.market-events {
+  padding: var(--desk-pad);
+}
+.market-sheet h2,
+.market-events h2 {
+  margin: 0;
+}
+.market-sheet p,
+.market-events p {
+  color: var(--muted);
+}
+.market-sheet ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.market-sheet > ul > li,
+.market-events article {
+  border-top: 1px solid var(--line);
+  padding: 0.7rem 0;
+}
+.market-sheet summary {
+  cursor: pointer;
+  justify-content: start;
+  flex-wrap: nowrap;
+}
+.market-sheet summary::before {
+  content: '+';
+  font: var(--type-option);
+  color: var(--service-herb);
+}
+.market-sheet details[open] summary::before {
+  content: '−';
+}
+.market-sheet summary b {
+  margin-left: auto;
+  text-align: end;
+}
+.market-sheet details ul {
+  padding: 0.6rem 0 0 1.2rem;
+}
+.market-events article a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.market-events article svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.market-events h2 {
+  margin-bottom: 1rem;
+}
+.market-events .market-missing {
+  color: var(--service-wine);
+}
+.market-empty {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+@container (max-width:44rem) {
+  .market-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .market-range .brand-field {
+    flex: 1 1 8rem;
+  }
+}

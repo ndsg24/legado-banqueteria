@@ -1,0 +1,26 @@
+{
+  "name": "admin",
+  "projectType": "application",
+  "sourceRoot": "apps/admin/src",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/dist/admin"
+      ],
+      "options": {
+        "cwd": "apps/admin",
+        "command": "tsc -p tsconfig.json && vite build"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "command": "node apps/admin/server.mjs"
+      }
+    }
+  }
+}

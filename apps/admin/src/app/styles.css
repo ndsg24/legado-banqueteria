@@ -1,0 +1,210 @@
+@import '@legado/brand/styles/fonts.css';
+@import '@legado/brand/styles/tokens.css';
+@import '@legado/brand/styles/controls.css';
+@import '@legado/brand/styles/actions.css';
+@import '@legado/brand/styles/fields.css';
+@import '@legado/brand/styles/table-watermark.css';
+
+:root[data-interface='admin'] {
+  --display: var(--sans);
+  --serif: var(--sans);
+}
+:root[data-interface='admin'] :is(input, select, textarea) {
+  font-family: var(--sans);
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font: var(--type-body);
+}
+button {
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+a {
+  color: inherit;
+  text-underline-offset: 0.25em;
+}
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+.brand {
+  text-decoration: none;
+}
+.workspace > main {
+  --desk-gap: clamp(0.85rem, 1.4vw, 1.55rem);
+  --desk-pad: clamp(1.1rem, 2vw, 2.1rem);
+  --workspace-inset: clamp(1.25rem, 2.5vw, 3rem);
+  --desk-wash: color-mix(in srgb, var(--gold) 8%, var(--dish-surface));
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: var(--workspace-inset);
+}
+h1 {
+  font: var(--type-section);
+  margin: 0 0 1em;
+  letter-spacing: -0.045em;
+}
+h2 {
+  font: var(--type-subheading);
+  margin: 0 0 1rem;
+}
+.nav-toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+}
+.nav-toggle:hover {
+  color: var(--ink);
+  border-color: var(--gold);
+}
+.auth-error {
+  color: var(--error);
+}
+
+.admin-surface {
+  min-width: 0;
+  color: var(--ink);
+  background: var(--dish-surface);
+  border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  border-radius: 0.85rem;
+  box-shadow:
+    0 2px 3px color-mix(in srgb, var(--shade) 5%, transparent),
+    0 8px 20px -12px color-mix(in srgb, var(--shade) 28%, transparent);
+}
+
+.measure-switch {
+  display: inline-flex;
+  gap: 0.15rem;
+  padding: 0.2rem;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+}
+.measure-switch button {
+  border: 0;
+  border-radius: 0.25rem;
+  padding: 0.45rem 0.7rem;
+  background: transparent;
+  color: var(--muted);
+  font: var(--type-option);
+}
+.measure-switch button[aria-pressed='true'] {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.admin-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.admin-page-heading {
+  display: grid;
+  justify-items: start;
+  gap: 0.45rem;
+  padding-block: 0.3rem 1.05rem;
+  margin-bottom: clamp(1rem, 1.8vw, 2rem);
+  border-bottom: 1px solid var(--line);
+}
+.admin-page-heading h1 {
+  margin: 0;
+  line-height: 1.08;
+  text-wrap: balance;
+  font-size: clamp(var(--type-section-size), 3.6vw, 4.2rem);
+}
+.admin-page-heading p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.empty-notice {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: clamp(1.35rem, 3.5vw, 3.4rem) 1rem;
+  text-align: center;
+}
+.empty-notice-mark {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50% 50% 0.45rem 0.45rem;
+  background: color-mix(in srgb, var(--gold) 11%, var(--dish-surface));
+}
+.empty-notice svg {
+  width: 2.2rem;
+  height: 2.2rem;
+  color: var(--ink);
+}
+.empty-notice .event-icon__foil {
+  stroke: var(--gold);
+}
+.empty-notice p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 34ch;
+}
+.recovery-panel {
+  padding: clamp(1.5rem, 4vw, 4rem);
+}
+.recovery-panel > svg {
+  height: 3rem;
+  color: var(--gold);
+}
+.recovery-panel h1 {
+  margin: 1rem 0;
+}
+.recovery-panel > a {
+  margin-inline-start: 1rem;
+}
+
+[data-pigment='wine'] {
+  --pigment: var(--service-wine);
+}
+[data-pigment='herb'] {
+  --pigment: var(--service-herb);
+}
+[data-pigment='citrus'] {
+  --pigment: var(--service-citrus);
+}
+[data-pigment='blue'] {
+  --pigment: var(--service-blue);
+}
+
+.workspace > main {
+  --linen:
+    repeating-linear-gradient(0deg, transparent 0 3px, currentColor 3px 4px),
+    repeating-linear-gradient(90deg, transparent 0 4px, currentColor 4px 5px);
+}
+
+[data-event='wedding'] {
+  --event-ink: var(--service-wine);
+}
+[data-event='family-gathering'] {
+  --event-ink: var(--service-herb);
+}
+[data-event='corporate-event'] {
+  --event-ink: var(--service-blue);
+}
+[data-event='other-celebration'] {
+  --event-ink: var(--service-citrus);
+}
